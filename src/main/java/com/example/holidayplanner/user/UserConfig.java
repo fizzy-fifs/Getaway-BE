@@ -6,10 +6,10 @@ import org.springframework.context.annotation.Configuration;
 
 
 @Configuration
-public class UserConfig { @Bean
-CommandLineRunner commandLineRunner(UserRepository repository) {
-    return args -> { repository.findAll(); };
-}
+public class UserConfig {
 
-
+    @Bean
+    CommandLineRunner commandLineRunner(UserRepository repository) {
+        return args -> { repository.findAll(); };
+    }
 }
