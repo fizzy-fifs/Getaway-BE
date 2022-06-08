@@ -28,11 +28,6 @@ public class User {
     @JsonProperty
     private String lastName;
 
-    @NotBlank(message = "User name cannot be blank")
-    @Pattern(regexp = "^[a-zA-Z0-9_]*$", message = "User name can only contain letters, numbers and underscores")
-    @JsonProperty
-    private String userName;
-
     @JsonFormat( pattern = "dd/MM/yyyy" )
     @JsonProperty
     private LocalDate dob;
@@ -51,20 +46,18 @@ public class User {
 
     public User() {}
 
-    public User(String id, String firstName, String lastName, String userName, LocalDate dob, String email, String password) {
+    public User(String id, String firstName, String lastName, LocalDate dob, String email, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.userName = userName;
         this.dob = dob;
         this.email = email;
         this.password = password;
     }
 
-    public User(String firstName, String lastName, String userName, LocalDate dob, String email, String password) {
+    public User(String firstName, String lastName, LocalDate dob, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.userName = userName;
         this.dob = dob;
         this.email = email;
         this.password = password;
