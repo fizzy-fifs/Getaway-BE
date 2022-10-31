@@ -1,6 +1,5 @@
 package com.example.holidayplanner.config;
 
-import com.example.holidayplanner.user.User;
 import com.example.holidayplanner.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
