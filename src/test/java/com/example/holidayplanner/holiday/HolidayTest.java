@@ -1,46 +1,44 @@
 //package com.example.holidayplanner.holiday;
-
-import com.example.holidayplanner.availableDates.AvailableDates;
-import com.example.holidayplanner.budget.Budget;
-import com.example.holidayplanner.group.Group;
-import com.example.holidayplanner.user.User;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
-
-import static java.time.Month.*;
-import static org.junit.jupiter.api.Assertions.*;
-
+//
+//import com.example.holidayplanner.availableDates.AvailableDates;
+//import com.example.holidayplanner.budget.Budget;
+//import com.example.holidayplanner.group.Group;
+//import com.example.holidayplanner.user.User;
+//import com.fasterxml.jackson.core.JsonProcessingException;
+//import com.fasterxml.jackson.databind.ObjectMapper;
+//import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.params.ParameterizedTest;
+//import org.junit.jupiter.params.provider.MethodSource;
+//
+//import java.time.LocalDate;
+//import java.util.ArrayList;
+//import java.util.List;
+//import java.util.stream.Stream;
+//
+//import static java.time.Month.*;
+//import static org.junit.jupiter.api.Assertions.*;
+//
 //public class HolidayTest {
-
+//
 //    private Holiday holiday;
 //    private ArrayList<AvailableDates> dates;
 //    private AvailableDates datesForUser1;
 //    private AvailableDates datesForUser3;
 //    private ArrayList<Budget> budgets;
 //
-//    public HolidayTest(Holiday holiday, ArrayList<AvailableDates> dates, AvailableDates datesForUser1,
-//                       AvailableDates datesForUser3, ArrayList<Budget> budgets) {
-//        this.holiday = holiday;
-//        this.dates = dates;
-//        this.datesForUser1 = datesForUser1;
-//        this.datesForUser3 = datesForUser3;
-//        this.budgets = budgets;
-//    }
+////    public HolidayTest(Holiday holiday, ArrayList<AvailableDates> dates, AvailableDates datesForUser1,
+////                       AvailableDates datesForUser3, ArrayList<Budget> budgets) {
+////        this.holiday = holiday;
+////        this.dates = dates;
+////        this.datesForUser1 = datesForUser1;
+////        this.datesForUser3 = datesForUser3;
+////        this.budgets = budgets;
+////    }
 //
 //
 //    private static Stream<Holiday> init() {
 //        User user1 = new User(
 //                "1",
-//                "User",
 //                "User",
 //                "User",
 //                LocalDate.of(2002, MAY, 13),
@@ -52,7 +50,6 @@ import static org.junit.jupiter.api.Assertions.*;
 //                "2",
 //                "User2",
 //                "User2",
-//                "User2",
 //                LocalDate.of(2004, OCTOBER, 21),
 //                "user2@user.com",
 //                "Password1"
@@ -60,7 +57,6 @@ import static org.junit.jupiter.api.Assertions.*;
 //
 //        User user3 = new User(
 //                "3",
-//                "User3",
 //                "User3",
 //                "User3",
 //                LocalDate.of(2000, JANUARY, 11),
@@ -114,13 +110,12 @@ import static org.junit.jupiter.api.Assertions.*;
 //
 //        assertEquals(expectedResponse[0], holiday.aggregateHolidayBudgets()[0]);
 //    }
-
+//
 //    @Test
 //    void testAggregateDates() {
 //
 //        User user1 = new User(
 //                "1",
-//                "User",
 //                "User",
 //                "User",
 //                LocalDate.of(2002, MAY, 13),
@@ -132,7 +127,6 @@ import static org.junit.jupiter.api.Assertions.*;
 //                "2",
 //                "User2",
 //                "User2",
-//                "User2",
 //                LocalDate.of(2004, OCTOBER, 21),
 //                "user2@user.com",
 //                "Password1"
@@ -140,7 +134,6 @@ import static org.junit.jupiter.api.Assertions.*;
 //
 //        User user3 = new User(
 //                "3",
-//                "User3",
 //                "User3",
 //                "User3",
 //                LocalDate.of(2000, JANUARY, 11),

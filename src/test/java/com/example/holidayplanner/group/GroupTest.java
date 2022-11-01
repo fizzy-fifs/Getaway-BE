@@ -42,7 +42,7 @@ public class GroupTest {
 
         group.addNewMember(user2);
 
-        assertEquals("User2", group.getGroupMembers().get(1).getUserName());
+        assertEquals("User2", group.getGroupMembers().get(1).getFirstName());
     }
 
     @Test
@@ -50,7 +50,6 @@ public class GroupTest {
 
         User user1 = new User(
                 "1",
-                "User",
                 "User",
                 "User",
                 LocalDate.of(2000, JANUARY, 21),
@@ -62,7 +61,6 @@ public class GroupTest {
                 "2",
                 "User2",
                 "User2",
-                "User2",
                 LocalDate.of(2000, JANUARY, 15),
                 "user2@user.com",
                 "Password1"
@@ -70,7 +68,6 @@ public class GroupTest {
 
         User user3 = new User(
                 "3",
-                "User3",
                 "User3",
                 "User3",
                 LocalDate.of(2000, JANUARY, 19),
