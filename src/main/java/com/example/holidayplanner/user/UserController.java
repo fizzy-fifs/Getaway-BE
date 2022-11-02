@@ -1,6 +1,7 @@
 package com.example.holidayplanner.user;
 
 import com.example.holidayplanner.interfaces.ControllerInterface;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -20,7 +21,7 @@ public class UserController implements ControllerInterface<User> {
 
     @Override
     @PostMapping(path = "/newuser")
-    public ResponseEntity create(@RequestBody @Valid User user, Errors errors) {
+    public ResponseEntity create(@RequestBody @Valid User user, Errors errors) throws JsonProcessingException {
 
         if (errors.hasErrors()) {
             return ResponseEntity.badRequest()
