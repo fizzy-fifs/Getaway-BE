@@ -3,6 +3,7 @@ package com.example.holidayplanner.user;
 import com.example.holidayplanner.interfaces.ServiceInterface;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,13 +24,20 @@ public class UserService implements ServiceInterface<User> {
     }
 
     @Override
-    public String create(User user) {
-        if(emailExists(user)){ return "Email already exists"; }
+    public ResponseEntity create(User user) {
 
+       //Check if email is already registered
+        if( emailExists(user) ) {
+            return ResponseEntity.badRequest().body("Email already exists");
+        }
+
+        //Hash password and set role as user
         String encodedPassword = this.passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
+
+
         userRepository.insert(user);
-        return "User created successfully";
+        return ResponseEntity.ok("User created successfully");
     }
 
     @Override

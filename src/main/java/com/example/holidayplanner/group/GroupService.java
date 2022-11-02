@@ -4,6 +4,7 @@ import com.example.holidayplanner.interfaces.ServiceInterface;
 import com.example.holidayplanner.user.User;
 import com.example.holidayplanner.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,9 +22,9 @@ public class GroupService implements ServiceInterface<Group> {
     }
 
     @Override
-    public String create(Group group) {
+    public ResponseEntity create(Group group) {
          groupRepository.insert(group);
-         return "Group has been successfully created";
+         return ResponseEntity.ok("Group has been successfully created");
     }
 
     @Override

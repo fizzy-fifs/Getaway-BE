@@ -3,6 +3,7 @@ package com.example.holidayplanner.holiday;
 import com.example.holidayplanner.interfaces.ServiceInterface;
 import com.example.holidayplanner.user.User;
 import com.example.holidayplanner.user.UserRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,9 +19,9 @@ public class HolidayService implements ServiceInterface<Holiday> {
     }
 
     @Override
-    public String create(Holiday holiday) {
+    public ResponseEntity create(Holiday holiday) {
         holidayRepository.insert(holiday);
-        return "Holiday has been successfully created";
+        return ResponseEntity.ok("Holiday has been successfully created");
     }
 
     public String addHolidayMaker(String holidayId, String userId) {

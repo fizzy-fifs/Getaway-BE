@@ -2,6 +2,7 @@ package com.example.holidayplanner.holiday;
 
 import com.example.holidayplanner.interfaces.ControllerInterface;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class HolidayController implements ControllerInterface<Holiday> {
 
     @Override
     @PostMapping(path = "/newholiday")
-    public String create(Holiday holiday, Errors errors) {
+    public ResponseEntity create(Holiday holiday, Errors errors) {
         return holidayService.create(holiday);
     }
 

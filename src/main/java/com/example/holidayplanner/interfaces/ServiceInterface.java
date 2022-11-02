@@ -1,10 +1,12 @@
 package com.example.holidayplanner.interfaces;
 
 
+import org.springframework.http.ResponseEntity;
+
 import java.util.List;
 
 public interface ServiceInterface<T> {
-    String create(T entity);
+    ResponseEntity create(T entity);
 
     List<T> getAll();
 

@@ -1,5 +1,6 @@
 package com.example.holidayplanner.user;
 
+import com.example.holidayplanner.user.role.Role;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -9,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.Date;
 
 @Data
@@ -44,6 +46,12 @@ public class User {
     @JsonProperty
     private String password;
 
+    @JsonProperty
+    private Collection<Role> roles;
+
+    @JsonProperty
+    private boolean enabled;
+
     public User() {}
 
     public User(String id, String firstName, String lastName, LocalDate dob, String email, String password) {
@@ -59,6 +67,12 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dob = dob;
+        this.email = email;
+        this.password = password;
+    }
+
+    public User(String firstName, String email, String password) {
+        this.firstName = firstName;
         this.email = email;
         this.password = password;
     }

@@ -2,6 +2,7 @@ package com.example.holidayplanner.group;
 
 import com.example.holidayplanner.interfaces.ControllerInterface;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,7 @@ public class GroupController implements ControllerInterface<Group> {
 
     @Override
     @PostMapping(path = "/newgroup")
-    public String create(Group group, Errors errors) {
+    public ResponseEntity create(Group group, Errors errors) {
         return groupService.create(group);
     }
 

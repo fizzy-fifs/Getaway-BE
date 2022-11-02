@@ -2,6 +2,7 @@ package com.example.holidayplanner.user;
 
 import com.example.holidayplanner.interfaces.ControllerInterface;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,9 +20,14 @@ public class UserController implements ControllerInterface<User> {
 
     @Override
     @PostMapping(path = "/newuser")
-    public String create(@RequestBody @Valid User user, Errors errors) {
+    public ResponseEntity create(@RequestBody @Valid User user, Errors errors) {
 
-        if (errors.hasErrors()) { return errors.getAllErrors().get(0).getDefaultMessage(); }
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest()
+                    .body(errors.getAllErrors()
+                    .get(0).getDefaultMessage())
+            ;
+        }
         return userService.create(user);
     }
 
