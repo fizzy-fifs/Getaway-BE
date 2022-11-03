@@ -1,22 +1,25 @@
 package com.example.holidayplanner.config;
 
-import com.example.holidayplanner.user.UserRepository;
+import com.example.holidayplanner.config.jwt.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Autowired
     private MyUserDetailsService myUserDetailsService;
-    private PasswordEncoder passwordEncoder;
-    private UserRepository userRepository;
+
+    @Autowired
+    private JwtRequestFilter jwtRequestFilter;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -34,7 +37,18 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
             .authorizeRequests().antMatchers(HttpMethod.DELETE).authenticated().and()
             .authorizeRequests().antMatchers(HttpMethod.POST).permitAll();
 
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//            .and()
+//                .authorizeRequests().antMatchers("/api/v1.0/users/newuser").anonymous()
+        ;
+
+        http.addFilterBefore( jwtRequestFilter, UsernamePasswordAuthenticationFilter.class );
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/api/v1.0/users/newuser");
+        web.ignoring().antMatchers("/swagger-ui/#/");
     }
 
     @Bean
