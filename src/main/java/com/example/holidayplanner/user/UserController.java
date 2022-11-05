@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/api/v1.0/users")
@@ -30,6 +31,19 @@ public class UserController implements ControllerInterface<User> {
             ;
         }
         return userService.create(user);
+    }
+
+    @PostMapping(path = "/login")
+    public ResponseEntity login (@RequestBody @Valid Map<String, String> emailAndPassword, Errors errors) throws JsonProcessingException {
+
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest()
+                    .body(errors.getAllErrors()
+                    .get(0).getDefaultMessage())
+            ;
+        }
+
+        return userService.login(emailAndPassword);
     }
 
     @Override

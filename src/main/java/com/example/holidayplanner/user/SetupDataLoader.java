@@ -7,27 +7,41 @@ import com.example.holidayplanner.user.role.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Component
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    private PrivilegeRepository privilegeRepository;
+    private final PrivilegeRepository privilegeRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    @Autowired
+    private final PasswordEncoder passwordEncoder;
+
+    public SetupDataLoader(RoleRepository roleRepository, PrivilegeRepository privilegeRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.roleRepository = roleRepository;
+        this.privilegeRepository = privilegeRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = new BCryptPasswordEncoder();
+    }
 
 
     @Override
+    @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
         if (isAlreadySetup()) { return; }
@@ -38,7 +52,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
         //Create admin and user privileges
         List<Privilege> adminPrivileges = Arrays.asList(readPrivilege, writePrivilege);
-        List<Privilege> userPrivileges = Arrays.asList(readPrivilege);
+        List<Privilege> userPrivileges = Collections.singletonList(readPrivilege);
 
         //Create admin and user roles
         createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
@@ -47,8 +61,11 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         Role adminRole = roleRepository.findByName("ROLE_ADMIN");
 
         //Create and save an initial admin
-        User user = new User("Admin", "admin@mail.com", "Admin123");
-        user.setRoles(Arrays.asList(adminRole));
+        User user = new User();
+        user.setFirstName("Admin");
+        user.setEmail("admin@mail.com");
+        user.setPassword(passwordEncoder.encode("Admin123"));
+        user.setRoles(Collections.singletonList(adminRole));
         user.setEnabled(true);
         userRepository.save(user);
     }

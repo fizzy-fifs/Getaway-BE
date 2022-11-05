@@ -9,6 +9,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,11 +42,15 @@ public class UserService implements ServiceInterface<User> {
     private final JwtUtil jwtTokenUtil;
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, MyUserDetailsService myUserDetailsService, JwtUtil jwtTokenUtil) {
+    private final AuthenticationManager authenticationManager;
+
+    @Autowired
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, MyUserDetailsService myUserDetailsService, JwtUtil jwtTokenUtil, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.myUserDetailsService = myUserDetailsService;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.authenticationManager = authenticationManager;
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
@@ -80,6 +87,37 @@ public class UserService implements ServiceInterface<User> {
         return ResponseEntity.ok(responseData);
     }
 
+    public ResponseEntity login(Map<String, String> emailAndPassword) throws JsonProcessingException {
+
+        //Retrieve email and password as separate strings
+        var email = emailAndPassword.get("email");
+        var password = emailAndPassword.get("password");
+
+        //Authenticate using authentication manager
+        try {
+            authenticationManager.authenticate( new UsernamePasswordAuthenticationToken(email, password) );
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.badRequest().body("Invalid email or password");
+        }
+
+        //Generate JWT
+        final UserDetails userDetails = myUserDetailsService.loadUserByUsername(email);
+        String jwt = jwtTokenUtil.generateToken(userDetails);
+
+        //Send user object and JWT as response
+        User user = userRepository.findByEmail(email);
+
+            //convert user object to json format
+        ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
+        String userJson = objectMapper.writeValueAsString(user);
+
+        Map<String, String> responseData = new HashMap<>();
+        responseData.put("user", userJson);
+        responseData.put("jwt", jwt);
+
+        return ResponseEntity.ok(responseData);
+
+    }
     @Override
     public List<User> getAll() { return userRepository.findAll(); }
 
@@ -117,6 +155,7 @@ public class UserService implements ServiceInterface<User> {
         User x = userRepository.findByEmail(user.getEmail());
         return x == null ? false : true;
     }
+
 
 
 }

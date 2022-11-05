@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 import java.util.Collection;
 
 @Data
-@Document
+@Document(collection = "Roles")
 public class Role {
 
     @MongoId(value = FieldType.OBJECT_ID)

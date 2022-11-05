@@ -70,10 +70,4 @@ public class User {
         this.email = email;
         this.password = password;
     }
-
-    public User(String firstName, String email, String password) {
-        this.firstName = firstName;
-        this.email = email;
-        this.password = password;
-    }
 }
