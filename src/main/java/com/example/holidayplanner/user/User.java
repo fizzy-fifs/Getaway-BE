@@ -48,6 +48,11 @@ public class User {
     @JsonProperty
     private String email;
 
+    @NotBlank(message = "User name cannot be blank")
+    @Pattern(regexp = "^[a-zA-Z0-9_]*$", message = "User name can only contain letters, numbers and underscores")
+    @JsonProperty
+    private String userName;
+
     @NotBlank(message = "Password cannot be blank")
     @Size(min = 8, message = "Password must have a minimum of 8 characters")
     @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$", message = "Password must contain at least one number, one uppercase character and one lowercase character")
@@ -62,18 +67,20 @@ public class User {
 
     public User() {}
 
-    public User(String id, String firstName, String lastName, LocalDate dob, String email, String password) {
+    public User(String id, String firstName, String lastName, String userName, LocalDate dob, String email, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.userName = userName;
         this.dob = dob;
         this.email = email;
         this.password = password;
     }
 
-    public User(String firstName, String lastName, LocalDate dob, String email, String password) {
+    public User(String firstName, String lastName, String userName, LocalDate dob, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.userName = userName;
         this.dob = dob;
         this.email = email;
         this.password = password;

@@ -62,6 +62,11 @@ public class UserService implements ServiceInterface<User> {
             return ResponseEntity.badRequest().body("Email already exists");
         }
 
+        //Check if username already exists
+        if(userNameExists(user) ) {
+            return ResponseEntity.badRequest().body("Username is already taken.");
+        }
+
         //Hash password and set role as user
         String encodedPassword = this.passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
@@ -86,6 +91,7 @@ public class UserService implements ServiceInterface<User> {
 
         return ResponseEntity.ok(responseData);
     }
+
 
     public ResponseEntity login(Map<String, String> emailAndPassword) throws JsonProcessingException {
 
@@ -152,9 +158,14 @@ public class UserService implements ServiceInterface<User> {
     }
 
     private boolean emailExists(User user) {
-        User x = userRepository.findByEmail(user.getEmail());
-        return x == null ? false : true;
+        User findUser = userRepository.findByEmail(user.getEmail());
+        return findUser != null;
     }
+
+    private boolean userNameExists(User user) {
+        User findUser = userRepository.findByUserName(user.getUserName());
+        return findUser != null;
+    };
 
 
 
