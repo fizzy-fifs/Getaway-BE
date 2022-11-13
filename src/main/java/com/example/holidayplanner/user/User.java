@@ -60,6 +60,9 @@ public class User {
     private String password;
 
     @JsonProperty
+    private String image;
+
+    @JsonProperty
     private Collection<Role> roles;
 
     @JsonProperty
