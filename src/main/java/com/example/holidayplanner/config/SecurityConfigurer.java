@@ -39,29 +39,34 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
             .authorizeRequests().antMatchers(HttpMethod.GET).authenticated().and()
             .authorizeRequests().antMatchers(HttpMethod.PUT).authenticated().and()
             .authorizeRequests().antMatchers(HttpMethod.DELETE).authenticated().and()
-            .authorizeRequests().antMatchers(HttpMethod.POST).permitAll();
-
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .authorizeRequests().antMatchers(HttpMethod.POST).authenticated().and()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
-                .authorizeRequests().antMatchers("/api/v1.0/users/newuser").anonymous().and()
-                .authorizeRequests().antMatchers("/api/v1.0/users").anonymous().and()
-                .authorizeRequests().antMatchers("/api/v1.0/users/login").anonymous().and()
-                .authorizeRequests().antMatchers("/swagger-ui/**").anonymous().and()
-                .authorizeRequests().antMatchers("/v3/api-docs").anonymous()
+            .authorizeRequests().antMatchers("/swagger-ui/**").permitAll()
         ;
+
+//        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//            .and()
+//                .authorizeRequests().antMatchers("/api/v1.0/users/newuser").anonymous().and()
+//                .authorizeRequests().antMatchers("/api/v1.0/users").anonymous().and()
+//                .authorizeRequests().antMatchers("/api/v1.0/users/login").anonymous().and()
+//                .authorizeRequests().antMatchers("/swagger-ui/**").anonymous().and()
+//                .authorizeRequests().antMatchers("/v3/api-docs").anonymous()
+//        ;
 
         http.addFilterBefore( jwtRequestFilter, UsernamePasswordAuthenticationFilter.class );
     }
 
-//    @Override
-//    public void configure(WebSecurity web) throws Exception {
-//        web.ignoring().antMatchers("/api/v1.0/users/newuser");
-//        web.ignoring().antMatchers("/api/v1.0/users/login");
-//        web.ignoring().antMatchers("/", "/csrf", "/v3/api-docs",
-//                                                "/swagger-resources/configuration/ui", "/configuration/ui",
-//                                                "/swagger-resources", "/swagger-resources/configuration/security",
-//                                                "/configuration/security", "/swagger-ui.html", "/webjars/**");
-//    }
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/api/v1.0/users/newuser");
+        web.ignoring().antMatchers("/api/v1.0/users/login");
+        web.ignoring().antMatchers("/api/v1.0/users");
+        web.ignoring().antMatchers("/", "/csrf", "/v3/api-docs",
+                                                "/swagger-resources/configuration/ui", "/configuration/ui",
+                                                "/swagger-resources", "/swagger-resources/configuration/security",
+                                                "/configuration/security", "/v2/api-docs/**", "/webjars/**");
+    }
 
     @Bean
     public  PasswordEncoder passwordEncoder() {
