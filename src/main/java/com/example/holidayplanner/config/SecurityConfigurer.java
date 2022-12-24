@@ -41,8 +41,8 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
             .authorizeRequests().antMatchers(HttpMethod.DELETE).authenticated().and()
             .authorizeRequests().antMatchers(HttpMethod.POST).authenticated().and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .authorizeRequests().antMatchers("/swagger-ui/**").permitAll()
+//            .and()
+//            .authorizeRequests().antMatchers("/swagger-ui/**").permitAll()
         ;
 
 //        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -65,7 +65,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/", "/csrf", "/v3/api-docs",
                                                 "/swagger-resources/configuration/ui", "/configuration/ui",
                                                 "/swagger-resources", "/swagger-resources/configuration/security",
-                                                "/configuration/security", "/v2/api-docs/**", "/webjars/**");
+                                                "/configuration/security", "/swagger-ui/**", "/v2/api-docs/**", "/webjars/**");
     }
 
     @Bean
