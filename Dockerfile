@@ -1,11 +1,11 @@
 FROM maven:3.8.3-openjdk-16
-#Make App directory
+
+#Create a directory called App
 RUN mkdir app
 
 #Add src content and pom.xml to app directory
 ADD src app/src
 ADD pom.xml app
-ADD .env .env
 
 #Generate executable jar in app directory
 WORKDIR app
