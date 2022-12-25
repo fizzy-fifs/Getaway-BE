@@ -11,6 +11,5 @@ WORKDIR app
 RUN mvn clean install
 
 #Set entry point
-#WORKDIR app/target
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "target/holiday-planner-0.0.1-SNAPSHOT.jar"]
