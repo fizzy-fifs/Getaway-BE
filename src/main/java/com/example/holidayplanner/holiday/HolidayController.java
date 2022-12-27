@@ -1,6 +1,7 @@
 package com.example.holidayplanner.holiday;
 
 import com.example.holidayplanner.interfaces.ControllerInterface;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -21,7 +22,7 @@ public class HolidayController implements ControllerInterface<Holiday> {
 
     @Override
     @PostMapping(path = "/newholiday")
-    public ResponseEntity create(Holiday holiday, Errors errors) {
+    public ResponseEntity create(Holiday holiday, Errors errors) throws JsonProcessingException {
         return holidayService.create(holiday);
     }
 

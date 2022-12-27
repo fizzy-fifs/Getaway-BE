@@ -1,5 +1,7 @@
 package com.example.holidayplanner.user;
 
+import com.example.holidayplanner.group.Group;
+import com.example.holidayplanner.holiday.Holiday;
 import com.example.holidayplanner.user.role.Role;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,6 +19,7 @@ import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Document(collection="Users")
@@ -63,6 +66,9 @@ public class User {
     private String image;
 
     @JsonProperty
+    private List<Group> groups;
+
+    @JsonProperty
     private Collection<Role> roles;
 
     @JsonProperty
@@ -88,4 +94,6 @@ public class User {
         this.email = email;
         this.password = password;
     }
+
+    public void addGroup(Group group) { groups.add(group); }
 }

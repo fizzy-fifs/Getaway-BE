@@ -1,6 +1,7 @@
 package com.example.holidayplanner.group;
 
 import com.example.holidayplanner.interfaces.ControllerInterface;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -19,7 +20,7 @@ public class GroupController implements ControllerInterface<Group> {
 
     @Override
     @PostMapping(path = "/newgroup")
-    public ResponseEntity create(Group group, Errors errors) {
+    public ResponseEntity create(Group group, Errors errors) throws JsonProcessingException {
         return groupService.create(group);
     }
 

@@ -3,11 +3,16 @@ package com.example.holidayplanner.group;
 import com.example.holidayplanner.interfaces.ServiceInterface;
 import com.example.holidayplanner.user.User;
 import com.example.holidayplanner.user.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class GroupService implements ServiceInterface<Group> {
@@ -22,9 +27,21 @@ public class GroupService implements ServiceInterface<Group> {
     }
 
     @Override
-    public ResponseEntity create(Group group) {
-         groupRepository.insert(group);
-         return ResponseEntity.ok("Group has been successfully created");
+    public ResponseEntity create(Group group) throws JsonProcessingException {
+         //Insert group in DB
+         Group newGroup = groupRepository.insert(group);
+
+         //Add group to each member's profile
+         ArrayList<User> groupMembers = newGroup.getGroupMembers();
+         for (User member : groupMembers){
+             member.addGroup(newGroup);
+         }
+
+        //Convert group object to json
+        ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
+        String groupJson = mapper.writeValueAsString(newGroup);
+
+         return ResponseEntity.ok(groupJson);
     }
 
     @Override

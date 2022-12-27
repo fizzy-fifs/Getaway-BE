@@ -3,6 +3,8 @@ package com.example.holidayplanner.holiday;
 import com.example.holidayplanner.interfaces.ServiceInterface;
 import com.example.holidayplanner.user.User;
 import com.example.holidayplanner.user.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +21,19 @@ public class HolidayService implements ServiceInterface<Holiday> {
     }
 
     @Override
-    public ResponseEntity create(Holiday holiday) {
-        holidayRepository.insert(holiday);
-        return ResponseEntity.ok("Holiday has been successfully created");
+    public ResponseEntity create(Holiday holiday) throws JsonProcessingException {
+
+        //Insert holiday in DB
+        Holiday newHoliday = holidayRepository.insert(holiday);
+
+        //Add holiday to group object
+        newHoliday.getGroup().addHoliday(newHoliday);
+
+        //Convert holiday object to json
+        ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
+        String holidayJson = mapper.writeValueAsString(newHoliday);
+
+        return ResponseEntity.ok(holidayJson);
     }
 
     public String addHolidayMaker(String holidayId, String userId) {
