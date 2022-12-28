@@ -2,6 +2,8 @@ package com.example.holidayplanner.group;
 
 import com.example.holidayplanner.interfaces.ControllerInterface;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -11,6 +13,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/v1.0/groups")
+@Api(tags = "Group")
+@SecurityRequirement(name = "holidayPlannerSecurity")
 public class GroupController implements ControllerInterface<Group> {
 
     private final GroupService groupService;
