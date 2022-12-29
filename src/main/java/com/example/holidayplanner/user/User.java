@@ -17,6 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -66,7 +67,10 @@ public class User {
     private String image;
 
     @JsonProperty
-    private List<Group> groups;
+    private List<Group> groups = new ArrayList<Group>();
+
+    @JsonProperty
+    private List<User> friends = new ArrayList<User>();
 
     @JsonProperty
     private Collection<Role> roles;
@@ -96,4 +100,6 @@ public class User {
     }
 
     public void addGroup(Group group) { groups.add(group); }
+
+    public void addFriend(User friend) { friends.add(friend); }
 }
