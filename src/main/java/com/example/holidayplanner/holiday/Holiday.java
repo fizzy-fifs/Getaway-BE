@@ -4,6 +4,7 @@ import com.example.holidayplanner.availableDates.AvailableDates;
 import com.example.holidayplanner.budget.Budget;
 import com.example.holidayplanner.group.Group;
 import com.example.holidayplanner.user.User;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
@@ -26,16 +27,22 @@ import static java.lang.Math.round;
 public class Holiday {
 
     @MongoId(value = FieldType.OBJECT_ID)
+    @JsonProperty
     private String id;
 
+    @JsonProperty
     private String name;
 
+    @JsonProperty
     private Group group;
 
+    @JsonProperty
     private ArrayList<User> holidayMakers;
 
+    @JsonProperty
     private ArrayList<Budget> budget;
 
+    @JsonProperty
     private ArrayList<AvailableDates> availableDates;
 
     //  Constructors
