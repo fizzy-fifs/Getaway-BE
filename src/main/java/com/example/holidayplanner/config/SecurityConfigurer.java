@@ -1,6 +1,7 @@
 package com.example.holidayplanner.config;
 
 import com.example.holidayplanner.config.jwt.JwtRequestFilter;
+import org.apache.catalina.filters.CorsFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -16,6 +17,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.session.SessionManagementFilter;
 
 @EnableWebSecurity
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
@@ -33,28 +35,16 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
-        http.httpBasic();
 
         http
             .authorizeRequests().antMatchers(HttpMethod.GET).authenticated().and()
             .authorizeRequests().antMatchers(HttpMethod.PUT).authenticated().and()
             .authorizeRequests().antMatchers(HttpMethod.DELETE).authenticated().and()
             .authorizeRequests().antMatchers(HttpMethod.POST).authenticated().and()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//            .and()
-//            .authorizeRequests().antMatchers("/swagger-ui/**").permitAll()
-        ;
-
-//        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//            .and()
-//                .authorizeRequests().antMatchers("/api/v1.0/users/newuser").anonymous().and()
-//                .authorizeRequests().antMatchers("/api/v1.0/users").anonymous().and()
-//                .authorizeRequests().antMatchers("/api/v1.0/users/login").anonymous().and()
-//                .authorizeRequests().antMatchers("/swagger-ui/**").anonymous().and()
-//                .authorizeRequests().antMatchers("/v3/api-docs").anonymous()
-//        ;
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore( jwtRequestFilter, UsernamePasswordAuthenticationFilter.class );
+        http.addFilterBefore(corsFilter(), SessionManagementFilter.class);
     }
 
     @Override
@@ -81,5 +71,11 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 return null;
             }
         };
+    }
+
+    @Bean
+    CorsFilter corsFilter() {
+        CorsFilter corsFilter = new CorsFilter();
+        return corsFilter;
     }
 }

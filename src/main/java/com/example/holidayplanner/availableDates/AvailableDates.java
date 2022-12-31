@@ -28,10 +28,10 @@ public class AvailableDates {
     private LocalDate endDate;
 
     @JsonProperty
-    private long flexibility;
+    private int flexibility;
 
     @JsonProperty
-    private long nights;
+    private int nights;
 
     public AvailableDates(User user, LocalDate startDate, LocalDate endDate) {
         this.user = user;
@@ -55,6 +55,6 @@ public class AvailableDates {
     }
 
     public long getNights() {
-        return this.nights = ChronoUnit.DAYS.between(this.startDate, this.endDate);
+        return this.nights = (int) ChronoUnit.DAYS.between(this.startDate, this.endDate);
     }
 }

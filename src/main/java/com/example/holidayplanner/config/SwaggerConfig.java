@@ -17,6 +17,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,15 +27,15 @@ public class SwaggerConfig implements WebMvcConfigurer {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
+                .securityContexts(Arrays.asList(securityContext()))
+                .securitySchemes(Arrays.asList(apiKey()))
+                .pathMapping("/")
                 .select()
-                .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
+                .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
                 .build()
                 .tags(new Tag("User", "All User Endpoints"), new Tag("Group", "All Group Endpoints"), new Tag("Holiday", "All Holiday Endpoints"))
-                .apiInfo(apiInfo())
-                .securityContexts(Collections.singletonList(securityContext()))
-                .securitySchemes(Collections.singletonList(apiKey()))
-                .pathMapping("/")
                 .directModelSubstitute(LocalDate.class, String.class)
                 .genericModelSubstitutes(ResponseEntity.class)
 
@@ -56,7 +57,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
     }
 
     private ApiKey apiKey () {
-        return new ApiKey("Bearer", "Authorization", SecurityScheme.In.HEADER.name());
+        return new ApiKey("JWT", "Authorization", SecurityScheme.In.HEADER.name());
     }
 
     private SecurityContext securityContext() {
@@ -64,7 +65,9 @@ public class SwaggerConfig implements WebMvcConfigurer {
     }
 
     private List<SecurityReference> securityReference() {
-        AuthorizationScope[] authorizationScope = { new AuthorizationScope("Limited", "Empty Description")};
-        return Collections.singletonList(new SecurityReference("Token Access", authorizationScope));
+        AuthorizationScope authorizationScope = new AuthorizationScope("global", "Empty Description");
+        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+        authorizationScopes[0] = authorizationScope;
+        return Arrays.asList(new SecurityReference("JWT", authorizationScopes));
     }
 }
