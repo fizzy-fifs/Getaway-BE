@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 
-@Document
+@Document(collection = "Refresh Tokens")
 @Data
 public class RefreshToken {
 
