@@ -21,10 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class UserService implements ServiceInterface<User> {
@@ -192,22 +189,72 @@ public class UserService implements ServiceInterface<User> {
     private boolean userNameExists(User user) {
         User findUser = userRepository.findByUserName(user.getUserName());
         return findUser != null;
-    };
+    }
 
-//    public ResponseEntity addFriend(String userId, String friendId) {
-//        // query db for both ids
-//            // convert both striung ids to object ids
-//            // put them in a list
-//            //use find by all id
-//
-//        // Returns an Iterable of both user objects. Order is not guaranteed, so I have to compare the Ids from the db to the two ids from the query to know which is which
-//
-//        // Add the 'friend'
-//
-//
-//        var user
-//        userRepository.findAllById()
-//    }
+    public ResponseEntity sendFriendRequest(String userId, String allegedFriendId) {
+
+        Iterable<User> users;
+
+        try {
+            users = userRepository.findAllById(Arrays.asList(userId,allegedFriendId)); //Returns Iterable list of users in random order
+        }catch(IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid Id");
+        }
+
+        if (Arrays.asList(users).size() != 2) { return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid"); }
+
+        User allegedFriend = null;
+        User principal = null;
+
+        for (User user : users) {
+
+            if (Objects.equals(user.getId(), allegedFriendId)) {
+                allegedFriend = user;
+            }
+            else if (Objects.equals(user.getId(), userId)) {
+                principal = user;
+            }
+
+        }
+
+        allegedFriend.addFriendRequest(principal);
+        return ResponseEntity.ok(allegedFriend.getFirstName() + " has been sent a friend request");
+    }
+
+    public ResponseEntity acceptFriendRequest(String userId, String friendId) {
+        // query db for user using userId
+        User user = userRepository.findById(new ObjectId(userId));
+
+        User friend = null;
+
+        //Iterate over user's friend request list to find friend Id
+        for (User allegedFriend : user.getFriendRequests()) {
+
+            if (allegedFriend.getId() == friendId) {
+                friend = allegedFriend;
+                user.getFriendRequests().remove(friend);
+            }
+        }
+
+        // If friend Id is not present return a bad request.
+        if (friend == null) {  return ResponseEntity.badRequest().body("Friend Request does not exist"); }
 
 
+        //Get friend from user's friend request list and add it to the user's friend's list
+        user.addFriend(friend);
+
+        User savedUser = userRepository.save(user);
+
+        return ResponseEntity.ok(savedUser);
+    }
+
+
+    public ResponseEntity deleteFriendRequest(String userId, String friendId) {
+        User user = userRepository.findById(new ObjectId(userId));
+
+        user.deleteFriendRequest(friendId);
+        User savedUser = userRepository.save(user);
+
+        return ResponseEntity.ok(savedUser);
+    }
 }

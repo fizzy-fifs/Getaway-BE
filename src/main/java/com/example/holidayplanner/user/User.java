@@ -110,5 +110,10 @@ public class User {
 
     public void addFriendRequest(User friendRequest) { friendRequests.add(friendRequest); }
 
+    public void deleteFriendRequest(String rejectedFriendId) {
+        friendRequests.removeIf(
+                friendRequest -> friendRequest.getId().equals(rejectedFriendId));
+    }
+
     public void addFriend(User friend) { friends.add(friend); }
 }

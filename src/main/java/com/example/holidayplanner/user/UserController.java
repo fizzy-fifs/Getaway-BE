@@ -60,6 +60,25 @@ public class UserController implements ControllerInterface<User> {
     @ApiOperation(value = "Get a list of all users")
     public List<User> getAll() { return userService.getAll(); }
 
+    @PostMapping(path="/sendfriendrequest/{userId}/{allegedFriendId}")
+    @ApiOperation(value = "Send a friend request")
+    public ResponseEntity sendFriendRequest(@PathVariable String userId, @PathVariable String allegedFriendId) {
+        return userService.sendFriendRequest(userId, allegedFriendId);
+    }
+
+
+    @PostMapping(path="/acceptfriendrequest/{userId}/{friendId}")
+    @ApiOperation("Add a Friend")
+    public ResponseEntity acceptFriendRequest(@PathVariable("userId") String userId, @PathVariable("friendId") String friendId) {
+        return userService.acceptFriendRequest(userId, friendId);
+    }
+
+    @PostMapping(path = "/deleteFriendRequest/{userId}/{friendId}")
+    @ApiOperation("Delete a friend request")
+    public ResponseEntity deleteFriendRequest(@PathVariable("userId") String userId, @PathVariable("friendId") String friendId) {
+        return userService.deleteFriendRequest(userId, friendId);
+    }
+
     @Override
     @PutMapping (path = "/{userId}")
     @ApiOperation(value = "Update user details")
@@ -74,9 +93,4 @@ public class UserController implements ControllerInterface<User> {
         return userService.delete(userId);
     }
 
-//    @PostMapping(path="/addfriend/{userId}/{friendId}")
-//    @ApiOperation("Add a Friend")
-//    public ResponseEntity addFriend(@PathVariable("userId") String userId, @PathVariable("friendId") String friendId) {
-//        return userService.addFriend(userId, friendId);
-//    }
 }
