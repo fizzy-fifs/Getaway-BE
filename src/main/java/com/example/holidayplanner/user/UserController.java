@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +42,7 @@ public class UserController implements ControllerInterface<User> {
 
     @PostMapping(path = "/login")
     @ApiOperation(value = "Authenticate users")
+    @Transactional
     public ResponseEntity login (@RequestBody @Valid Map<String, String> emailAndPassword, Errors errors) throws JsonProcessingException {
 
         if (errors.hasErrors()) {

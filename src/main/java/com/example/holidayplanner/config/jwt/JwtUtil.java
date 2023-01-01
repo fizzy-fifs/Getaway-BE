@@ -43,8 +43,10 @@ public class JwtUtil {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
+        return Jwts
+                .parserBuilder()
                 .setSigningKey(secretKey)
+                .build()
                 .parseClaimsJws(token).getBody();
     }
 
@@ -53,9 +55,19 @@ public class JwtUtil {
         return Jwts.builder().setClaims(claims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt( new Date(System.currentTimeMillis()) )
-                .setExpiration( new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(30)) )
+                .setExpiration( new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(60)) )
                 .signWith(secretKey).compact();
     }
+
+    public String generateRefreshToken(UserDetails userDetails, String tokenId) {
+        return Jwts.builder().setClaims(Map.of("tokenId", tokenId))
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt( new Date(System.currentTimeMillis()) )
+                .setExpiration( new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(60*60)) )
+                .signWith(secretKey).compact();
+    }
+
+
 
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());

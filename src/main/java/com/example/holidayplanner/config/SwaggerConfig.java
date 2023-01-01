@@ -36,9 +36,9 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .paths(PathSelectors.any())
                 .build()
                 .tags(new Tag("User", "All User Endpoints"), new Tag("Group", "All Group Endpoints"), new Tag("Holiday", "All Holiday Endpoints"))
+
                 .directModelSubstitute(LocalDate.class, String.class)
                 .genericModelSubstitutes(ResponseEntity.class)
-
         ;
     }
 
@@ -57,7 +57,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
     }
 
     private ApiKey apiKey () {
-        return new ApiKey("JWT", "Authorization", SecurityScheme.In.HEADER.name());
+        return new ApiKey("Access Token", "Authorization", SecurityScheme.In.HEADER.name());
     }
 
     private SecurityContext securityContext() {
@@ -65,9 +65,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
     }
 
     private List<SecurityReference> securityReference() {
-        AuthorizationScope authorizationScope = new AuthorizationScope("global", "Empty Description");
-        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-        authorizationScopes[0] = authorizationScope;
-        return Arrays.asList(new SecurityReference("JWT", authorizationScopes));
+        AuthorizationScope[] authorizationScope = { new AuthorizationScope("global", "Empty Description")};
+        return Collections.singletonList(new SecurityReference("Access Token", authorizationScope));
     }
 }

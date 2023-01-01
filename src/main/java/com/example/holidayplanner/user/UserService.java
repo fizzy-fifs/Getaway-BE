@@ -2,6 +2,8 @@ package com.example.holidayplanner.user;
 
 import com.example.holidayplanner.config.MyUserDetailsService;
 import com.example.holidayplanner.config.jwt.JwtUtil;
+import com.example.holidayplanner.config.jwt.refreshToken.RefreshToken;
+import com.example.holidayplanner.config.jwt.refreshToken.RefreshTokenRepository;
 import com.example.holidayplanner.interfaces.ServiceInterface;
 import com.example.holidayplanner.user.role.RoleRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.Collections;
@@ -45,12 +48,16 @@ public class UserService implements ServiceInterface<User> {
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, MyUserDetailsService myUserDetailsService, JwtUtil jwtTokenUtil, AuthenticationManager authenticationManager) {
+    private final RefreshTokenRepository refreshTokenRepository;
+
+    @Autowired
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, MyUserDetailsService myUserDetailsService, JwtUtil jwtTokenUtil, AuthenticationManager authenticationManager, RefreshTokenRepository refreshTokenRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.myUserDetailsService = myUserDetailsService;
         this.jwtTokenUtil = jwtTokenUtil;
         this.authenticationManager = authenticationManager;
+        this.refreshTokenRepository = refreshTokenRepository;
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
@@ -75,9 +82,14 @@ public class UserService implements ServiceInterface<User> {
         //Insert user in DB
         User savedUser = userRepository.insert(user);
 
+        RefreshToken refreshToken = new RefreshToken();
+        refreshToken.setOwner(user);
+        RefreshToken savedRefreshToken = refreshTokenRepository.insert(refreshToken);
+
         //Generate JWT
         final UserDetails userDetails = myUserDetailsService.loadUserByUsername(user.getEmail());
         final String jwt = jwtTokenUtil.generateToken(userDetails);
+        String refreshTokenString = jwtTokenUtil.generateRefreshToken(userDetails, savedRefreshToken.getId());
 
         //Put JWT and created user object in a map and send response
         Map<String, Object> responseData = new HashMap<>();
@@ -88,11 +100,12 @@ public class UserService implements ServiceInterface<User> {
 
         responseData.put("user", userJson);
         responseData.put("jwt", jwt);
+        responseData.put("refreshToken", refreshTokenString);
 
         return ResponseEntity.ok(responseData);
     }
 
-
+    @Transactional
     public ResponseEntity login(Map<String, String> emailAndPassword) throws JsonProcessingException {
 
         //Retrieve email and password as separate strings
@@ -106,12 +119,19 @@ public class UserService implements ServiceInterface<User> {
             return ResponseEntity.badRequest().body("Invalid email or password");
         }
 
+        User user = userRepository.findByEmail(email);
+
+        RefreshToken refreshToken = new RefreshToken();
+        refreshToken.setOwner(user);
+        RefreshToken savedRefreshToken = refreshTokenRepository.insert(refreshToken);
+
         //Generate JWT
         final UserDetails userDetails = myUserDetailsService.loadUserByUsername(email);
         String jwt = jwtTokenUtil.generateToken(userDetails);
+        String refreshTokenString = jwtTokenUtil.generateRefreshToken(userDetails, savedRefreshToken.getId());
 
         //Send user object and JWT as response
-        User user = userRepository.findByEmail(email);
+
 
             //convert user object to json format
         ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
@@ -120,6 +140,7 @@ public class UserService implements ServiceInterface<User> {
         Map<String, String> responseData = new HashMap<>();
         responseData.put("user", userJson);
         responseData.put("jwt", jwt);
+        responseData.put("refreshToken", refreshTokenString);
 
         return ResponseEntity.ok(responseData);
 
@@ -156,6 +177,12 @@ public class UserService implements ServiceInterface<User> {
         userRepository.delete(user);
         return "Your account has been deleted";
     }
+
+//    public ResponseEntity<?> logout(@RequestBody Map<String, String> tokens) {
+//        String jwt = tokens.get("jwt");
+//        String refreshToken = tokens.get("refreshToken");
+//      Check jwt and refresh tokens are valid, then delete the refresh token from the db.
+//    }
 
     private boolean emailExists(User user) {
         User findUser = userRepository.findByEmail(user.getEmail());
