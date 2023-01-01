@@ -11,6 +11,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -67,9 +68,11 @@ public class User {
     private String image;
 
     @JsonProperty
+    @DocumentReference
     private List<Group> groups = new ArrayList<Group>();
 
     @JsonProperty
+    @DocumentReference
     private List<User> friends = new ArrayList<User>();
 
     @JsonProperty

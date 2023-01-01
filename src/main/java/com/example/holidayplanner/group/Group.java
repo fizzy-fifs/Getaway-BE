@@ -5,6 +5,7 @@ import com.example.holidayplanner.user.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
@@ -22,9 +23,11 @@ public class Group {
     private String name;
 
     @JsonProperty
+    @DocumentReference
     private ArrayList<User> groupMembers;
 
     @JsonProperty
+    @DocumentReference
     private ArrayList<Holiday> holidays;
 
 

@@ -11,6 +11,7 @@ import lombok.Data;
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
@@ -37,12 +38,15 @@ public class Holiday {
     private Group group;
 
     @JsonProperty
+    @DocumentReference
     private ArrayList<User> holidayMakers;
 
     @JsonProperty
+    @DocumentReference
     private ArrayList<Budget> budget;
 
     @JsonProperty
+    @DocumentReference
     private ArrayList<AvailableDates> availableDates;
 
     //  Constructors
