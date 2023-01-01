@@ -73,6 +73,10 @@ public class User {
 
     @JsonProperty
     @DocumentReference
+    private List<User> friendRequests = new ArrayList<User>();
+
+    @JsonProperty
+    @DocumentReference
     private List<User> friends = new ArrayList<User>();
 
     @JsonProperty
@@ -103,6 +107,8 @@ public class User {
     }
 
     public void addGroup(Group group) { groups.add(group); }
+
+    public void addFriendRequest(User friendRequest) { friendRequests.add(friendRequest); }
 
     public void addFriend(User friend) { friends.add(friend); }
 }

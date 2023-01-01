@@ -194,6 +194,20 @@ public class UserService implements ServiceInterface<User> {
         return findUser != null;
     };
 
+//    public ResponseEntity addFriend(String userId, String friendId) {
+//        // query db for both ids
+//            // convert both striung ids to object ids
+//            // put them in a list
+//            //use find by all id
+//
+//        // Returns an Iterable of both user objects. Order is not guaranteed, so I have to compare the Ids from the db to the two ids from the query to know which is which
+//
+//        // Add the 'friend'
+//
+//
+//        var user
+//        userRepository.findAllById()
+//    }
 
 
 }

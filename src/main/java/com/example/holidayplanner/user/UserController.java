@@ -73,4 +73,10 @@ public class UserController implements ControllerInterface<User> {
     public String delete(@PathVariable("userId") String userId) {
         return userService.delete(userId);
     }
+
+//    @PostMapping(path="/addfriend/{userId}/{friendId}")
+//    @ApiOperation("Add a Friend")
+//    public ResponseEntity addFriend(@PathVariable("userId") String userId, @PathVariable("friendId") String friendId) {
+//        return userService.addFriend(userId, friendId);
+//    }
 }
