@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -24,7 +25,7 @@ public class GroupController implements ControllerInterface<Group> {
 
     @Override
     @PostMapping(path = "/newgroup")
-    public ResponseEntity create(Group group, Errors errors) throws JsonProcessingException {
+    public ResponseEntity<Object> create(@RequestBody @Valid Group group, Errors errors) throws JsonProcessingException {
         return groupService.create(group);
     }
 
@@ -44,7 +45,7 @@ public class GroupController implements ControllerInterface<Group> {
     }
 
     @PostMapping(path = "/addmember/{groupId}")
-    public String addGroupMember(@PathVariable("groupId") String groupId, @RequestBody String userId) {
+    public ResponseEntity<Object> addGroupMember(@PathVariable("groupId") String groupId, @RequestBody String userId) {
         return groupService.addGroupMember(groupId, userId);
     }
 

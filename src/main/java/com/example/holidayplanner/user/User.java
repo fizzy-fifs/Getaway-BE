@@ -1,17 +1,14 @@
 package com.example.holidayplanner.user;
 
-import com.example.holidayplanner.group.Group;
 import com.example.holidayplanner.holiday.Holiday;
 import com.example.holidayplanner.user.role.Role;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -68,16 +65,17 @@ public class User {
     private String image;
 
     @JsonProperty
-    @DocumentReference
-    private List<Group> groups = new ArrayList<Group>();
+   // @DocumentReference()
+    private List<String> groupIds = new ArrayList<String>();
 
     @JsonProperty
-    @DocumentReference
-    private List<User> friendRequests = new ArrayList<User>();
+    private List<Holiday> holidays = new ArrayList<Holiday>();
 
     @JsonProperty
-    @DocumentReference
-    private List<User> friends = new ArrayList<User>();
+    private List<String> friendRequests = new ArrayList<>();
+
+    @JsonProperty
+    private List<String> friends = new ArrayList<>();
 
     @JsonProperty
     private Collection<Role> roles;
@@ -106,14 +104,13 @@ public class User {
         this.password = password;
     }
 
-    public void addGroup(Group group) { groups.add(group); }
+    public void addGroup(String groupId) { groupIds.add(groupId); }
 
-    public void addFriendRequest(User friendRequest) { friendRequests.add(friendRequest); }
+    public void addFriendRequest(String friendId) { friendRequests.add(friendId); }
 
-    public void deleteFriendRequest(String rejectedFriendId) {
-        friendRequests.removeIf(
-                friendRequest -> friendRequest.getId().equals(rejectedFriendId));
-    }
+    public void deleteFriendRequest(String rejectedFriendId) {  friendRequests.remove(rejectedFriendId); }
 
-    public void addFriend(User friend) { friends.add(friend); }
+    public void addFriend(String friendId) { friends.add(friendId); }
+
+    public void addHoliday(Holiday holiday) { holidays.add(holiday); }
 }

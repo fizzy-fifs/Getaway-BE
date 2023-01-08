@@ -1,15 +1,13 @@
 package com.example.holidayplanner.group;
 
-import com.example.holidayplanner.holiday.Holiday;
-import com.example.holidayplanner.user.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Document(collection="Groups")
@@ -23,19 +21,17 @@ public class Group {
     private String name;
 
     @JsonProperty
-    @DocumentReference
-    private ArrayList<User> groupMembers;
+    private List<String> groupMemberUsernames;
 
     @JsonProperty
-    @DocumentReference
-    private ArrayList<Holiday> holidays;
+    private List<String> holidayIds = new ArrayList<>();
 
 
-    public Group(String name, ArrayList<User> groupMembers) { this.name = name; this.groupMembers = groupMembers; }
+    public Group(String name, List<String> groupMemberUsernames) { this.name = name; this.groupMemberUsernames = groupMemberUsernames; }
 
-    public void addNewMember(User newGroupMember) { this.groupMembers.add(newGroupMember); }
+    public void addNewMember(String newGroupMemberUsername) { this.groupMemberUsernames.add(newGroupMemberUsername); }
 
-    public void removeMember(String id) { this.groupMembers.removeIf(member -> member.getId().equals(id)); }
+    public void removeMember(String username) { this.groupMemberUsernames.removeIf(memberUsername -> memberUsername.equals(username)); }
 
-    public void addHoliday(Holiday holiday) { holidays.add(holiday); }
+    public void addHoliday(String holidayId) { holidayIds.add(holidayId); }
 }

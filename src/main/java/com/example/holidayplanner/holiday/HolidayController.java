@@ -31,7 +31,7 @@ public class HolidayController implements ControllerInterface<Holiday> {
     }
 
     @GetMapping(path = "/addholidaymaker/holiday={holidayId}&user={userId}")
-    public String addHolidayMaker(@PathVariable("holidayId") String holidayId, @PathVariable("userId") String userId) {
+    public ResponseEntity addHolidayMaker(@PathVariable("holidayId") String holidayId, @PathVariable("userId") String userId) {
         return holidayService.addHolidayMaker(holidayId, userId);
     }
 

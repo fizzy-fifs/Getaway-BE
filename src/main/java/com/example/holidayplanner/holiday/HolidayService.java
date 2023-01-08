@@ -1,10 +1,13 @@
 package com.example.holidayplanner.holiday;
 
+import com.example.holidayplanner.group.Group;
+import com.example.holidayplanner.group.GroupRepository;
 import com.example.holidayplanner.interfaces.ServiceInterface;
 import com.example.holidayplanner.user.User;
 import com.example.holidayplanner.user.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -12,22 +15,28 @@ import java.util.List;
 
 @Service
 public class HolidayService implements ServiceInterface<Holiday> {
-    private HolidayRepository holidayRepository;
-    private UserRepository userRepository;
+    private final HolidayRepository holidayRepository;
+    private final UserRepository userRepository;
+    private final GroupRepository groupRepository;
 
-    public HolidayService(HolidayRepository holidayRepository, UserRepository userRepository) {
+    public HolidayService(HolidayRepository holidayRepository, UserRepository userRepository, GroupRepository groupRepository) {
         this.holidayRepository = holidayRepository;
         this.userRepository = userRepository;
+        this.groupRepository = groupRepository;
     }
 
     @Override
-    public ResponseEntity create(Holiday holiday) throws JsonProcessingException {
+    public ResponseEntity<Object> create(Holiday holiday) throws JsonProcessingException {
 
         //Insert holiday in DB
         Holiday newHoliday = holidayRepository.insert(holiday);
 
         //Add holiday to group object
-        newHoliday.getGroup().addHoliday(newHoliday);
+        String groupId = newHoliday.getGroupId();
+        Group group = groupRepository.findById(new ObjectId(groupId));
+
+        group.addHoliday(newHoliday.getId());
+        Group savedGroup = groupRepository.save(group);
 
         //Convert holiday object to json
         ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
@@ -36,28 +45,28 @@ public class HolidayService implements ServiceInterface<Holiday> {
         return ResponseEntity.ok(holidayJson);
     }
 
-    public String addHolidayMaker(String holidayId, String userId) {
-        User newHolidayMaker = userRepository.findById(userId).get();
+    public ResponseEntity<Object> addHolidayMaker(String holidayId, String userId) {
+        User newHolidayMaker = userRepository.findById(new ObjectId(userId));
 
         if (newHolidayMaker == null) {
-            return "User with user id" + userId + "does not exists";
+            return ResponseEntity.badRequest().body("User with user id" + userId + "does not exists");
         }
 
         Holiday holiday = holidayRepository.findById(holidayId).get();
-        holiday.addHolidayMaker(newHolidayMaker);
+        holiday.addHolidayMaker(newHolidayMaker.getId());
 
         holidayRepository.save(holiday);
 
-        return newHolidayMaker.getFirstName() + " has been successfully added to " + holiday.getName();
+        return ResponseEntity.ok(newHolidayMaker.getFirstName() + " has been successfully added to " + holiday.getName());
     }
 
     public String removeHolidayMaker(String holidayId, String userId) {
-        User user = userRepository.findById(userId).get();
+        User user = userRepository.findById(new ObjectId(userId));
 
         if (user == null) { return "User with user id" + userId + "does not exists"; }
 
         Holiday holiday = holidayRepository.findById(holidayId).get();
-        holiday.removeHolidayMaker(user);
+        holiday.removeHolidayMaker(user.getId());
 
         return user.getFirstName() + " has been removed from " + holiday.getName();
     }

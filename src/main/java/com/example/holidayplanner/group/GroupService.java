@@ -5,14 +5,12 @@ import com.example.holidayplanner.user.User;
 import com.example.holidayplanner.user.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class GroupService implements ServiceInterface<Group> {
@@ -27,15 +25,24 @@ public class GroupService implements ServiceInterface<Group> {
     }
 
     @Override
-    public ResponseEntity create(Group group) throws JsonProcessingException {
+    public ResponseEntity<Object> create(Group group) throws JsonProcessingException {
+         //Add group to each member's profile
+         List<String> groupMemberUsernames = group.getGroupMemberUsernames();//.toArray(new String[0]);
+
+         var groupMembers = userRepository.findByUserNameIn(groupMemberUsernames);
+
+         if (groupMembers.size() != groupMemberUsernames.size()) {
+             return ResponseEntity.badRequest().body("One of the username is invalid");
+         }
+
          //Insert group in DB
          Group newGroup = groupRepository.insert(group);
 
-         //Add group to each member's profile
-         ArrayList<User> groupMembers = newGroup.getGroupMembers();
          for (User member : groupMembers){
-             member.addGroup(newGroup);
+             member.addGroup(newGroup.getId());
          }
+
+         userRepository.saveAll(groupMembers);
 
         //Convert group object to json
         ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
@@ -55,30 +62,34 @@ public class GroupService implements ServiceInterface<Group> {
     @Override
     public String delete(String groupId) {
 
-        Group group = groupRepository.findById(groupId).get();
+        Group group = groupRepository.findById(new ObjectId(groupId));
 
         groupRepository.delete(group);
 
         return  group.getName() + " has been deleted" ;
     }
 
-    public String addGroupMember(String groupId, String userId) {
+    public ResponseEntity<Object> addGroupMember(String groupId, String userId) {
 
-        User newGroupMember = userRepository.findById(userId).get();
+        User newGroupMember = userRepository.findById(new ObjectId(userId));
 
-        if (newGroupMember == null) { return "user with id " + userId + " does not exists"; }
+        if (newGroupMember == null) { return ResponseEntity.badRequest().body("user with id " + userId + " does not exists"); }
 
-        Group group = groupRepository.findById(groupId).get();
+        Group group = groupRepository.findById(new ObjectId(groupId));
 
-        group.addNewMember(newGroupMember);
+        if (group == null) { return ResponseEntity.badRequest().body("Group with id " + groupId + " does not exist"); }
+
+        group.addNewMember(newGroupMember.getUserName());
+        newGroupMember.addGroup(group.getId());
 
         groupRepository.save(group);
+        userRepository.save(newGroupMember);
 
-        return newGroupMember.getFirstName() + " has been successfully added to " + group.getName();
+        return ResponseEntity.ok(newGroupMember.getFirstName() + " has been successfully added to " + group.getName());
     }
 
     public String removeGroupMember(String groupId, String userId) {
-        Group group = groupRepository.findById(groupId).get();
+        Group group = groupRepository.findById(new ObjectId(groupId));
 
         if (group == null) { return "group with id " + groupId + " does not exists"; }
         group.removeMember(userId);

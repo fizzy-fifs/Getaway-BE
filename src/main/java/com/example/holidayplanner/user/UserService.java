@@ -59,7 +59,7 @@ public class UserService implements ServiceInterface<User> {
     }
 
     @Override
-    public ResponseEntity create(User user) throws JsonProcessingException {
+    public ResponseEntity<Object> create(User user) throws JsonProcessingException {
 
        //Check if email is already registered
         if( emailExists(user) ) {
@@ -103,7 +103,7 @@ public class UserService implements ServiceInterface<User> {
     }
 
     @Transactional
-    public ResponseEntity login(Map<String, String> emailAndPassword) throws JsonProcessingException {
+    public ResponseEntity<Object> login(Map<String, String> emailAndPassword) throws JsonProcessingException {
 
         //Retrieve email and password as separate strings
         var email = emailAndPassword.get("email");
@@ -191,17 +191,17 @@ public class UserService implements ServiceInterface<User> {
         return findUser != null;
     }
 
-    public ResponseEntity sendFriendRequest(String userId, String allegedFriendId) {
+    public ResponseEntity<Object> sendFriendRequest(String userId, String allegedFriendId) {
 
-        Iterable<User> users;
+        ArrayList<User> users;
 
         try {
-            users = userRepository.findAllById(Arrays.asList(userId,allegedFriendId)); //Returns Iterable list of users in random order
+            users = (ArrayList<User>) userRepository.findAllById(Arrays.asList(userId,allegedFriendId)); //Returns Iterable list of users in random order
         }catch(IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid Id");
         }
 
-        if (Arrays.asList(users).size() != 2) { return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid"); }
+        if (users.size() != 2) { return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid"); }
 
         User allegedFriend = null;
         User principal = null;
@@ -217,39 +217,62 @@ public class UserService implements ServiceInterface<User> {
 
         }
 
-        allegedFriend.addFriendRequest(principal);
+        assert allegedFriend != null;
+        assert principal != null;
+        allegedFriend.addFriendRequest(principal.getId());
+
+        userRepository.save(allegedFriend);
         return ResponseEntity.ok(allegedFriend.getFirstName() + " has been sent a friend request");
     }
 
-    public ResponseEntity acceptFriendRequest(String userId, String friendId) {
-        // query db for user using userId
-        User user = userRepository.findById(new ObjectId(userId));
+    public ResponseEntity<Object> acceptFriendRequest(String userId, String friendId) {
+        // query db for both users using userId and friendId
+        ArrayList<User> users;
 
-        User friend = null;
-
-        //Iterate over user's friend request list to find friend Id
-        for (User allegedFriend : user.getFriendRequests()) {
-
-            if (allegedFriend.getId() == friendId) {
-                friend = allegedFriend;
-                user.getFriendRequests().remove(friend);
-            }
+        try {
+            users = (ArrayList<User>) userRepository.findAllById(Arrays.asList(userId, friendId)); //Returns Iterable list of users in random order
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid Id");
         }
 
-        // If friend Id is not present return a bad request.
-        if (friend == null) {  return ResponseEntity.badRequest().body("Friend Request does not exist"); }
+        if (users.size() != 2) { return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid"); }
+
+        User friend = null;
+        User principal = null;
+
+        for (User user : users) {
+
+            if (Objects.equals(user.getId(), friendId)) {
+                friend = user;
+            }
+            else if (Objects.equals(user.getId(), userId)) {
+                principal = user;
+            }
+
+        }
+
+        //Check request exists in principal's friend request list
+        assert principal != null;
+        List<String> friendRequests = principal.getFriendRequests();
+
+        assert friend != null;
+        if ( !friendRequests.contains(friend.getId()) ) { return ResponseEntity.badRequest().body("Friend Request does not exist"); }
 
 
-        //Get friend from user's friend request list and add it to the user's friend's list
-        user.addFriend(friend);
 
-        User savedUser = userRepository.save(user);
+        //Add friend to principal's friend's list and vice versa
+        principal.addFriend(friend.getId());
+        friend.addFriend(principal.getId());
 
-        return ResponseEntity.ok(savedUser);
+        //Remove the request from the friendRequest list and save to db
+        friendRequests.remove(friendId);
+        List<User> savedUsers = userRepository.saveAll(Arrays.asList(principal,friend));
+
+        return ResponseEntity.ok(savedUsers);
     }
 
 
-    public ResponseEntity deleteFriendRequest(String userId, String friendId) {
+    public ResponseEntity<Object> deleteFriendRequest(String userId, String friendId) {
         User user = userRepository.findById(new ObjectId(userId));
 
         user.deleteFriendRequest(friendId);

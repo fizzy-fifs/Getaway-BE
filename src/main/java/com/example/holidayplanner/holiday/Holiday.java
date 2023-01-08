@@ -2,8 +2,6 @@ package com.example.holidayplanner.holiday;
 
 import com.example.holidayplanner.availableDates.AvailableDates;
 import com.example.holidayplanner.budget.Budget;
-import com.example.holidayplanner.group.Group;
-import com.example.holidayplanner.user.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,9 +17,8 @@ import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
+import java.util.List;
 
-import static java.lang.Math.round;
 
 @Data
 @Document(collection = "Holidays")
@@ -35,19 +32,18 @@ public class Holiday {
     private String name;
 
     @JsonProperty
-    private Group group;
+    private String groupId;
+
+    @JsonProperty
+    private List<String> holidayMakerIds;
 
     @JsonProperty
     @DocumentReference
-    private ArrayList<User> holidayMakers;
+    private List<Budget> budget;
 
     @JsonProperty
     @DocumentReference
-    private ArrayList<Budget> budget;
-
-    @JsonProperty
-    @DocumentReference
-    private ArrayList<AvailableDates> availableDates;
+    private List<AvailableDates> availableDates;
 
     //  Constructors
     public Holiday() {
@@ -57,28 +53,28 @@ public class Holiday {
         this.name = name;
     }
 
-    public Holiday(String name, Group group) {
+    public Holiday(String name, String groupId) {
         this.name = name;
-        this.group = group;
+        this.groupId = groupId;
     }
 
-    public Holiday(String name, Group group, ArrayList<User> holidayMakers) {
+    public Holiday(String name, String groupId, List<String> holidayMakerIds) {
         this.name = name;
-        this.group = group;
-        this.holidayMakers = holidayMakers;
+        this.groupId = groupId;
+        this.holidayMakerIds = holidayMakerIds;
     }
 
-    public Holiday(String name, Group group, ArrayList<User> holidayMakers, ArrayList<Budget> budget) {
+    public Holiday(String name, String groupId, List<String> holidayMakerIds, List<Budget> budget) {
         this.name = name;
-        this.group = group;
-        this.holidayMakers = holidayMakers;
+        this.groupId = groupId;
+        this.holidayMakerIds = holidayMakerIds;
         this.budget = budget;
     }
 
-    public Holiday(String name, Group group, ArrayList<User> holidayMakers, ArrayList<Budget> budget, ArrayList<AvailableDates> availableDates) {
+    public Holiday(String name, String groupId, List<String> holidayMakerIds, List<Budget> budget, List<AvailableDates> availableDates) {
         this.name = name;
-        this.group = group;
-        this.holidayMakers = holidayMakers;
+        this.groupId = groupId;
+        this.holidayMakerIds = holidayMakerIds;
         this.budget = budget;
         this.availableDates = availableDates;
     }
@@ -104,13 +100,12 @@ public class Holiday {
         return null;
     }
 
-    public void addHolidayMaker(User newHolidayMaker) {
-        this.holidayMakers.add(newHolidayMaker);
+    public void addHolidayMaker(String newHolidayMakerId) {
+        this.holidayMakerIds.add(newHolidayMakerId);
     }
 
-    public void removeHolidayMaker(User user) {
-        this.holidayMakers.removeIf(
-                holidayMaker -> holidayMaker.getId().equals(user.getId()));
+    public void removeHolidayMaker(String userId) {
+        this.holidayMakerIds.remove(userId);
     }
 
     public String[] aggregateHolidayBudgets() {
