@@ -69,7 +69,7 @@ public class User {
     private List<String> groupIds = new ArrayList<String>();
 
     @JsonProperty
-    private List<Holiday> holidays = new ArrayList<Holiday>();
+    private List<String> holidayIds = new ArrayList<String>();
 
     @JsonProperty
     private List<String> friendRequests = new ArrayList<>();
@@ -112,5 +112,5 @@ public class User {
 
     public void addFriend(String friendId) { friends.add(friendId); }
 
-    public void addHoliday(Holiday holiday) { holidays.add(holiday); }
+    public void addHoliday(String holidayId) { holidayIds.add(holidayId); }
 }
