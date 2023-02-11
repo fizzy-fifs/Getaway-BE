@@ -271,7 +271,6 @@ public class UserService implements ServiceInterface<User> {
         return ResponseEntity.ok(savedUsers);
     }
 
-
     public ResponseEntity<Object> deleteFriendRequest(String userId, String friendId) {
         User user = userRepository.findById(new ObjectId(userId));
 

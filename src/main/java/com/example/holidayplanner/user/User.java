@@ -1,6 +1,5 @@
 package com.example.holidayplanner.user;
 
-import com.example.holidayplanner.holiday.Holiday;
 import com.example.holidayplanner.user.role.Role;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -17,7 +16,6 @@ import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -61,15 +59,19 @@ public class User {
     @JsonProperty
     private String password;
 
+    @Size(min = 7, max = 11, message = "Phone number must be 10 digits")
+    @JsonProperty
+    private String phoneNumber;
+
     @JsonProperty
     private String image;
 
     @JsonProperty
    // @DocumentReference()
-    private List<String> groupIds = new ArrayList<String>();
+    private List<String> groupIds = new ArrayList<>();
 
     @JsonProperty
-    private List<String> holidayIds = new ArrayList<String>();
+    private List<String> holidayIds = new ArrayList<>();
 
     @JsonProperty
     private List<String> friendRequests = new ArrayList<>();
@@ -95,13 +97,14 @@ public class User {
         this.password = password;
     }
 
-    public User(String firstName, String lastName, String userName, LocalDate dob, String email, String password) {
+    public User(String firstName, String lastName, String userName, LocalDate dob, String email, String password, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
         this.dob = dob;
         this.email = email;
         this.password = password;
+        this.phoneNumber = phoneNumber;
     }
 
     public void addGroup(String groupId) { groupIds.add(groupId); }
