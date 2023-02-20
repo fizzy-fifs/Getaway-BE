@@ -6,7 +6,9 @@ import com.example.holidayplanner.config.jwt.refreshToken.RefreshToken;
 import com.example.holidayplanner.config.jwt.refreshToken.RefreshTokenRepository;
 import com.example.holidayplanner.interfaces.ServiceInterface;
 import com.example.holidayplanner.user.role.RoleRepository;
+import com.example.holidayplanner.userLookupModel.UserLookupModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -271,6 +273,22 @@ public class UserService implements ServiceInterface<User> {
         return ResponseEntity.ok(savedUsers);
     }
 
+    public ResponseEntity findMultipleByPhoneNumberOrEmail(Map<String, String> phoneNumbersAndEmails) throws JsonProcessingException {
+
+        ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
+        List<User> users;
+
+        try {
+            UserLookupModel userLookup = mapper.convertValue(phoneNumbersAndEmails, UserLookupModel.class);
+            users = userRepository.findByPhoneNumberInOrEmailIn(userLookup.phoneNumbers, userLookup.emails);
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid Request Format. Request body must be a JSON object with phoneNumbers and emails properties");
+        }
+        String usersJson = mapper.writeValueAsString(users);
+        return ResponseEntity.ok(usersJson);
+    }
+
     public ResponseEntity<Object> deleteFriendRequest(String userId, String friendId) {
         User user = userRepository.findById(new ObjectId(userId));
 
@@ -279,4 +297,6 @@ public class UserService implements ServiceInterface<User> {
 
         return ResponseEntity.ok(savedUser);
     }
+
+
 }

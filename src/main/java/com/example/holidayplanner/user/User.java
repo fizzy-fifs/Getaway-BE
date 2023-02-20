@@ -59,7 +59,7 @@ public class User {
     @JsonProperty
     private String password;
 
-    @Size(min = 7, max = 11, message = "Phone number must be 10 digits")
+    @Size(min = 7, max = 11, message = "Please enter a valid phone number")
     @JsonProperty
     private String phoneNumber;
 

@@ -66,7 +66,6 @@ public class UserController implements ControllerInterface<User> {
         return userService.sendFriendRequest(userId, allegedFriendId);
     }
 
-
     @PostMapping(path="/acceptfriendrequest/{userId}/{friendId}")
     @ApiOperation("Add a Friend")
     public ResponseEntity acceptFriendRequest(@PathVariable("userId") String userId, @PathVariable("friendId") String friendId) {
@@ -77,6 +76,12 @@ public class UserController implements ControllerInterface<User> {
     @ApiOperation("Delete a friend request")
     public ResponseEntity deleteFriendRequest(@PathVariable("userId") String userId, @PathVariable("friendId") String friendId) {
         return userService.deleteFriendRequest(userId, friendId);
+    }
+
+    @PostMapping(path="/findmultiplebyphonenumberoremail")
+    @ApiOperation(value = "Find multiple users by their phone numbers or email addresses")
+    public ResponseEntity findMultipleByPhoneNumberOrEmail(@RequestBody Map<String, String> phoneNumbersAndEmails) throws JsonProcessingException {
+        return userService.findMultipleByPhoneNumberOrEmail(phoneNumbersAndEmails);
     }
 
     @Override
