@@ -80,7 +80,7 @@ public class UserController implements ControllerInterface<User> {
 
     @PostMapping(path="/findmultiplebyphonenumberoremail")
     @ApiOperation(value = "Find multiple users by their phone numbers or email addresses")
-    public ResponseEntity findMultipleByPhoneNumberOrEmail(@RequestBody Map<String, String> phoneNumbersAndEmails) throws JsonProcessingException {
+    public ResponseEntity findMultipleByPhoneNumberOrEmail(@RequestBody Map<String, List<String>> phoneNumbersAndEmails) throws JsonProcessingException {
         return userService.findMultipleByPhoneNumberOrEmail(phoneNumbersAndEmails);
     }
 

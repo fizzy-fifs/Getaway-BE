@@ -273,7 +273,7 @@ public class UserService implements ServiceInterface<User> {
         return ResponseEntity.ok(savedUsers);
     }
 
-    public ResponseEntity findMultipleByPhoneNumberOrEmail(Map<String, String> phoneNumbersAndEmails) throws JsonProcessingException {
+    public ResponseEntity findMultipleByPhoneNumberOrEmail(Map<String, List<String>> phoneNumbersAndEmails) throws JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
         List<User> users;
