@@ -84,6 +84,12 @@ public class UserController implements ControllerInterface<User> {
         return userService.findMultipleByPhoneNumberOrEmail(phoneNumbersAndEmails);
     }
 
+    @GetMapping(path = "/{searchTerm}")
+    @ApiOperation(value = "Search for a user")
+    public ResponseEntity<List<User>> search(@PathVariable("searchTerm") String searchTerm) throws JsonProcessingException {
+        return userService.search(searchTerm);
+    }
+
     @Override
     @PutMapping (path = "/{userId}")
     @ApiOperation(value = "Update user details")

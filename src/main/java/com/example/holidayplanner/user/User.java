@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.Data;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -28,11 +29,13 @@ public class User {
     @NotBlank(message = "First name cannot be blank")
     @Pattern(regexp = "^[A-Za-z]+$", message = "First name can only contain letters")
     @JsonProperty
+    @Indexed
     private String firstName;
 
     @NotBlank(message = "Last name cannot be blank")
     @Pattern(regexp = "^[A-Za-z]+$", message = "Last name can only contain letters")
     @JsonProperty
+    @Indexed
     private String lastName;
 
     @JsonFormat( pattern = "dd/MM/yyyy" )
@@ -46,11 +49,13 @@ public class User {
     @Email(message="Please provide a valid email address")
     @Pattern(regexp=".+@.+\\..+", message="Please provide a valid email address")
     @JsonProperty
+    @Indexed(unique = true)
     private String email;
 
     @NotBlank(message = "User name cannot be blank")
     @Pattern(regexp = "^[a-zA-Z0-9_]*$", message = "User name can only contain letters, numbers and underscores")
     @JsonProperty
+    @Indexed(unique = true)
     private String userName;
 
     @NotBlank(message = "Password cannot be blank")

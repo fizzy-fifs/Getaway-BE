@@ -8,10 +8,14 @@ import com.example.holidayplanner.interfaces.ServiceInterface;
 import com.example.holidayplanner.user.role.RoleRepository;
 import com.example.holidayplanner.userLookupModel.UserLookupModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -50,13 +54,22 @@ public class UserService implements ServiceInterface<User> {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, MyUserDetailsService myUserDetailsService, JwtUtil jwtTokenUtil, AuthenticationManager authenticationManager, RefreshTokenRepository refreshTokenRepository) {
+    private final MongoTemplate mongoTemplate;
+
+    private final int pageNumber = 0;
+
+    private final int pageSize = 10;
+
+
+    @Autowired
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, MyUserDetailsService myUserDetailsService, JwtUtil jwtTokenUtil, AuthenticationManager authenticationManager, RefreshTokenRepository refreshTokenRepository, MongoTemplate mongoTemplate) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.myUserDetailsService = myUserDetailsService;
         this.jwtTokenUtil = jwtTokenUtil;
         this.authenticationManager = authenticationManager;
         this.refreshTokenRepository = refreshTokenRepository;
+        this.mongoTemplate = mongoTemplate;
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
@@ -299,4 +312,22 @@ public class UserService implements ServiceInterface<User> {
     }
 
 
+    public ResponseEntity<List<User>> search(String searchTerm) {
+        String sanitizedSearchTerm = searchTerm.trim().toLowerCase();
+
+        Query searchQuery = new Query();
+        Criteria criteria = new Criteria().orOperator(
+                Criteria.where("firstName").regex(sanitizedSearchTerm, "i"),
+                Criteria.where("lastName").regex(sanitizedSearchTerm, "i"),
+                Criteria.where("userName").regex(sanitizedSearchTerm, "i"),
+                Criteria.where("email").regex(sanitizedSearchTerm, "i")
+        );
+
+        searchQuery.addCriteria(criteria);
+        searchQuery.with(PageRequest.of(pageNumber, pageSize));
+
+
+        List<User> users = mongoTemplate.find(searchQuery, User.class);
+        return ResponseEntity.ok(users);
+    }
 }
