@@ -202,7 +202,7 @@ public class UserService implements ServiceInterface<User> {
     }
 
     private boolean userNameExists(User user) {
-        User findUser = userRepository.findByUserName(user.getUserName());
+        User findUser = userRepository.findByUserName(user.getUserName().toLowerCase());
         return findUser != null;
     }
 

@@ -60,19 +60,19 @@ public class UserController implements ControllerInterface<User> {
     @ApiOperation(value = "Get a list of all users")
     public List<User> getAll() { return userService.getAll(); }
 
-    @PostMapping(path="/sendfriendrequest/{userId}/{allegedFriendId}")
+    @GetMapping(path="/sendfriendrequest/{userId}/{allegedFriendId}")
     @ApiOperation(value = "Send a friend request")
     public ResponseEntity sendFriendRequest(@PathVariable String userId, @PathVariable String allegedFriendId) {
         return userService.sendFriendRequest(userId, allegedFriendId);
     }
 
-    @PostMapping(path="/acceptfriendrequest/{userId}/{friendId}")
+    @GetMapping(path="/acceptfriendrequest/{userId}/{friendId}")
     @ApiOperation("Add a Friend")
     public ResponseEntity acceptFriendRequest(@PathVariable("userId") String userId, @PathVariable("friendId") String friendId) {
         return userService.acceptFriendRequest(userId, friendId);
     }
 
-    @PostMapping(path = "/deleteFriendRequest/{userId}/{friendId}")
+    @GetMapping(path = "/deleteFriendRequest/{userId}/{friendId}")
     @ApiOperation("Delete a friend request")
     public ResponseEntity deleteFriendRequest(@PathVariable("userId") String userId, @PathVariable("friendId") String friendId) {
         return userService.deleteFriendRequest(userId, friendId);
@@ -84,7 +84,7 @@ public class UserController implements ControllerInterface<User> {
         return userService.findMultipleByPhoneNumberOrEmail(phoneNumbersAndEmails);
     }
 
-    @GetMapping(path = "/{searchTerm}")
+    @GetMapping(path = "/search/{searchTerm}")
     @ApiOperation(value = "Search for a user")
     public ResponseEntity<List<User>> search(@PathVariable("searchTerm") String searchTerm) throws JsonProcessingException {
         return userService.search(searchTerm);
