@@ -78,6 +78,12 @@ public class UserController implements ControllerInterface<User> {
         return userService.deleteFriendRequest(userId, friendId);
     }
 
+    @GetMapping(path= "/findbyid/{id}")
+    @ApiOperation(value = "Find a user by their id")
+    public ResponseEntity findById(@PathVariable("id") String id) throws JsonProcessingException {
+        return userService.findById(id);
+    }
+
     @PostMapping(path="/findmultiplebyphonenumberoremail")
     @ApiOperation(value = "Find multiple users by their phone numbers or email addresses")
     public ResponseEntity findMultipleByPhoneNumberOrEmail(@RequestBody Map<String, List<String>> phoneNumbersAndEmails) throws JsonProcessingException {

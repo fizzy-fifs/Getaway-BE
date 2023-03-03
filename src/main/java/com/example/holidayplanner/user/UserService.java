@@ -13,7 +13,6 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.ResponseEntity;
@@ -56,6 +55,9 @@ public class UserService implements ServiceInterface<User> {
     @Autowired
     private final MongoTemplate mongoTemplate;
 
+    @Autowired
+    private final ObjectMapper mapper;
+
     private final int pageNumber = 0;
 
     private final int pageSize = 10;
@@ -70,6 +72,7 @@ public class UserService implements ServiceInterface<User> {
         this.authenticationManager = authenticationManager;
         this.refreshTokenRepository = refreshTokenRepository;
         this.mongoTemplate = mongoTemplate;
+        this.mapper = new ObjectMapper().findAndRegisterModules();;
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
@@ -288,7 +291,6 @@ public class UserService implements ServiceInterface<User> {
 
     public ResponseEntity findMultipleByPhoneNumberOrEmail(Map<String, List<String>> phoneNumbersAndEmails) throws JsonProcessingException {
 
-        ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
         List<User> users;
 
         try {
@@ -329,5 +331,15 @@ public class UserService implements ServiceInterface<User> {
 
         List<User> users = mongoTemplate.find(searchQuery, User.class);
         return ResponseEntity.ok(users);
+    }
+
+    public ResponseEntity findById(String id) throws JsonProcessingException {
+
+        User user = userRepository.findById(new ObjectId(id));
+
+        if (user == null) { return ResponseEntity.badRequest().body("User with id " + id + " does not exist"); }
+
+        String userJson = mapper.writeValueAsString(user);
+        return ResponseEntity.ok(userJson);
     }
 }
