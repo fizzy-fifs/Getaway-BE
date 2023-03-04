@@ -342,4 +342,16 @@ public class UserService implements ServiceInterface<User> {
         String userJson = mapper.writeValueAsString(user);
         return ResponseEntity.ok(userJson);
     }
+
+    public ResponseEntity findMultipleById(List<String> ids) throws JsonProcessingException {
+        if (ids.isEmpty()) { return ResponseEntity.badRequest().body("No ids provided"); }
+
+        List<User> users = (List<User>) userRepository.findAllById(ids);
+
+        if (users.isEmpty()) { return ResponseEntity.badRequest().body("No users found"); }
+
+        String usersJson = mapper.writeValueAsString(users);
+
+        return ResponseEntity.ok(usersJson);
+    }
 }

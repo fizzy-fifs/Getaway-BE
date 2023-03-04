@@ -84,6 +84,12 @@ public class UserController implements ControllerInterface<User> {
         return userService.findById(id);
     }
 
+    @GetMapping(path="/findmultiplebyid")
+    @ApiOperation(value = "Find multiple users by their ids")
+    public ResponseEntity findMultipleById(@RequestParam("ids") List<String> ids) throws JsonProcessingException {
+        return userService.findMultipleById(ids);
+    }
+
     @PostMapping(path="/findmultiplebyphonenumberoremail")
     @ApiOperation(value = "Find multiple users by their phone numbers or email addresses")
     public ResponseEntity findMultipleByPhoneNumberOrEmail(@RequestBody Map<String, List<String>> phoneNumbersAndEmails) throws JsonProcessingException {
