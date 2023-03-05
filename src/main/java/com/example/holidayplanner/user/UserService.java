@@ -237,9 +237,15 @@ public class UserService implements ServiceInterface<User> {
 
         assert allegedFriend != null;
         assert principal != null;
-        allegedFriend.addFriendRequest(principal.getId());
 
-        userRepository.save(allegedFriend);
+        if (allegedFriend.getFriendRequestsSent().contains(principal.getId())) {
+            return ResponseEntity.badRequest().body("You have already sent a friend request to " + allegedFriend.getFirstName());
+        }
+
+        allegedFriend.addFriendRequest(principal.getId());
+        principal.addToFriendRequestsSent(allegedFriend.getId());
+
+        userRepository.saveAll(Arrays.asList(allegedFriend, principal));
         return ResponseEntity.ok(allegedFriend.getFirstName() + " has been sent a friend request");
     }
 
@@ -282,8 +288,9 @@ public class UserService implements ServiceInterface<User> {
         principal.addFriend(friend.getId());
         friend.addFriend(principal.getId());
 
-        //Remove the request from the friendRequest list and save to db
+        //Remove the request from the friendRequest list, friendRequestSent list and save to db
         friendRequests.remove(friendId);
+        friend.removeFromFreindRequestsSent(principal.getId());
         List<User> savedUsers = userRepository.saveAll(Arrays.asList(principal,friend));
 
         return ResponseEntity.ok(savedUsers);
@@ -305,12 +312,24 @@ public class UserService implements ServiceInterface<User> {
     }
 
     public ResponseEntity<Object> deleteFriendRequest(String userId, String friendId) {
-        User user = userRepository.findById(new ObjectId(userId));
+        List<User> users;
 
+        try {
+            users = (List<User>) userRepository.findAllById(Arrays.asList(userId, friendId)); //Returns Iterable list of users in random order
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid Id");
+        }
+
+        if (users.size() != 2) { return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid"); }
+
+        for (User user: users) {
         user.deleteFriendRequest(friendId);
-        User savedUser = userRepository.save(user);
+        user.removeFromFreindRequestsSent(userId);
+        }
 
-        return ResponseEntity.ok(savedUser);
+        List<User> savedUsers = userRepository.saveAll(users);
+
+        return ResponseEntity.ok(savedUsers);
     }
 
 

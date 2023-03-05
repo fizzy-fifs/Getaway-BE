@@ -82,6 +82,10 @@ public class User {
     private List<String> friendRequests = new ArrayList<>();
 
     @JsonProperty
+    private List<String> friendRequestsSent = new ArrayList<>();
+
+
+    @JsonProperty
     private List<String> friends = new ArrayList<>();
 
     @JsonProperty
@@ -116,9 +120,15 @@ public class User {
 
     public void addFriendRequest(String friendId) { friendRequests.add(friendId); }
 
+    public void addToFriendRequestsSent(String id) { friendRequestsSent.add(id); }
+
+    public void removeFromFreindRequestsSent(String id) { friendRequestsSent.remove(id); }
+
     public void deleteFriendRequest(String rejectedFriendId) {  friendRequests.remove(rejectedFriendId); }
 
     public void addFriend(String friendId) { friends.add(friendId); }
 
     public void addHoliday(String holidayId) { holidayIds.add(holidayId); }
+
+
 }
