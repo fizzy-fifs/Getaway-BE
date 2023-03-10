@@ -15,7 +15,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -74,6 +76,12 @@ public class UserService implements ServiceInterface<User> {
         this.mongoTemplate = mongoTemplate;
         this.mapper = new ObjectMapper().findAndRegisterModules();;
         this.passwordEncoder = new BCryptPasswordEncoder();
+    }
+
+    @Scheduled(fixedRate = 1000 * 60 * 60 * 24)
+    public void updateUserPropertiesIfNotPresent() {
+        mongoTemplate.updateMulti(new Query(), new Update()
+                .setOnInsert("friendRequestSent", new ArrayList<>()), User.class);
     }
 
     @Override
