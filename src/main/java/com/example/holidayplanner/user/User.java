@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -66,9 +67,11 @@ public class User {
 
     @Size(min = 7, max = 11, message = "Please enter a valid phone number")
     @JsonProperty
+    @Nullable
     private String phoneNumber;
 
     @JsonProperty
+    @Nullable
     private String image;
 
     @JsonProperty

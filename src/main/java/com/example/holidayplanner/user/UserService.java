@@ -78,10 +78,16 @@ public class UserService implements ServiceInterface<User> {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    @Scheduled(fixedRate = 1000 * 60 * 60 * 24)
+    @Scheduled(fixedRate = 1000 * 60)
     public void updateUserPropertiesIfNotPresent() {
         mongoTemplate.updateMulti(new Query(), new Update()
-                .setOnInsert("friendRequestSent", new ArrayList<>()), User.class);
+                .setOnInsert("phoneNumber", "")
+                .setOnInsert("image", "")
+                .setOnInsert("groupIds", new ArrayList<>())
+                .setOnInsert("holidayIds", new ArrayList<>())
+                .setOnInsert("friendRequests", new ArrayList<>())
+                .setOnInsert("friends", new ArrayList<>())
+                .setOnInsert("friendRequestsSent", new ArrayList<>()), User.class);
     }
 
     @Override
