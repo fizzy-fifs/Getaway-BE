@@ -1,4 +1,4 @@
-package com.example.holidayplanner.config.schedulingConfig;
+package com.example.holidayplanner.scheduler;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;

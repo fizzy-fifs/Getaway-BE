@@ -78,17 +78,7 @@ public class UserService implements ServiceInterface<User> {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    @Scheduled(fixedRate = 1000 * 60)
-    public void updateUserPropertiesIfNotPresent() {
-        mongoTemplate.updateMulti(new Query(), new Update()
-                .setOnInsert("phoneNumber", "")
-                .setOnInsert("image", "")
-                .setOnInsert("groupIds", new ArrayList<>())
-                .setOnInsert("holidayIds", new ArrayList<>())
-                .setOnInsert("friendRequests", new ArrayList<>())
-                .setOnInsert("friends", new ArrayList<>())
-                .setOnInsert("friendRequestsSent", new ArrayList<>()), User.class);
-    }
+
 
     @Override
     public ResponseEntity<Object> create(User user) throws JsonProcessingException {
@@ -359,6 +349,7 @@ public class UserService implements ServiceInterface<User> {
         );
 
         searchQuery.addCriteria(criteria);
+        int pageSize = 10;
         searchQuery.with(PageRequest.of(pageNumber, pageSize));
 
 
