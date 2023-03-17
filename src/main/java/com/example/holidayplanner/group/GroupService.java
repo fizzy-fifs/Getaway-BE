@@ -33,26 +33,31 @@ public class GroupService implements ServiceInterface<Group> {
          //Add group to each member's profile
 //         List<User> groupMembers = group.getGroupMembers();//.toArray(new String[0]);
 
-         var groupMembers = userRepository.findAll((Pageable) group.getGroupMembers());
+        List<String> groupMembersUsernames = null;
 
-         if (groupMembers.toList().size() != group.getGroupMembers().size()) {
+        for (User member : group.getGroupMembers()){
+            groupMembersUsernames.add(member.getUserName());
+        }
+        var groupMembers = userRepository.findByUserNameIn(groupMembersUsernames) ;
+
+        if (groupMembers.size() != group.getGroupMembers().size()) {
              return ResponseEntity.badRequest().body("One of the username is invalid");
-         }
+        }
 
          //Insert group in DB
-         Group newGroup = groupRepository.insert(group);
+        Group newGroup = groupRepository.insert(group);
 
-         for (User member : groupMembers){
+        for (User member : groupMembers){
              member.addGroup(newGroup.getId());
-         }
+        }
 
-         userRepository.saveAll(groupMembers);
+        userRepository.saveAll(groupMembers);
 
         //Convert group object to json
         ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
         String groupJson = mapper.writeValueAsString(newGroup);
 
-         return ResponseEntity.ok(groupJson);
+        return ResponseEntity.ok(groupJson);
     }
 
     @Override
