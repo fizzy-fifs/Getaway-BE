@@ -1,5 +1,6 @@
 package com.example.holidayplanner.group;
 
+import com.example.holidayplanner.user.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -21,17 +22,17 @@ public class Group {
     private String name;
 
     @JsonProperty
-    private List<String> groupMemberUsernames;
+    private List<User> groupMembers;
 
     @JsonProperty
     private List<String> holidayIds = new ArrayList<>();
 
 
-    public Group(String name, List<String> groupMemberUsernames) { this.name = name; this.groupMemberUsernames = groupMemberUsernames; }
+    public Group(String name, List<User> groupMembers) { this.name = name; this.groupMembers = groupMembers; }
 
-    public void addNewMember(String newGroupMemberUsername) { this.groupMemberUsernames.add(newGroupMemberUsername); }
+    public void addNewMember(User newGroupMember) { this.groupMembers.add(newGroupMember); }
 
-    public void removeMember(String username) { this.groupMemberUsernames.removeIf(memberUsername -> memberUsername.equals(username)); }
+    public void removeMember(String username) { this.groupMembers.removeIf(member -> member.getUserName().equals(username)); }
 
     public void addHoliday(String holidayId) { holidayIds.add(holidayId); }
 }

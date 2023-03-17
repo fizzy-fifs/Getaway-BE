@@ -3,6 +3,7 @@ package com.example.holidayplanner.group;
 import com.example.holidayplanner.interfaces.ControllerInterface;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -52,5 +53,12 @@ public class GroupController implements ControllerInterface<Group> {
     @PostMapping(path = "/removemember/{groupId}")
     public String removeGroupMember(@PathVariable("groupId") String groupId, @RequestBody String userId){
         return groupService.removeGroupMember(groupId, userId);
+    }
+
+
+    @GetMapping(path = "/findmultiplebyid")
+    @ApiOperation(value = "Find multiple groups by their ids")
+    public ResponseEntity<Object> findMultipleById(@RequestParam("ids") List<String> groupIds) throws JsonProcessingException {
+        return groupService.findMultipleById(groupIds);
     }
 }

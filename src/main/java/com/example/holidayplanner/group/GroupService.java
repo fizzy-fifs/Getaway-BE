@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -17,21 +18,24 @@ public class GroupService implements ServiceInterface<Group> {
 
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    @Autowired
+    private final ObjectMapper mapper;
 
     @Autowired
-    public GroupService(GroupRepository groupRepository, UserRepository userRepository) {
+    public GroupService(GroupRepository groupRepository, UserRepository userRepository, ObjectMapper mapper) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
+        this.mapper = mapper;
     }
 
     @Override
     public ResponseEntity<Object> create(Group group) throws JsonProcessingException {
          //Add group to each member's profile
-         List<String> groupMemberUsernames = group.getGroupMemberUsernames();//.toArray(new String[0]);
+//         List<User> groupMembers = group.getGroupMembers();//.toArray(new String[0]);
 
-         var groupMembers = userRepository.findByUserNameIn(groupMemberUsernames);
+         var groupMembers = userRepository.findAll((Pageable) group.getGroupMembers());
 
-         if (groupMembers.size() != groupMemberUsernames.size()) {
+         if (groupMembers.toList().size() != group.getGroupMembers().size()) {
              return ResponseEntity.badRequest().body("One of the username is invalid");
          }
 
@@ -79,7 +83,7 @@ public class GroupService implements ServiceInterface<Group> {
 
         if (group == null) { return ResponseEntity.badRequest().body("Group with id " + groupId + " does not exist"); }
 
-        group.addNewMember(newGroupMember.getUserName());
+        group.addNewMember(newGroupMember);
         newGroupMember.addGroup(group.getId());
 
         groupRepository.save(group);
@@ -97,5 +101,18 @@ public class GroupService implements ServiceInterface<Group> {
         groupRepository.save(group);
 
         return "user with id: " + userId + " has been successfully removed from " + group.getName();
+    }
+
+    public ResponseEntity<Object> findMultipleById(List<String> groupIds) throws JsonProcessingException {
+
+        if (groupIds == null || groupIds.isEmpty()) { return ResponseEntity.badRequest().body("No group id provided"); }
+
+        List<Group> groups = (List<Group>) groupRepository.findAllById(groupIds);
+
+        if (groups.isEmpty()) { return ResponseEntity.badRequest().body("No group found"); }
+
+        String groupJson = mapper.writeValueAsString(groups);
+
+        return ResponseEntity.ok(groupJson);
     }
 }
