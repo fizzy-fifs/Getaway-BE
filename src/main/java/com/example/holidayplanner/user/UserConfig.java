@@ -22,8 +22,8 @@ public class UserConfig {
         return new UserLookupModel();
     }
 
-    @Bean
-    MongoTemplate mongoTemplate(MongoClient mongoClient) {
-        return new MongoTemplate(mongoClient , "");
-    }
+//    @Bean
+//    MongoTemplate mongoTemplate(MongoClient mongoClient) {
+//        return new MongoTemplate(mongoClient , "");
+//    }
 }
