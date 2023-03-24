@@ -7,7 +7,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +26,18 @@ public class GroupService implements ServiceInterface<Group> {
     private final ObjectMapper mapper;
 
     @Autowired
-    public GroupService(GroupRepository groupRepository, UserRepository userRepository, ObjectMapper mapper) {
+    private final MongoTemplate mongoTemplate;
+
+    private final int pageNumber = 0;
+
+    private final int pageSize = 10;
+
+    @Autowired
+    public GroupService(GroupRepository groupRepository, UserRepository userRepository, ObjectMapper mapper, MongoTemplate mongoTemplate) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
         this.mapper = mapper;
+        this.mongoTemplate = mongoTemplate;
     }
 
     @Override
@@ -113,5 +124,22 @@ public class GroupService implements ServiceInterface<Group> {
         String groupJson = mapper.writeValueAsString(groups);
 
         return ResponseEntity.ok(groupJson);
+    }
+
+    public ResponseEntity<List<Group>> search(String searchTerm) {
+        String sanitizedSearchTerm = searchTerm.trim().toLowerCase();
+
+        Query searchQuery = new Query();
+        Criteria criteria = new Criteria().orOperator(
+                Criteria.where("name").regex(sanitizedSearchTerm, "i"),
+                Criteria.where("description").regex(sanitizedSearchTerm, "i")
+        );
+
+        searchQuery .addCriteria(criteria);
+        searchQuery.with(PageRequest.of(pageNumber, pageSize));
+
+        List<Group> groups = mongoTemplate.find(searchQuery, Group.class);
+
+        return ResponseEntity.ok(groups);
     }
 }

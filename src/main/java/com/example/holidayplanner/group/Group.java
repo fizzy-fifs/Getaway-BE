@@ -24,12 +24,26 @@ public class Group {
     @JsonProperty
     private List<String> groupMembers = new ArrayList<>();
 
+
+
+    @JsonProperty
+    private String description;
+
     @JsonProperty
     private List<String> holidayIds = new ArrayList<>();
 
+    public Group(String name) {
+        this.name = name;
+    }
 
     public Group(String name, List<String> groupMembers) { this.name = name; this.groupMembers = groupMembers; }
-
+    
+    public Group(String name, List<User> groupMembers, String description) {
+        this.name = name;
+        this.groupMembers = groupMembers;
+        this.description = description;
+    }
+    
     public void addNewMember(String newGroupMemberId) { this.groupMembers.add(newGroupMemberId); }
 
     public void removeMember(String memberId) { this.groupMembers.remove(memberId); }
