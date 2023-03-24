@@ -23,9 +23,6 @@ public class Group {
 
     @JsonProperty
     private List<String> groupMembers = new ArrayList<>();
-
-
-
     @JsonProperty
     private String description;
 
@@ -38,7 +35,7 @@ public class Group {
 
     public Group(String name, List<String> groupMembers) { this.name = name; this.groupMembers = groupMembers; }
     
-    public Group(String name, List<User> groupMembers, String description) {
+    public Group(String name, List<String> groupMembers, String description) {
         this.name = name;
         this.groupMembers = groupMembers;
         this.description = description;
