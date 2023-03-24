@@ -22,17 +22,17 @@ public class Group {
     private String name;
 
     @JsonProperty
-    private List<User> groupMembers;
+    private List<String> groupMembers = new ArrayList<>();
 
     @JsonProperty
     private List<String> holidayIds = new ArrayList<>();
 
 
-    public Group(String name, List<User> groupMembers) { this.name = name; this.groupMembers = groupMembers; }
+    public Group(String name, List<String> groupMembers) { this.name = name; this.groupMembers = groupMembers; }
 
-    public void addNewMember(User newGroupMember) { this.groupMembers.add(newGroupMember); }
+    public void addNewMember(String newGroupMemberId) { this.groupMembers.add(newGroupMemberId); }
 
-    public void removeMember(String username) { this.groupMembers.removeIf(member -> member.getUserName().equals(username)); }
+    public void removeMember(String memberId) { this.groupMembers.remove(memberId); }
 
     public void addHoliday(String holidayId) { holidayIds.add(holidayId); }
 }
