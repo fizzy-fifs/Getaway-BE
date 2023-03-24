@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -42,17 +43,10 @@ public class GroupService implements ServiceInterface<Group> {
     @Override
     public ResponseEntity<Object> create(Group group) throws JsonProcessingException {
          //Add group to each member's profile
-//         List<User> groupMembers = group.getGroupMembers();//.toArray(new String[0]);
+        var groupMembers = userRepository.findAllById(group.getGroupMembers());
 
-        List<String> groupMembersUsernames = null;
-
-        for (User member : group.getGroupMembers()){
-            groupMembersUsernames.add(member.getUserName());
-        }
-        var groupMembers = userRepository.findByUserNameIn(groupMembersUsernames) ;
-
-        if (groupMembers.size() != group.getGroupMembers().size()) {
-             return ResponseEntity.badRequest().body("One of the username is invalid");
+        if (Arrays.asList(groupMembers).size() != group.getGroupMembers().size()) {
+             return ResponseEntity.badRequest().body("One of the user id added is invalid");
         }
 
          //Insert group in DB
@@ -99,7 +93,7 @@ public class GroupService implements ServiceInterface<Group> {
 
         if (group == null) { return ResponseEntity.badRequest().body("Group with id " + groupId + " does not exist"); }
 
-        group.addNewMember(newGroupMember);
+        group.addNewMember(newGroupMember.getId());
         newGroupMember.addGroup(group.getId());
 
         groupRepository.save(group);

@@ -22,7 +22,7 @@ public class Group {
     private String name;
 
     @JsonProperty
-    private List<User> groupMembers;
+    private List<String> groupMembers = new ArrayList<>();
 
 
 
@@ -36,17 +36,17 @@ public class Group {
         this.name = name;
     }
 
-    public Group(String name, List<User> groupMembers) { this.name = name; this.groupMembers = groupMembers; }
-
+    public Group(String name, List<String> groupMembers) { this.name = name; this.groupMembers = groupMembers; }
+    
     public Group(String name, List<User> groupMembers, String description) {
         this.name = name;
         this.groupMembers = groupMembers;
         this.description = description;
     }
+    
+    public void addNewMember(String newGroupMemberId) { this.groupMembers.add(newGroupMemberId); }
 
-    public void addNewMember(User newGroupMember) { this.groupMembers.add(newGroupMember); }
-
-    public void removeMember(String username) { this.groupMembers.removeIf(member -> member.getUserName().equals(username)); }
+    public void removeMember(String memberId) { this.groupMembers.remove(memberId); }
 
     public void addHoliday(String holidayId) { holidayIds.add(holidayId); }
 }
