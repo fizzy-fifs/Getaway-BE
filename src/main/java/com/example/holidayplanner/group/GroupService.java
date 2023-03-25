@@ -19,9 +19,12 @@ import java.util.List;
 
 @Service
 public class GroupService implements ServiceInterface<Group> {
-
+    @Autowired
     private final GroupRepository groupRepository;
+
+    @Autowired
     private final UserRepository userRepository;
+
     @Autowired
     private final ObjectMapper mapper;
 
@@ -45,7 +48,7 @@ public class GroupService implements ServiceInterface<Group> {
          //Add group to each member's profile
         var groupMembers = userRepository.findAllById(group.getGroupMembers());
 
-        if (Arrays.asList(groupMembers).size() != group.getGroupMembers().size()) {
+        if (List.of(groupMembers).size() != group.getGroupMembers().size()) {
              return ResponseEntity.badRequest().body("One of the user id added is invalid");
         }
 

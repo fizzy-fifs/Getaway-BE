@@ -29,6 +29,10 @@ public class Group {
     @JsonProperty
     private List<String> holidayIds = new ArrayList<>();
 
+
+    public Group() {
+    }
+
     public Group(String name) {
         this.name = name;
     }

@@ -135,12 +135,20 @@
 			<version>3.3.0</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync -->
+		<!-- https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-legacy -->
 		<dependency>
 			<groupId>org.mongodb</groupId>
-			<artifactId>mongodb-driver-sync</artifactId>
+			<artifactId>mongodb-driver-legacy</artifactId>
 			<version>4.9.0</version>
 		</dependency>
+
+<!--		&lt;!&ndash; https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver &ndash;&gt;-->
+<!--		<dependency>-->
+<!--			<groupId>org.mongodb</groupId>-->
+<!--			<artifactId>mongo-java-driver</artifactId>-->
+<!--			<version>3.12.12</version>-->
+<!--		</dependency>-->
+
 
 
 	</dependencies>
