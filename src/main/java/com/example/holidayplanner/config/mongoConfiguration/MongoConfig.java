@@ -1,4 +1,4 @@
-package com.example.holidayplanner.config;
+package com.example.holidayplanner.config.mongoConfiguration;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.client.MongoClient;
