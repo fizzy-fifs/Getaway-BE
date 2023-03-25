@@ -51,7 +51,6 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/api/v1.0/users/newuser");
         web.ignoring().antMatchers("/api/v1.0/users/login");
-        web.ignoring().antMatchers("/api/v1.0/users");
         web.ignoring().antMatchers("/", "/csrf", "/v3/api-docs",
                                                 "/swagger-resources/configuration/ui", "/configuration/ui",
                                                 "/swagger-resources", "/swagger-resources/configuration/security",
