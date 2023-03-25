@@ -10,6 +10,8 @@ import org.springframework.data.mongodb.core.MongoClientFactoryBean;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 
+import java.util.Objects;
+
 @Configuration
 public class MongoConfig {
 
@@ -19,6 +21,7 @@ public class MongoConfig {
 
         ConnectionString conn = new ConnectionString(System.getenv("MONGODB_CONNECTION_STRING"));
 
+        System.out.println("Connection String: " + conn);
         mongo.setSingleton(false);
         mongo.setConnectionString(conn);
 
@@ -39,7 +42,8 @@ public class MongoConfig {
     @Bean
     public MongoTemplate mongoTemplate() throws Exception {
 
-        MongoDatabaseFactory factory = new SimpleMongoClientDatabaseFactory( mongoClient(), System.getenv("DATABASE_NAME"));
+        System.out.println("Database: " + mongoClient().listDatabaseNames().first());
+        MongoDatabaseFactory factory = new SimpleMongoClientDatabaseFactory( mongoClient(), Objects.requireNonNull(mongoClient().listDatabaseNames().first()));
         return new MongoTemplate(factory);
     }
 }
