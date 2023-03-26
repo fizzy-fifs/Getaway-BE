@@ -21,6 +21,9 @@ public class AvailableDates {
     private String userId;
 
     @JsonProperty
+    private String holidayId;
+
+    @JsonProperty
     private LocalDate startDate;
 
     @JsonProperty

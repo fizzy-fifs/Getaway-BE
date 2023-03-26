@@ -3,7 +3,6 @@ package com.example.holidayplanner.budget;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
@@ -17,8 +16,10 @@ public class Budget {
     private String id;
 
     @JsonProperty
-    @DocumentReference
     private String userId;
+
+    @JsonProperty
+    private String holidayId;
 
     @JsonProperty
     private double budgetUpperLimit;
@@ -27,8 +28,9 @@ public class Budget {
     private double budgetLowerLimit;
 
 
-    public Budget(String userId, double budgetUpperLimit, double budgetLowerLimit) {
+    public Budget(String userId, String holidayId, double budgetUpperLimit, double budgetLowerLimit) {
         this.userId = userId;
+        this.holidayId = holidayId;
         this.budgetUpperLimit = budgetUpperLimit;
         this.budgetLowerLimit = budgetLowerLimit;
     }

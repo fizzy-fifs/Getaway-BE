@@ -75,7 +75,6 @@ public class User {
     private String image;
 
     @JsonProperty
-   // @DocumentReference()
     private List<String> groupIds = new ArrayList<>();
 
     @JsonProperty

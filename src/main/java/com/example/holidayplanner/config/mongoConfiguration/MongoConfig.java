@@ -21,7 +21,6 @@ public class MongoConfig {
 
         ConnectionString conn = new ConnectionString(System.getenv("MONGODB_CONNECTION_STRING"));
 
-        System.out.println("Connection String: " + conn);
         mongo.setSingleton(false);
         mongo.setConnectionString(conn);
 
@@ -41,8 +40,6 @@ public class MongoConfig {
 
     @Bean
     public MongoTemplate mongoTemplate() throws Exception {
-
-        System.out.println("Database: " + mongoClient().listDatabaseNames().first());
         MongoDatabaseFactory factory = new SimpleMongoClientDatabaseFactory( mongoClient(), Objects.requireNonNull(mongoClient().listDatabaseNames().first()));
         return new MongoTemplate(factory);
     }
