@@ -14,8 +14,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class GroupService implements ServiceInterface<Group> {
@@ -46,9 +47,11 @@ public class GroupService implements ServiceInterface<Group> {
     @Override
     public ResponseEntity<Object> create(Group group) throws JsonProcessingException {
          //Add group to each member's profile
-        var groupMembers = userRepository.findAllById(group.getGroupMembers());
+        Iterable<User> groupMembersIterable = userRepository.findAllById(group.getGroupMembers());
+        List<User> groupMembers = StreamSupport.stream(groupMembersIterable.spliterator(), false)
+                                                .collect(Collectors.toList());
 
-        if (List.of(groupMembers).size() != group.getGroupMembers().size()) {
+        if (groupMembers.size() != group.getGroupMembers().size()) {
              return ResponseEntity.badRequest().body("One of the user id added is invalid");
         }
 
