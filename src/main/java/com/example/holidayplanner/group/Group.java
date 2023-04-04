@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @Document(collection="Groups")
@@ -22,7 +23,7 @@ public class Group {
     private String name;
 
     @JsonProperty
-    private List<String> groupMembers = new ArrayList<>();
+    private List<User> groupMembers = new ArrayList<>();
 
     @JsonProperty
     private String description;
@@ -41,24 +42,24 @@ public class Group {
         this.name = name;
     }
 
-    public Group(String name, List<String> groupMembers) { this.name = name; this.groupMembers = groupMembers; }
+    public Group(String name, List<User> groupMembers) { this.name = name; this.groupMembers = groupMembers; }
     
-    public Group(String name, List<String> groupMembers, String description) {
+    public Group(String name, List<User> groupMembers, String description) {
         this.name = name;
         this.groupMembers = groupMembers;
         this.description = description;
     }
 
-    public Group(String name, List<String> groupMembers, String description, String image) {
+    public Group(String name, List<User> groupMembers, String description, String image) {
         this.name = name;
         this.groupMembers = groupMembers;
         this.description = description;
         this.image = image;
     }
 
-    public void addNewMember(String newGroupMemberId) { this.groupMembers.add(newGroupMemberId); }
+    public void addNewMember(User newGroupMember) { this.groupMembers.add(newGroupMember); }
 
-    public void removeMember(String memberId) { this.groupMembers.remove(memberId); }
+    public void removeMember(String memberId) { this.groupMembers.removeIf(member -> Objects.equals(member.getId(), memberId)); }
 
     public void addHoliday(String holidayId) { holidayIds.add(holidayId); }
 }

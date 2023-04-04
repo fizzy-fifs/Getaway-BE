@@ -47,12 +47,11 @@ public class GroupService implements ServiceInterface<Group> {
     @Override
     public ResponseEntity<Object> create(Group group) throws JsonProcessingException {
          //Add group to each member's profile
-        Iterable<User> groupMembersIterable = userRepository.findAllById(group.getGroupMembers());
-        List<User> groupMembers = StreamSupport.stream(groupMembersIterable.spliterator(), false)
-                                                .collect(Collectors.toList());
+        List<String> groupMembersUsernames = group.getGroupMembers().stream().map(User::getUserName).collect(Collectors.toList());
+        List<User> groupMembers = userRepository.findByUserNameIn(groupMembersUsernames);
 
         if (groupMembers.size() != group.getGroupMembers().size()) {
-             return ResponseEntity.badRequest().body("One of the user id added is invalid");
+             return ResponseEntity.badRequest().body("One of the usernames added is invalid");
         }
 
          //Insert group in DB
@@ -99,7 +98,7 @@ public class GroupService implements ServiceInterface<Group> {
 
         if (group == null) { return ResponseEntity.badRequest().body("Group with id " + groupId + " does not exist"); }
 
-        group.addNewMember(newGroupMember.getId());
+        group.addNewMember(newGroupMember);
         newGroupMember.addGroup(group.getId());
 
         groupRepository.save(group);
