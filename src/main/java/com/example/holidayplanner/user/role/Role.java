@@ -31,7 +31,17 @@ public class Role {
     private Collection<Privilege> privileges;
 
 
+    public Role() {
+    }
+
     public Role(String name) {
         this.name = name;
+    }
+
+    public Role(String id, String name, Collection<User> users, Collection<Privilege> privileges) {
+        this.id = id;
+        this.name = name;
+        this.users = users;
+        this.privileges = privileges;
     }
 }
