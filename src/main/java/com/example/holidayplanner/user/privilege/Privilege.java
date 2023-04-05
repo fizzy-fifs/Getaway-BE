@@ -25,7 +25,16 @@ public class Privilege {
     @DocumentReference
     private Collection<Role> roles;
 
+    public Privilege() {
+    }
+
     public Privilege(String name) {
         this.name = name;
+    }
+
+    public Privilege(String id, String name, Collection<Role> roles) {
+        this.id = id;
+        this.name = name;
+        this.roles = roles;
     }
 }
