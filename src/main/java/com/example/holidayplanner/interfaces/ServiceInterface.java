@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface ServiceInterface<T> {
-    ResponseEntity create(String entity) throws JsonProcessingException;
+    ResponseEntity create(T entity) throws JsonProcessingException;
 
     List<T> getAll();
 

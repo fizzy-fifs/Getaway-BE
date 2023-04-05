@@ -26,7 +26,7 @@ public class HolidayController implements ControllerInterface<Holiday> {
 
     @Override
     @PostMapping(path = "/newholiday")
-    public ResponseEntity create(String holiday, Errors errors) throws JsonProcessingException {
+    public ResponseEntity create(Holiday holiday, Errors errors) throws JsonProcessingException {
         return holidayService.create(holiday);
     }
 

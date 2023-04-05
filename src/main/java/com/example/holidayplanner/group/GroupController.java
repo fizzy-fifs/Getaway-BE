@@ -27,7 +27,7 @@ public class GroupController implements ControllerInterface<Group> {
 
     @Override
     @PostMapping(path = "/newgroup")
-    public ResponseEntity<Object> create(@RequestBody @Valid String group, Errors errors) throws JsonProcessingException {
+    public ResponseEntity<Object> create(@RequestBody @Valid Group group, Errors errors) throws JsonProcessingException {
         return groupService.create(group);
     }
 

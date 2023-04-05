@@ -29,7 +29,7 @@ public class UserController implements ControllerInterface<User> {
     @Override
     @PostMapping(path = "/newuser")
     @ApiOperation(value = "Create a new user")
-    public ResponseEntity create(@RequestBody @Valid String user, Errors errors) throws JsonProcessingException {
+    public ResponseEntity create(@RequestBody @Valid User user, Errors errors) throws JsonProcessingException {
 
         if (errors.hasErrors()) {
             return ResponseEntity.badRequest()

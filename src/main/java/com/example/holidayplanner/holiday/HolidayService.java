@@ -18,19 +18,16 @@ public class HolidayService implements ServiceInterface<Holiday> {
     private final HolidayRepository holidayRepository;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
-    private final ObjectMapper mapper;
 
-    public HolidayService(HolidayRepository holidayRepository, UserRepository userRepository, GroupRepository groupRepository, ObjectMapper mapper) {
+    public HolidayService(HolidayRepository holidayRepository, UserRepository userRepository, GroupRepository groupRepository) {
         this.holidayRepository = holidayRepository;
         this.userRepository = userRepository;
         this.groupRepository = groupRepository;
-        this.mapper = mapper;
     }
 
     @Override
-    public ResponseEntity<Object> create(String newHolidayJson) throws JsonProcessingException {
-        //Convert json to holiday object
-        Holiday holiday = mapper.readValue(newHolidayJson, Holiday.class);
+    public ResponseEntity<Object> create(Holiday holiday) throws JsonProcessingException {
+
         //Insert holiday in DB
         Holiday newHoliday = holidayRepository.insert(holiday);
 
