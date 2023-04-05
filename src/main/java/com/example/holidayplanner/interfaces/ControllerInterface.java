@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ControllerInterface<T> {
 
-    ResponseEntity create(T entity, Errors errors) throws JsonProcessingException;
+    ResponseEntity create(String entity, Errors errors) throws JsonProcessingException;
 
     List<T> getAll();
 

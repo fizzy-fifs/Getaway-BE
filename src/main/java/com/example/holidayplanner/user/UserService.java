@@ -79,7 +79,9 @@ public class UserService implements ServiceInterface<User> {
 
 
     @Override
-    public ResponseEntity<Object> create(User user) throws JsonProcessingException {
+    public ResponseEntity<Object> create(String newUserJson) throws JsonProcessingException {
+        //Convert json to user object
+        User user = mapper.readValue(newUserJson, User.class);
 
        //Check if email is already registered
         if( emailExists(user) ) {
