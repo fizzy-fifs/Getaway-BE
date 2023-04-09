@@ -131,6 +131,18 @@ public class GroupService implements ServiceInterface<Group> {
         return ResponseEntity.ok(groupJson);
     }
 
+    public ResponseEntity<Object> findById(String groupId) throws JsonProcessingException {
+        if (groupId == null || groupId.isEmpty()) { return ResponseEntity.badRequest().body("No group id provided"); }
+
+        Group group = groupRepository.findById(new ObjectId(groupId));
+
+        if (group == null) { return ResponseEntity.badRequest().body("No group found"); }
+
+        String groupJson = mapper.writeValueAsString(group);
+
+        return ResponseEntity.ok(groupJson);
+    }
+
     public ResponseEntity<List<Group>> search(String searchTerm) {
         String sanitizedSearchTerm = searchTerm.trim().toLowerCase();
 
@@ -147,4 +159,6 @@ public class GroupService implements ServiceInterface<Group> {
 
         return ResponseEntity.ok(groups);
     }
+
+
 }

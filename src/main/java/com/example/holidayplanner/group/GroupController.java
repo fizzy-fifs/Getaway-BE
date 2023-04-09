@@ -1,7 +1,6 @@
 package com.example.holidayplanner.group;
 
 import com.example.holidayplanner.interfaces.ControllerInterface;
-import com.example.holidayplanner.user.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -61,6 +60,12 @@ public class GroupController implements ControllerInterface<Group> {
     @ApiOperation(value = "Find multiple groups by their ids")
     public ResponseEntity<Object> findMultipleById(@RequestParam("ids") List<String> groupIds) throws JsonProcessingException {
         return groupService.findMultipleById(groupIds);
+    }
+
+    @GetMapping(path = "/findbyid/{groupId}")
+    @ApiOperation(value = "Find a group by its id")
+    public ResponseEntity<Object> findById(@PathVariable("groupId") String groupId) throws JsonProcessingException {
+        return groupService.findById(groupId);
     }
 
     @GetMapping(path = "/search/{searchTerm}")
