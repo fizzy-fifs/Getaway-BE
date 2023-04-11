@@ -365,10 +365,10 @@ public class UserService implements ServiceInterface<User> {
         return ResponseEntity.ok(userJson);
     }
 
-    public ResponseEntity findMultipleById(List<String> ids) throws JsonProcessingException {
-        if (ids.isEmpty()) { return ResponseEntity.badRequest().body("No ids provided"); }
+    public ResponseEntity findMultipleById(List<String> userIds) throws JsonProcessingException {
+        if (userIds.isEmpty()) { return ResponseEntity.badRequest().body("No ids provided"); }
 
-        List<User> users = (List<User>) userRepository.findAllById(ids);
+        List<User> users = (List<User>) userRepository.findAllById(userIds);
 
         if (users.isEmpty()) { return ResponseEntity.badRequest().body("No users found"); }
 

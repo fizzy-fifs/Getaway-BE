@@ -56,9 +56,9 @@ public class GroupController implements ControllerInterface<Group> {
     }
 
 
-    @GetMapping(path = "/findmultiplebyid")
+    @PostMapping(path = "/findmultiplebyid")
     @ApiOperation(value = "Find multiple groups by their ids")
-    public ResponseEntity<Object> findMultipleById(@RequestParam("ids") List<String> groupIds) throws JsonProcessingException {
+    public ResponseEntity<Object> findMultipleById(@RequestBody List<String> groupIds) throws JsonProcessingException {
         return groupService.findMultipleById(groupIds);
     }
 
