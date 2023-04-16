@@ -19,7 +19,7 @@ public class Scheduler {
         this.mongoTemplate = mongoTemplate;
     }
 
-    @Scheduled(fixedRate = 1000 * 60)
+//    @Scheduled(fixedRate = 1000 * 60)
     public void updateUserPropertiesIfNotPresent() {
         mongoTemplate.updateMulti(new Query(), new Update()
                 .setOnInsert("phoneNumber", "")

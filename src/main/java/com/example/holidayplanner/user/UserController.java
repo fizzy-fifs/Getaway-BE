@@ -122,8 +122,11 @@ public class UserController implements ControllerInterface<User> {
         return userService.delete(userId);
     }
 
-    public void updateUserproperties() {
+    @GetMapping(path = "/updateuserproperties")
+    @ApiOperation(value = "Update user properties in database")
+    public ResponseEntity<Object> updateUserproperties() {
         scheduler.updateUserPropertiesIfNotPresent();
+        return ResponseEntity.ok().build();
     }
 
 }
