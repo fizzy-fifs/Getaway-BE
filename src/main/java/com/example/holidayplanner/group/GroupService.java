@@ -175,4 +175,28 @@ public class GroupService implements ServiceInterface<Group> {
         }
         return ResponseEntity.ok("Invitation sent");
     }
+
+    public ResponseEntity<Object> acceptInvitation(String groupId, String userId) {
+        if (groupId == null || groupId.isEmpty()) { return ResponseEntity.badRequest().body("No group id provided"); }
+
+        Group group = groupRepository.findById(new ObjectId(groupId));
+
+        if (group == null) { return ResponseEntity.badRequest().body("No group found"); }
+
+        User user = userRepository.findById(new ObjectId(userId));
+
+        if (user == null) { return ResponseEntity.badRequest().body("User with id " + userId + " does not exist"); }
+
+        user.addGroup(group.getId());
+
+        user.getGroupInvites().remove(group.getId());
+
+        group.addNewMember(user);
+
+        userRepository.save(user);
+
+        groupRepository.save(group);
+
+        return ResponseEntity.ok("Invitation accepted");
+    }
 }

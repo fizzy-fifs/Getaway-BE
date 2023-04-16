@@ -74,11 +74,16 @@ public class GroupController implements ControllerInterface<Group> {
         return groupService.search(searchTerm);
     }
 
-    //Endpoint to invite multiple users to a group
     @PostMapping(path = "/invite/{groupId}")
     @ApiOperation(value = "Invite multiple users to a group")
     public ResponseEntity<Object> inviteUsers(@PathVariable("groupId") String groupId, @RequestBody List<String> userIds) throws JsonProcessingException {
         return groupService.inviteUsers(groupId, userIds);
+    }
+
+    @PostMapping(path = "/acceptinvitation/{groupId}")
+    @ApiOperation(value = "Accept an invitation to a group")
+    public ResponseEntity<Object> acceptInvitation(@PathVariable("groupId") String groupId, @RequestBody String userId) throws JsonProcessingException {
+        return groupService.acceptInvitation(groupId, userId);
     }
 
 }
