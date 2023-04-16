@@ -1,6 +1,7 @@
 package com.example.holidayplanner.user;
 
 import com.example.holidayplanner.interfaces.ControllerInterface;
+import com.example.holidayplanner.scheduler.Scheduler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,8 +24,13 @@ public class UserController implements ControllerInterface<User> {
 
     private final UserService userService;
 
+    private Scheduler scheduler;
+
     @Autowired
-    public UserController(UserService userService) { this.userService = userService; }
+    public UserController(UserService userService, Scheduler scheduler) {
+        this.userService = userService;
+        this.scheduler = scheduler;
+    }
 
     @Override
     @PostMapping(path = "/newuser")
@@ -114,6 +120,10 @@ public class UserController implements ControllerInterface<User> {
     @ApiOperation(value = "Delete a user")
     public String delete(@PathVariable("userId") String userId) {
         return userService.delete(userId);
+    }
+
+    public void updateUserproperties() {
+        scheduler.updateUserPropertiesIfNotPresent();
     }
 
 }

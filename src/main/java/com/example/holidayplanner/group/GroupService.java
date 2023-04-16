@@ -161,4 +161,18 @@ public class GroupService implements ServiceInterface<Group> {
     }
 
 
+    public ResponseEntity<Object> inviteUsers(String groupId, List<String> userIds) {
+        if (groupId == null || groupId.isEmpty()) { return ResponseEntity.badRequest().body("No group id provided"); }
+
+        Group group = groupRepository.findById(new ObjectId(groupId));
+
+        if (group == null) { return ResponseEntity.badRequest().body("No group found"); }
+
+        List<User> users = (List<User>) userRepository.findAllById(userIds);
+
+        for (User user : users) {
+            user.getGroupInvites().add(group.getId());
+        }
+        return ResponseEntity.ok("Invitation sent");
+    }
 }

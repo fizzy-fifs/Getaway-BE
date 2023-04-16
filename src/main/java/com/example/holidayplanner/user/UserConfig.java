@@ -1,5 +1,6 @@
 package com.example.holidayplanner.user;
 
+import com.example.holidayplanner.scheduler.Scheduler;
 import com.example.holidayplanner.userLookupModel.UserLookupModel;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;

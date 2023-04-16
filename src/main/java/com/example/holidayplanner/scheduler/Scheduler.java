@@ -6,9 +6,11 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
+@Component
 public class Scheduler {
     @Autowired
     private final MongoTemplate mongoTemplate;
@@ -26,6 +28,7 @@ public class Scheduler {
                 .setOnInsert("holidayIds", new ArrayList<>())
                 .setOnInsert("friendRequests", new ArrayList<>())
                 .setOnInsert("friends", new ArrayList<>())
-                .setOnInsert("friendRequestsSent", new ArrayList<>()), User.class);
+                .setOnInsert("friendRequestsSent", new ArrayList<>())
+                .setOnInsert("groupInvites", new ArrayList<>()), User.class);
     }
 }
