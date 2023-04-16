@@ -1,6 +1,7 @@
 package com.example.holidayplanner.group;
 
 import com.example.holidayplanner.interfaces.ServiceInterface;
+import com.example.holidayplanner.user.GroupInvite;
 import com.example.holidayplanner.user.User;
 import com.example.holidayplanner.user.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -161,8 +162,10 @@ public class GroupService implements ServiceInterface<Group> {
     }
 
 
-    public ResponseEntity<Object> inviteUsers(String groupId, List<String> userIds) {
+    public ResponseEntity<Object> inviteUsers(String groupId, String inviteeId, List<String> userIds) {
         if (groupId == null || groupId.isEmpty()) { return ResponseEntity.badRequest().body("No group id provided"); }
+        if (userIds == null || userIds.isEmpty()) { return ResponseEntity.badRequest().body("No user id provided"); }
+        if (inviteeId == null || inviteeId.isEmpty()) { return ResponseEntity.badRequest().body("Please include the id of the invitee"); }
 
         Group group = groupRepository.findById(new ObjectId(groupId));
 
@@ -170,9 +173,23 @@ public class GroupService implements ServiceInterface<Group> {
 
         List<User> users = (List<User>) userRepository.findAllById(userIds);
 
+        if (users.size() != userIds.size()) { return ResponseEntity.badRequest().body("One or more of the userIds cannot be found"); }
+
+        User invitee = userRepository.findById(new ObjectId(inviteeId));
+
+        if (invitee == null) { return ResponseEntity.badRequest().body("User with id " + inviteeId + " does not exist"); }
+
+        GroupInvite newGroupInvitation = new GroupInvite() {{
+            setGroupId(group.getId());
+            setInviteeId(invitee.getId());
+        }};
+
         for (User user : users) {
-            user.getGroupInvites().add(group.getId());
+            user.getGroupInvites().add(newGroupInvitation);
         }
+
+        userRepository.saveAll(users);
+
         return ResponseEntity.ok("Invitation sent");
     }
 

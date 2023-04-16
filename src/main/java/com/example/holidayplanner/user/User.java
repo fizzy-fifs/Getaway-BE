@@ -78,7 +78,7 @@ public class User {
     private List<String> groupIds = new ArrayList<>();
 
     @JsonProperty
-    private List<String> groupInvites = new ArrayList<>();
+    private List<GroupInvite> groupInvites = new ArrayList<>();
 
     @JsonProperty
     private List<String> holidayIds = new ArrayList<>();
