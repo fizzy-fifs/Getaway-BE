@@ -47,7 +47,7 @@ public class GroupService implements ServiceInterface<Group> {
 
     @Override
     public ResponseEntity<Object> create(Group group) throws JsonProcessingException {
-         //Add group to each member's profile
+         //Find group members
         List<String> groupMembersUsernames = group.getGroupMembers().stream().map(User::getUserName).collect(Collectors.toList());
         List<User> groupMembers = userRepository.findByUserNameIn(groupMembersUsernames);
 
