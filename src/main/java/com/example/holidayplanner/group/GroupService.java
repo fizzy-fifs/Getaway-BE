@@ -179,10 +179,9 @@ public class GroupService implements ServiceInterface<Group> {
 
         if (invitee == null) { return ResponseEntity.badRequest().body("User with id " + inviteeId + " does not exist"); }
 
-        GroupInvite newGroupInvitation = new GroupInvite() {{
-            setGroupId(group.getId());
-            setInviteeId(invitee.getId());
-        }};
+        GroupInvite newGroupInvitation = new GroupInvite();
+        newGroupInvitation.setGroupId(group.getId());
+        newGroupInvitation.setInviteeId(invitee.getId());
 
         for (User user : users) {
             user.getGroupInvites().add(newGroupInvitation);

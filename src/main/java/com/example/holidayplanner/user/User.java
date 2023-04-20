@@ -84,6 +84,9 @@ public class User {
     private List<String> holidayIds = new ArrayList<>();
 
     @JsonProperty
+    private List<String> holidayInvites = new ArrayList<>();
+
+    @JsonProperty
     private List<String> friendRequests = new ArrayList<>();
 
     @JsonProperty
