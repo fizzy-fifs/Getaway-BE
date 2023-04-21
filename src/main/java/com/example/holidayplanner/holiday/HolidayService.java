@@ -8,6 +8,7 @@ import com.example.holidayplanner.user.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +17,13 @@ import java.util.stream.Collectors;
 
 @Service
 public class HolidayService implements ServiceInterface<Holiday> {
+    @Autowired
     private final HolidayRepository holidayRepository;
+
+    @Autowired
     private final UserRepository userRepository;
+
+    @Autowired
     private final GroupRepository groupRepository;
 
     public HolidayService(HolidayRepository holidayRepository, UserRepository userRepository, GroupRepository groupRepository) {
@@ -31,7 +37,7 @@ public class HolidayService implements ServiceInterface<Holiday> {
 
         //Find holidaymakers
         List<String> holidayMakersId = holiday.getHolidayMakersIds(); //.stream().map(User::getId).collect(Collectors.toList());
-        List<User> holidayMakers = userRepository.findByIdIn(holidayMakersId);
+        List<User> holidayMakers = (List<User>) userRepository.findAllById(holidayMakersId); //.findByIdIn(holidayMakersId);
 
         if (holidayMakers.size() != holiday.getHolidayMakersIds().size()) {
             return ResponseEntity.badRequest().body("One of the userIds added is invalid");
