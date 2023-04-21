@@ -30,10 +30,10 @@ public class HolidayService implements ServiceInterface<Holiday> {
     public ResponseEntity<Object> create(Holiday holiday) throws JsonProcessingException {
 
         //Find holidaymakers
-        List<String> holidayMakersId = holiday.getHolidayMakerIds(); //.stream().map(User::getId).collect(Collectors.toList());
+        List<String> holidayMakersId = holiday.getHolidayMakersIds(); //.stream().map(User::getId).collect(Collectors.toList());
         List<User> holidayMakers = userRepository.findByIdIn(holidayMakersId);
 
-        if (holidayMakers.size() != holiday.getHolidayMakerIds().size()) {
+        if (holidayMakers.size() != holiday.getHolidayMakersIds().size()) {
             return ResponseEntity.badRequest().body("One of the userIds added is invalid");
         }
 

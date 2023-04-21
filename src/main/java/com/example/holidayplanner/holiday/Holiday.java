@@ -35,7 +35,7 @@ public class Holiday {
     private String groupId;
 
     @JsonProperty
-    private List<String> holidayMakerIds;
+    private List<String> holidayMakersIds;
 
     @JsonProperty
     @DocumentReference
@@ -58,23 +58,23 @@ public class Holiday {
         this.groupId = groupId;
     }
 
-    public Holiday(String name, String groupId, List<String> holidayMakerIds) {
+    public Holiday(String name, String groupId, List<String> holidayMakersIds) {
         this.name = name;
         this.groupId = groupId;
-        this.holidayMakerIds = holidayMakerIds;
+        this.holidayMakersIds = holidayMakersIds;
     }
 
-    public Holiday(String name, String groupId, List<String> holidayMakerIds, List<Budget> budget) {
+    public Holiday(String name, String groupId, List<String> holidayMakersIds, List<Budget> budget) {
         this.name = name;
         this.groupId = groupId;
-        this.holidayMakerIds = holidayMakerIds;
+        this.holidayMakersIds = holidayMakersIds;
         this.budget = budget;
     }
 
-    public Holiday(String name, String groupId, List<String> holidayMakerIds, List<Budget> budget, List<AvailableDates> availableDates) {
+    public Holiday(String name, String groupId, List<String> holidayMakersIds, List<Budget> budget, List<AvailableDates> availableDates) {
         this.name = name;
         this.groupId = groupId;
-        this.holidayMakerIds = holidayMakerIds;
+        this.holidayMakersIds = holidayMakersIds;
         this.budget = budget;
         this.availableDates = availableDates;
     }
@@ -101,11 +101,11 @@ public class Holiday {
     }
 
     public void addHolidayMaker(String newHolidayMakerId) {
-        this.holidayMakerIds.add(newHolidayMakerId);
+        this.holidayMakersIds.add(newHolidayMakerId);
     }
 
     public void removeHolidayMaker(String userId) {
-        this.holidayMakerIds.remove(userId);
+        this.holidayMakersIds.remove(userId);
     }
 
     public String[] aggregateHolidayBudgets() {
