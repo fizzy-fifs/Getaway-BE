@@ -28,9 +28,8 @@ public class Budget {
     private double budgetLowerLimit;
 
 
-    public Budget(String userId, String holidayId, double budgetUpperLimit, double budgetLowerLimit) {
+    public Budget(String userId, double budgetUpperLimit, double budgetLowerLimit) {
         this.userId = userId;
-        this.holidayId = holidayId;
         this.budgetUpperLimit = budgetUpperLimit;
         this.budgetLowerLimit = budgetLowerLimit;
     }
