@@ -130,7 +130,7 @@ public class HolidayService implements ServiceInterface<Holiday> {
 
     public ResponseEntity<Object> findMultipleById(List<String> holidayIds) throws JsonProcessingException {
 
-        if (holidayIds == null) {
+        if (holidayIds == null || holidayIds.isEmpty()) {
             return ResponseEntity.badRequest().body("No holiday id provided");
         }
 
