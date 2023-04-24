@@ -17,6 +17,7 @@ import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -35,15 +36,15 @@ public class Holiday {
     private String groupId;
 
     @JsonProperty
-    private List<String> holidayMakersIds;
+    private List<String> holidayMakersIds = new ArrayList<>();
 
     @JsonProperty
     @DocumentReference
-    private List<Budget> budget;
+    private List<Budget> budgets = new ArrayList<>();
 
     @JsonProperty
     @DocumentReference
-    private List<AvailableDates> availableDates;
+    private List<AvailableDates> availableDates = new ArrayList<>();
 
     //  Constructors
     public Holiday() {
@@ -64,26 +65,26 @@ public class Holiday {
         this.holidayMakersIds = holidayMakersIds;
     }
 
-    public Holiday(String name, String groupId, List<String> holidayMakersIds, List<Budget> budget) {
+    public Holiday(String name, String groupId, List<String> holidayMakersIds, List<Budget> budgets) {
         this.name = name;
         this.groupId = groupId;
         this.holidayMakersIds = holidayMakersIds;
-        this.budget = budget;
+        this.budgets = budgets;
     }
 
-    public Holiday(String name, String groupId, List<String> holidayMakersIds, List<Budget> budget, List<AvailableDates> availableDates) {
+    public Holiday(String name, String groupId, List<String> holidayMakersIds, List<Budget> budgets, List<AvailableDates> availableDates) {
         this.name = name;
         this.groupId = groupId;
         this.holidayMakersIds = holidayMakersIds;
-        this.budget = budget;
+        this.budgets = budgets;
         this.availableDates = availableDates;
     }
 
     //    Methods
-    public String getBudget() {
+    public String getBudgets() {
         ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
         try {
-            return objectMapper.writeValueAsString(this.budget);
+            return objectMapper.writeValueAsString(this.budgets);
         } catch (JsonProcessingException e) {
             e.getMessage();
         }
@@ -110,10 +111,10 @@ public class Holiday {
 
     public String[] aggregateHolidayBudgets() {
 
-        double[] medianBudget = new double[this.budget.size()];
-        for (int i = 0; i < this.budget.size(); i++) {
-            var median = calculateMedian(this.budget.get(i).getBudgetUpperLimit(),
-                    this.budget.get(i).getBudgetLowerLimit());
+        double[] medianBudget = new double[this.budgets.size()];
+        for (int i = 0; i < this.budgets.size(); i++) {
+            var median = calculateMedian(this.budgets.get(i).getBudgetUpperLimit(),
+                    this.budgets.get(i).getBudgetLowerLimit());
             medianBudget[i] = median;
         }
 

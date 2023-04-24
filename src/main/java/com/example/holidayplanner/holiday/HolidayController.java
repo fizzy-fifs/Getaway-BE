@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -26,7 +27,7 @@ public class HolidayController implements ControllerInterface<Holiday> {
 
     @Override
     @PostMapping(path = "/newholiday")
-    public ResponseEntity create(Holiday holiday, Errors errors) throws JsonProcessingException {
+    public ResponseEntity create(@RequestBody @Valid Holiday holiday, Errors errors) throws JsonProcessingException {
         return holidayService.create(holiday);
     }
 
