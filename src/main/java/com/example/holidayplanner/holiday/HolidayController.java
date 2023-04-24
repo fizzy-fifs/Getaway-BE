@@ -3,6 +3,7 @@ package com.example.holidayplanner.holiday;
 import com.example.holidayplanner.interfaces.ControllerInterface;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +50,12 @@ public class HolidayController implements ControllerInterface<Holiday> {
     @GetMapping(path = "/getdateaggregates/{holidayId}")
     public String[] getDateAggregates(@PathVariable("holidayId") String holidayId) {
         return holidayService.aggregateDates(holidayId);
+    }
+
+    @PostMapping(path = "/findmultiplebyid")
+    @ApiOperation(value = "Find multiple holidays by their ids")
+    public ResponseEntity<Object> findMultipleById(@RequestBody List<String> holidayIds) throws JsonProcessingException {
+        return holidayService.findMultipleById(holidayIds);
     }
 
     @Override
