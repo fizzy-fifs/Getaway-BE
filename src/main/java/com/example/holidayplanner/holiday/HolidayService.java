@@ -27,15 +27,18 @@ public class HolidayService implements ServiceInterface<Holiday> {
     @Autowired
     private final GroupRepository groupRepository;
 
-    public HolidayService(HolidayRepository holidayRepository, UserRepository userRepository, GroupRepository groupRepository) {
+    @Autowired
+    private final ObjectMapper mapper;
+
+    public HolidayService(HolidayRepository holidayRepository, UserRepository userRepository, GroupRepository groupRepository, ObjectMapper mapper) {
         this.holidayRepository = holidayRepository;
         this.userRepository = userRepository;
         this.groupRepository = groupRepository;
+        this.mapper = mapper;
     }
 
     @Override
     public ResponseEntity<Object> create(Holiday holiday) throws JsonProcessingException {
-        System.out.println("Holiday Object: " + holiday);
 
         Iterable<String> holidayMakersId = holiday.getHolidayMakersIds().stream().filter(Objects::nonNull).collect(Collectors.toList());
         List<User> holidayMakers = (List<User>) userRepository.findAllById(holidayMakersId);
@@ -67,7 +70,6 @@ public class HolidayService implements ServiceInterface<Holiday> {
 
         userRepository.saveAll(holidayMakers);
 
-        ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
         String holidayJson = mapper.writeValueAsString(newHoliday);
 
         return ResponseEntity.ok(holidayJson);
@@ -91,7 +93,9 @@ public class HolidayService implements ServiceInterface<Holiday> {
     public String removeHolidayMaker(String holidayId, String userId) {
         User user = userRepository.findById(new ObjectId(userId));
 
-        if (user == null) { return "User with user id" + userId + "does not exists"; }
+        if (user == null) {
+            return "User with user id" + userId + "does not exists";
+        }
 
         Holiday holiday = holidayRepository.findById(holidayId).get();
         holiday.removeHolidayMaker(user.getId());
@@ -108,6 +112,7 @@ public class HolidayService implements ServiceInterface<Holiday> {
         Holiday holiday = holidayRepository.findById(holidayId).get();
         return holiday.aggregateDates();
     }
+
     @Override
     public List<Holiday> getAll() {
         return null;
@@ -121,5 +126,26 @@ public class HolidayService implements ServiceInterface<Holiday> {
     @Override
     public String delete(String entityId) {
         return null;
+    }
+
+    public ResponseEntity<Object> findMultipleById(List<String> holidayIds) throws JsonProcessingException {
+
+        if (holidayIds == null) {
+            return ResponseEntity.badRequest().body("No holiday id provided");
+        }
+
+        List<Holiday> holidays = (List<Holiday>) holidayRepository.findAllById(holidayIds);
+
+        if (holidays.isEmpty()) {
+            return ResponseEntity.badRequest().body("No holiday found");
+        }
+
+        if (holidays.size() != holidayIds.size()) {
+            return ResponseEntity.badRequest().body("One of the holidayIds added is invalid");
+        }
+
+        String holidaysJson = mapper.writeValueAsString(holidays);
+
+        return ResponseEntity.ok(holidaysJson);
     }
 }
