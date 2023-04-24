@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,38 +35,38 @@ public class HolidayService implements ServiceInterface<Holiday> {
 
     @Override
     public ResponseEntity<Object> create(Holiday holiday) throws JsonProcessingException {
+        System.out.println("Holiday Object: " + holiday);
 
-        //Find holidaymakers
-        List<String> holidayMakersId = holiday.getHolidayMakersIds(); //.stream().map(User::getId).collect(Collectors.toList());
-        List<User> holidayMakers = (List<User>) userRepository.findAllById(holidayMakersId); //.findByIdIn(holidayMakersId);
+        Iterable<String> holidayMakersId = holiday.getHolidayMakersIds().stream().filter(Objects::nonNull).collect(Collectors.toList());
+        List<User> holidayMakers = (List<User>) userRepository.findAllById(holidayMakersId);
 
         if (holidayMakers.size() != holiday.getHolidayMakersIds().size()) {
             return ResponseEntity.badRequest().body("One of the userIds added is invalid");
         }
 
-        //Find group
         String groupId = holiday.getGroupId();
+
+        if (groupId == null) {
+            return ResponseEntity.badRequest().body("Group id is null");
+        }
+
         Group group = groupRepository.findById(new ObjectId(groupId));
 
         if (group == null) {
             return ResponseEntity.badRequest().body("Group with group id" + groupId + "does not exists");
         }
 
-        //Insert holiday in DB
         Holiday newHoliday = holidayRepository.insert(holiday);
 
-        //Add holiday to group object and save group in DB
         group.addHoliday(newHoliday.getId());
         Group savedGroup = groupRepository.save(group);
 
-        //Add holiday to user objects and save users in DB
         for (User holidayMaker : holidayMakers) {
             holidayMaker.addHoliday(newHoliday.getId());
         }
 
         userRepository.saveAll(holidayMakers);
 
-        //Convert holiday object to json
         ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
         String holidayJson = mapper.writeValueAsString(newHoliday);
 
@@ -79,7 +80,7 @@ public class HolidayService implements ServiceInterface<Holiday> {
             return ResponseEntity.badRequest().body("User with user id" + userId + "does not exists");
         }
 
-        Holiday holiday = holidayRepository.findById(holidayId).get();
+        Holiday holiday = holidayRepository.findById(new ObjectId(holidayId));
         holiday.addHolidayMaker(newHolidayMaker.getId());
 
         holidayRepository.save(holiday);
