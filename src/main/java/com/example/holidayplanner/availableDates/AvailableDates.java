@@ -1,10 +1,16 @@
 package com.example.holidayplanner.availableDates;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -23,9 +29,17 @@ public class AvailableDates {
     @JsonProperty
     private String holidayId;
 
+    @JsonFormat( pattern = "dd/MM/yyyy" )
+    @DateTimeFormat( pattern = "dd/MM/yyyy" )
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     @JsonProperty
     private LocalDate startDate;
 
+    @JsonFormat( pattern = "dd/MM/yyyy" )
+    @DateTimeFormat( pattern = "dd/MM/yyyy" )
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     @JsonProperty
     private LocalDate endDate;
 
