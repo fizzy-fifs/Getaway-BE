@@ -6,6 +6,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+
 
 @Data
 @Document(collection = "Budgets")
@@ -16,15 +19,18 @@ public class Budget {
     private String id;
 
     @JsonProperty
+    @NotBlank
+    @NotEmpty
     private String userId;
 
     @JsonProperty
-    private String holidayId;
-
-    @JsonProperty
+    @NotBlank
+    @NotEmpty
     private double budgetUpperLimit;
 
     @JsonProperty
+    @NotBlank
+    @NotEmpty
     private double budgetLowerLimit;
 
 

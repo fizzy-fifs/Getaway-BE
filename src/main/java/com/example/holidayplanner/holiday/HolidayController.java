@@ -1,5 +1,7 @@
 package com.example.holidayplanner.holiday;
 
+import com.example.holidayplanner.availableDates.AvailableDates;
+import com.example.holidayplanner.budget.Budget;
 import com.example.holidayplanner.interfaces.ControllerInterface;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.Api;
@@ -17,7 +19,7 @@ import java.util.List;
 @RequestMapping(path = "/api/v1.0/holidays")
 @Api(tags = "Holiday")
 @SecurityRequirement(name = "holidayPlannerSecurity")
-public class HolidayController implements ControllerInterface<Holiday> {
+public class HolidayController {
 
     private final HolidayService holidayService;
 
@@ -26,10 +28,9 @@ public class HolidayController implements ControllerInterface<Holiday> {
         this.holidayService = holidayService;
     }
 
-    @Override
     @PostMapping(path = "/newholiday")
-    public ResponseEntity create(@RequestBody @Valid Holiday holiday, Errors errors) throws JsonProcessingException {
-        return holidayService.create(holiday);
+    public ResponseEntity create(@RequestBody @Valid HolidayCreationRequest holidayCreationRequest) throws JsonProcessingException {
+        return holidayService.create(holidayCreationRequest.getHoliday(), holidayCreationRequest.getBudget(), holidayCreationRequest.getAvailableDates());
     }
 
     @GetMapping(path = "/addholidaymaker/holiday={holidayId}&user={userId}")
@@ -56,20 +57,5 @@ public class HolidayController implements ControllerInterface<Holiday> {
     @ApiOperation(value = "Find multiple holidays by their ids")
     public ResponseEntity<Object> findMultipleById(@RequestBody List<String> holidayIds) throws JsonProcessingException {
         return holidayService.findMultipleById(holidayIds);
-    }
-
-    @Override
-    public List<Holiday> getAll() {
-        return null;
-    }
-
-    @Override
-    public String update(String id, Holiday newInfo) {
-        return null;
-    }
-
-    @Override
-    public String delete(String id) {
-        return null;
     }
 }
