@@ -168,6 +168,23 @@ public class HolidayService {
         return ResponseEntity.ok(holidaysJson);
     }
 
+    public ResponseEntity<Object> findById(String holidayId) throws JsonProcessingException {
+
+        if (holidayId == null || holidayId.isEmpty()) {
+            return ResponseEntity.badRequest().body("No holiday id provided");
+        }
+
+        Holiday holiday = holidayRepository.findById(new ObjectId(holidayId));
+
+        if (holiday == null) {
+            return ResponseEntity.badRequest().body("No holiday found");
+        }
+
+        String holidayJson = mapper.writeValueAsString(holiday);
+
+        return ResponseEntity.ok(holidayJson);
+    }
+
     private String[] aggregateHolidayBudgets(List<Budget> budgets) {
 
         double[] medianBudget = new double[budgets.size()];

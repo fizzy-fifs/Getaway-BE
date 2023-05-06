@@ -58,4 +58,10 @@ public class HolidayController {
     public ResponseEntity<Object> findMultipleById(@RequestBody List<String> holidayIds) throws JsonProcessingException {
         return holidayService.findMultipleById(holidayIds);
     }
+
+    @GetMapping(path = "/findbyid/{holidayId}")
+    @ApiOperation(value = "Find a single holiday by its id")
+    public ResponseEntity<Object> findById(@PathVariable("holidayId") String holidayId) throws JsonProcessingException {
+        return holidayService.findById(holidayId);
+    }
 }
