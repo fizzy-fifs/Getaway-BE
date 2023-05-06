@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1.0/budget")
-@Api(tags = "Budget")
+@Api(tags = "Budgets")
 @SecurityRequirement(name = "holidayPlannerSecurity")
 public class BudgetController {
 

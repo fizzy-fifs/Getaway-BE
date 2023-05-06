@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1.0/availableDates")
+@RequestMapping("/api/v1.0/availabledates")
 @Api(tags = "Available Dates")
 @SecurityRequirement(name = "holidayPlannerSecurity")
 public class AvailableDatesController {
