@@ -1,15 +1,11 @@
 package com.example.holidayplanner.holiday;
 
-import com.example.holidayplanner.availableDates.AvailableDates;
-import com.example.holidayplanner.budget.Budget;
-import com.example.holidayplanner.interfaces.ControllerInterface;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
