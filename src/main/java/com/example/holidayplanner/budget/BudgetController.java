@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1.0/budget")
+@RequestMapping("/api/v1.0/budgets")
 @Api(tags = "Budgets")
 @SecurityRequirement(name = "holidayPlannerSecurity")
 public class BudgetController {
