@@ -39,14 +39,9 @@ public class HolidayController {
         return holidayService.removeHolidayMaker(holidayId, userId);
     }
 
-    @GetMapping(path = "/getbudgetaggregates/{holidayId}")
-    public String[] getBudgetAggregates(@PathVariable("holidayId") String holidayId) {
-        return holidayService.aggregateHolidayBudgets(holidayId);
-    }
-
-    @GetMapping(path = "/getdateaggregates/{holidayId}")
-    public String[] getDateAggregates(@PathVariable("holidayId") String holidayId) {
-        return holidayService.aggregateDates(holidayId);
+    @GetMapping(path = "/getaggregates/{holidayId}")
+    public ResponseEntity getDateAndBudgetAggregates(@PathVariable("holidayId") String holidayId) throws JsonProcessingException {
+        return holidayService.getDateAndBudgetAggregates(holidayId);
     }
 
     @PostMapping(path = "/findmultiplebyid")

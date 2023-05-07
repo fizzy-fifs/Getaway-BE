@@ -23,6 +23,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -71,7 +72,7 @@ public class HolidayService {
             return ResponseEntity.badRequest().body("Group id is null or empty. Please add a valid group id");
         }
 
-        Group group ;
+        Group group;
 
         try {
             group = groupRepository.findById(new ObjectId(groupId));
@@ -129,22 +130,36 @@ public class HolidayService {
         return user.getFirstName() + " has been removed from " + holiday.getName();
     }
 
-    public String[] aggregateHolidayBudgets(String holidayId) {
-        Holiday holiday = holidayRepository.findById(holidayId).get();
+    public ResponseEntity getDateAndBudgetAggregates(String holidayId) throws JsonProcessingException {
+        if (holidayId == null || holidayId.isEmpty()) {
+            return ResponseEntity.badRequest().body("Holiday id is null or empty. Please add a valid holiday id");
+        }
+
+        Holiday holiday = holidayRepository.findById(new ObjectId(holidayId));
+
+        if (holiday == null) {
+            return ResponseEntity.badRequest().body("Holiday id is invalid. Please add a valid holiday id");
+        }
 
         List<String> budgetIds = holiday.getBudgetIds();
-        List<Budget> budgets = (List<Budget>) budgetRepository.findAllById(budgetIds);
-
-        return aggregateHolidayBudgets(budgets);
-    }
-
-    public String[] aggregateDates(String holidayId) {
-        Holiday holiday = holidayRepository.findById(holidayId).get();
-
         List<String> availableDatesIds = holiday.getAvailableDatesIds();
-        List<AvailableDates> availableDates = (List<AvailableDates>) availableDatesRepository.findAllById(availableDatesIds);
 
-        return aggregateDates(availableDates);
+        List<Budget> budgets = (List<Budget>) budgetRepository.findAllById(budgetIds);
+        if (budgets.isEmpty()) {
+            return ResponseEntity.badRequest().body("No budgets found. Please enter valid budget ids");
+        }
+
+        List<AvailableDates> availableDates = (List<AvailableDates>) availableDatesRepository.findAllById(availableDatesIds);
+        if (availableDates.isEmpty()) {
+            return ResponseEntity.badRequest().body("No dates found. Please enter valid date ids");
+        }
+
+        String[] budgetAggregates = aggregateBudgets(budgets);
+        String[] dateAggregates = aggregateDates(availableDates);
+
+        Map<String, String[]> aggregates = Map.of("budgetAggregates", budgetAggregates, "dateAggregates", dateAggregates);
+
+        return ResponseEntity.ok().body(mapper.writeValueAsString(aggregates));
     }
 
     public ResponseEntity<Object> findMultipleById(List<String> holidayIds) throws JsonProcessingException {
@@ -185,7 +200,7 @@ public class HolidayService {
         return ResponseEntity.ok(holidayJson);
     }
 
-    private String[] aggregateHolidayBudgets(List<Budget> budgets) {
+    private String[] aggregateBudgets(List<Budget> budgets) {
 
         double[] medianBudget = new double[budgets.size()];
         for (int i = 0; i < budgets.size(); i++) {
