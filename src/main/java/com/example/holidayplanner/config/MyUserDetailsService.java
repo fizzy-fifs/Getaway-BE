@@ -42,4 +42,6 @@ public class MyUserDetailsService implements UserDetailsService {
                 .userdetails
                 .User(user.getEmail(), user.getPassword(), grantedAuthorities);
     }
+
+
 }

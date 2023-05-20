@@ -123,11 +123,7 @@ public class UserService implements ServiceInterface<User> {
     }
 
     @Transactional
-    public ResponseEntity<Object> login(Map<String, String> emailAndPassword) throws JsonProcessingException {
-
-        //Retrieve email and password as separate strings
-        var email = emailAndPassword.get("email");
-        var password = emailAndPassword.get("password");
+    public ResponseEntity<Object> login(String email, String password) throws JsonProcessingException {
 
         //Authenticate using authentication manager
         try {

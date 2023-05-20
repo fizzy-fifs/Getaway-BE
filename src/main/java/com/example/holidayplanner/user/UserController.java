@@ -49,16 +49,9 @@ public class UserController implements ControllerInterface<User> {
     @PostMapping(path = "/login")
     @ApiOperation(value = "Authenticate users")
     @Transactional
-    public ResponseEntity login (@RequestBody @Valid Map<String, String> emailAndPassword, Errors errors) throws JsonProcessingException {
+    public ResponseEntity login (@RequestParam  String email, @RequestParam String password) throws JsonProcessingException {
 
-        if (errors.hasErrors()) {
-            return ResponseEntity.badRequest()
-                    .body(errors.getAllErrors()
-                    .get(0).getDefaultMessage())
-            ;
-        }
-
-        return userService.login(emailAndPassword);
+        return userService.login(email, password);
     }
 
     @Override
