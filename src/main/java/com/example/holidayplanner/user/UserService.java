@@ -123,9 +123,11 @@ public class UserService implements ServiceInterface<User> {
     }
 
     @Transactional
-    public ResponseEntity<Object> login(String email, String password) throws JsonProcessingException {
+    public ResponseEntity<Object> login(Map<String, String> emailAndPassword) throws JsonProcessingException {
 
-        //Authenticate using authentication manager
+        String email = emailAndPassword.get("email");
+        String password = emailAndPassword.get("password");
+
         try {
             authenticationManager.authenticate( new UsernamePasswordAuthenticationToken(email, password) );
         } catch (BadCredentialsException e) {
@@ -138,15 +140,11 @@ public class UserService implements ServiceInterface<User> {
         refreshToken.setOwner(user);
         RefreshToken savedRefreshToken = refreshTokenRepository.insert(refreshToken);
 
-        //Generate JWT
+
         final UserDetails userDetails = myUserDetailsService.loadUserByUsername(email);
         String jwt = jwtTokenUtil.generateToken(userDetails);
         String refreshTokenString = jwtTokenUtil.generateRefreshToken(userDetails, savedRefreshToken.getId());
 
-        //Send user object and JWT as response
-
-
-            //convert user object to json format
         ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
         String userJson = objectMapper.writeValueAsString(user);
 
