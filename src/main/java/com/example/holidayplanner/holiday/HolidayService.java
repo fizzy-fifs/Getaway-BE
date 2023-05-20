@@ -218,7 +218,13 @@ public class HolidayService {
         }
 
         holiday.removeInvitedHolidayMaker(user.getId());
+        user.deleteHolidayInvite(holiday.getId());
+
         holiday.addHolidayMaker(user.getId());
+        user.addHoliday(holiday.getId());
+
+        holidayRepository.save(holiday);
+        userRepository.save(user);
 
         return ResponseEntity.ok("You have successfully accepted the invite");
     }
@@ -241,6 +247,10 @@ public class HolidayService {
         }
 
         holiday.removeInvitedHolidayMaker(user.getId());
+        user.deleteHolidayInvite(holiday.getId());
+
+        holidayRepository.save(holiday);
+        userRepository.save(user);
 
         return ResponseEntity.ok("Invitation declined");
     }

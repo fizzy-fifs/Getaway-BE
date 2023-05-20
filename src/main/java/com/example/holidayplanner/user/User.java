@@ -138,5 +138,11 @@ public class User {
 
     public void addHoliday(String holidayId) { holidayIds.add(holidayId); }
 
+    public void deleteHoliday(String holidayId) { holidayIds.remove(holidayId); }
+
+    public void addHolidayInvite(String holidayId) { holidayInvites.add(holidayId); }
+
+    public void deleteHolidayInvite(String holidayId) { holidayInvites.remove(holidayId); }
+
 
 }
