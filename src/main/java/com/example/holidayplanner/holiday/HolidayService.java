@@ -200,6 +200,51 @@ public class HolidayService {
         return ResponseEntity.ok(holidayJson);
     }
 
+    public ResponseEntity<Object> acceptInvite(String holidayId, String userId) {
+        Holiday holiday = holidayRepository.findById(new ObjectId(holidayId));
+
+        if (holiday == null) {
+            return ResponseEntity.badRequest().body("No holiday found");
+        }
+
+        User user = userRepository.findById(new ObjectId(userId));
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body("No user found");
+        }
+
+        if (!holiday.getInvitedHolidayMakersIds().contains(user.getId())) {
+            return ResponseEntity.badRequest().body("Unfortunately, you have not been invited to this holiday");
+        }
+
+        holiday.removeInvitedHolidayMaker(user.getId());
+        holiday.addHolidayMaker(user.getId());
+
+        return ResponseEntity.ok("You have successfully accepted the invite");
+    }
+
+    public ResponseEntity declineInvite(String holidayId, String userId) {
+        Holiday holiday = holidayRepository.findById(new ObjectId(holidayId));
+
+        if (holiday == null) {
+            return ResponseEntity.badRequest().body("No holiday found");
+        }
+
+        User user = userRepository.findById(new ObjectId(userId));
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body("No user found");
+        }
+
+        if (!holiday.getInvitedHolidayMakersIds().contains(user.getId())) {
+            return ResponseEntity.badRequest().body("Unfortunately, you have not been invited to this holiday");
+        }
+
+        holiday.removeInvitedHolidayMaker(user.getId());
+
+        return ResponseEntity.ok("Invitation declined");
+    }
+
     private String[] aggregateBudgets(List<Budget> budgets) {
 
         double[] medianBudget = new double[budgets.size()];

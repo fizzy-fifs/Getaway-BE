@@ -77,4 +77,6 @@ public class Holiday {
     public void removeHolidayMaker(String userId) {
         this.holidayMakersIds.remove(userId);
     }
+
+    public void removeInvitedHolidayMaker(String userId) { this.invitedHolidayMakersIds.remove(userId); }
 }
