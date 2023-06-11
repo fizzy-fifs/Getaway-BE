@@ -372,12 +372,17 @@ public class UserService implements ServiceInterface<User> {
     }
 
     public ResponseEntity saveDeviceToken(String userId, String deviceToken) {
+        System.out.println("Request hits service layer");
         User user = userRepository.findById(new ObjectId(userId));
 
         if (user == null) { return ResponseEntity.badRequest().body("User with id " + userId + " does not exist"); }
 
+        System.out.println("User found");
+
         user.setDeviceToken(deviceToken);
         userRepository.save(user);
+
+        System.out.println("Device token saved");
 
         return ResponseEntity.ok("Device token saved");
     }

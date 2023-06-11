@@ -104,6 +104,7 @@ public class UserController implements ControllerInterface<User> {
     @PostMapping(path = "savedevicetoken/$userId")
     @ApiOperation(value = "Save a user's device token")
     public ResponseEntity saveDeviceToken(@PathVariable("userId") String userId, @RequestBody String deviceToken) {
+        System.out.println("Request hits controller layer");
         return userService.saveDeviceToken(userId, deviceToken);
     }
 
