@@ -92,6 +92,10 @@ public class User {
     @JsonProperty
     private List<String> friendRequestsSent = new ArrayList<>();
 
+    @JsonProperty
+    @Nullable
+    private String deviceToken;
+
 
     @JsonProperty
     private List<String> friends = new ArrayList<>();

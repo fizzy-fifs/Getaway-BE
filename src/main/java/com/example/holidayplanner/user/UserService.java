@@ -370,4 +370,15 @@ public class UserService implements ServiceInterface<User> {
 
         return ResponseEntity.ok(usersJson);
     }
+
+    public ResponseEntity saveDeviceToken(String userId, String deviceToken) {
+        User user = userRepository.findById(new ObjectId(userId));
+
+        if (user == null) { return ResponseEntity.badRequest().body("User with id " + userId + " does not exist"); }
+
+        user.setDeviceToken(deviceToken);
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Device token saved");
+    }
 }

@@ -101,6 +101,12 @@ public class UserController implements ControllerInterface<User> {
         return userService.search(searchTerm);
     }
 
+    @PostMapping(path = "savedevicetoken/$userId")
+    @ApiOperation(value = "Save a user's device token")
+    public ResponseEntity saveDeviceToken(@PathVariable("userId") String userId, @RequestBody String deviceToken) {
+        return userService.saveDeviceToken(userId, deviceToken);
+    }
+
     @Override
     @PutMapping (path = "/{userId}")
     @ApiOperation(value = "Update user details")
