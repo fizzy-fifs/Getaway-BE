@@ -307,7 +307,7 @@ public class UserService implements ServiceInterface<User> {
         return ResponseEntity.ok(usersJson);
     }
 
-    public ResponseEntity<Object> deleteFriendRequest(String userId, String friendId) {
+    public ResponseEntity<Object> declineFriendRequest(String userId, String friendId) {
         List<User> users;
 
         try {

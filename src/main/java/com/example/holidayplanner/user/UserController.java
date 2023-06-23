@@ -71,10 +71,10 @@ public class UserController implements ControllerInterface<User> {
         return userService.acceptFriendRequest(userId, friendId);
     }
 
-    @GetMapping(path = "/deleteFriendRequest/{userId}/{friendId}")
+    @GetMapping(path = "/declinefriendrequest/{userId}/{friendId}")
     @ApiOperation("Delete a friend request")
-    public ResponseEntity deleteFriendRequest(@PathVariable("userId") String userId, @PathVariable("friendId") String friendId) {
-        return userService.deleteFriendRequest(userId, friendId);
+    public ResponseEntity declineFriendRequest(@PathVariable("userId") String userId, @PathVariable("friendId") String friendId) {
+        return userService.declineFriendRequest(userId, friendId);
     }
 
     @GetMapping(path= "/findbyid/{id}")
