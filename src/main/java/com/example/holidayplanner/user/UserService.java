@@ -289,7 +289,7 @@ public class UserService implements ServiceInterface<User> {
         friend.removeFromFreindRequestsSent(principal.getId());
         List<User> savedUsers = userRepository.saveAll(Arrays.asList(principal,friend));
 
-        return ResponseEntity.ok(savedUsers);
+        return ResponseEntity.ok("You are now friends with " + friend.getFirstName());
     }
 
     public ResponseEntity findMultipleByPhoneNumberOrEmail(Map<String, List<String>> phoneNumbersAndEmails) throws JsonProcessingException {
