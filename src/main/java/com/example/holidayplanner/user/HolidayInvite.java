@@ -11,4 +11,9 @@ public class HolidayInvite {
 
     @JsonProperty
     public String inviteeId;
+
+    public HolidayInvite(String holidayId, String inviteeId) {
+        this.holidayId = holidayId;
+        this.inviteeId = inviteeId;
+    }
 }

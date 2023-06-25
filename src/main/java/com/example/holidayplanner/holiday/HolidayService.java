@@ -7,6 +7,7 @@ import com.example.holidayplanner.budget.BudgetRepository;
 import com.example.holidayplanner.group.Group;
 import com.example.holidayplanner.group.GroupRepository;
 import com.example.holidayplanner.interfaces.ServiceInterface;
+import com.example.holidayplanner.user.HolidayInvite;
 import com.example.holidayplanner.user.User;
 import com.example.holidayplanner.user.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -90,8 +91,10 @@ public class HolidayService {
 
         group.addHoliday(newHoliday.getId());
 
+
+        HolidayInvite holidayInvite = new HolidayInvite(newHoliday.getId(), newHoliday.getHolidayMakersIds().get(0));
         for (User invitedHolidayMaker : invitedHolidayMakers) {
-            invitedHolidayMaker.getHolidayInvites().add(newHoliday.getId());
+            invitedHolidayMaker.getHolidayInvites().add(holidayInvite);
         }
 
         userRepository.saveAll(invitedHolidayMakers);

@@ -84,7 +84,7 @@ public class User {
     private List<String> holidayIds = new ArrayList<>();
 
     @JsonProperty
-    private List<String> holidayInvites = new ArrayList<>();
+    private List<HolidayInvite> holidayInvites = new ArrayList<>();
 
     @JsonProperty
     private List<String> friendRequests = new ArrayList<>();
@@ -144,7 +144,7 @@ public class User {
 
     public void deleteHoliday(String holidayId) { holidayIds.remove(holidayId); }
 
-    public void addHolidayInvite(String holidayId) { holidayInvites.add(holidayId); }
+    public void addHolidayInvite(HolidayInvite holidayInvite) { holidayInvites.add(holidayInvite); }
 
     public void deleteHolidayInvite(String holidayId) { holidayInvites.remove(holidayId); }
 
