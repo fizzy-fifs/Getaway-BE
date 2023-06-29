@@ -8,13 +8,13 @@ import lombok.Data;
 public class HolidayInvite {
 
     @JsonProperty
-    public Holiday holidayId;
+    public Holiday holiday;
 
     @JsonProperty
-    public User inviteeId;
+    public User invitee;
 
-    public HolidayInvite(Holiday holidayId, User inviteeId) {
-        this.holidayId = holidayId;
-        this.inviteeId = inviteeId;
+    public HolidayInvite(Holiday holiday, User invitee) {
+        this.holiday = holiday;
+        this.invitee = invitee;
     }
 }

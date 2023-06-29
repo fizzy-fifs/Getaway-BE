@@ -162,32 +162,30 @@ public class GroupService implements ServiceInterface<Group> {
     }
 
 
-    public ResponseEntity<Object> inviteUsers(String groupId, String inviteeId, List<String> userIds) {
+    public ResponseEntity<Object> inviteUsers(String groupId, String inviteeId, List<String> inviteeIds) {
         if (groupId == null || groupId.isEmpty()) { return ResponseEntity.badRequest().body("No group id provided"); }
-        if (userIds == null || userIds.isEmpty()) { return ResponseEntity.badRequest().body("No user id provided"); }
+        if (inviteeIds == null || inviteeIds.isEmpty()) { return ResponseEntity.badRequest().body("No user id provided"); }
         if (inviteeId == null || inviteeId.isEmpty()) { return ResponseEntity.badRequest().body("Please include the id of the invitee"); }
 
         Group group = groupRepository.findById(new ObjectId(groupId));
 
         if (group == null) { return ResponseEntity.badRequest().body("No group found"); }
 
-        List<User> users = (List<User>) userRepository.findAllById(userIds);
+        List<User> invitees = (List<User>) userRepository.findAllById(inviteeIds);
 
-        if (users.size() != userIds.size()) { return ResponseEntity.badRequest().body("One or more of the userIds cannot be found"); }
+        if (invitees.size() != inviteeIds.size()) { return ResponseEntity.badRequest().body("One or more of the userIds cannot be found"); }
 
-        User invitee = userRepository.findById(new ObjectId(inviteeId));
+        User inviter = userRepository.findById(new ObjectId(inviteeId));
 
-        if (invitee == null) { return ResponseEntity.badRequest().body("User with id " + inviteeId + " does not exist"); }
+        if (inviter == null) { return ResponseEntity.badRequest().body("User with id " + inviteeId + " does not exist"); }
 
-        GroupInvite newGroupInvitation = new GroupInvite();
-        newGroupInvitation.setGroupId(group.getId());
-        newGroupInvitation.setInviteeId(invitee.getId());
+        GroupInvite newGroupInvitation = new GroupInvite(group, inviter);
 
-        for (User user : users) {
+        for (User user : invitees) {
             user.getGroupInvites().add(newGroupInvitation);
         }
 
-        userRepository.saveAll(users);
+        userRepository.saveAll(invitees);
 
         return ResponseEntity.ok("Invitation sent");
     }

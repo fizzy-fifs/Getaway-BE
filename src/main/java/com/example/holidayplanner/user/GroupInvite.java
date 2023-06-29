@@ -8,8 +8,13 @@ import lombok.Data;
 public class GroupInvite {
 
     @JsonProperty
-    public Group groupId;
+    public Group group;
 
     @JsonProperty
-    public User inviteeId;
+    public User invitee;
+
+    public GroupInvite(Group group, User invitee) {
+        this.group = group;
+        this.invitee = invitee;
+    }
 }
