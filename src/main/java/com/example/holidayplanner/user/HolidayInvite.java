@@ -1,5 +1,6 @@
 package com.example.holidayplanner.user;
 
+import com.example.holidayplanner.holiday.Holiday;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -7,12 +8,12 @@ import lombok.Data;
 public class HolidayInvite {
 
     @JsonProperty
-    public String holidayId;
+    public Holiday holidayId;
 
     @JsonProperty
-    public String inviteeId;
+    public User inviteeId;
 
-    public HolidayInvite(String holidayId, String inviteeId) {
+    public HolidayInvite(Holiday holidayId, User inviteeId) {
         this.holidayId = holidayId;
         this.inviteeId = inviteeId;
     }

@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class HolidayService {
@@ -61,6 +63,7 @@ public class HolidayService {
     public ResponseEntity<Object> create(Holiday holiday, Budget budget, AvailableDates availableDates) throws JsonProcessingException {
 
         List<String> invitedHolidayMakersIds = holiday.getInvitedHolidayMakersIds();
+        invitedHolidayMakersIds.add(holiday.getHolidayMakersIds().get(0));
         List<User> invitedHolidayMakers = (List<User>) userRepository.findAllById(invitedHolidayMakersIds);
 
         if (invitedHolidayMakers.size() != invitedHolidayMakersIds.size()) {
@@ -91,11 +94,14 @@ public class HolidayService {
 
         group.addHoliday(newHoliday.getId());
 
+        User inviter = invitedHolidayMakers.stream().filter(holidayMaker -> holidayMaker.getId().equals(newHoliday.getHolidayMakersIds().get(0))).findFirst().get();
 
-        HolidayInvite holidayInvite = new HolidayInvite(newHoliday.getId(), newHoliday.getHolidayMakersIds().get(0));
+        HolidayInvite holidayInvite = new HolidayInvite(newHoliday, inviter);
         for (User invitedHolidayMaker : invitedHolidayMakers) {
             invitedHolidayMaker.getHolidayInvites().add(holidayInvite);
         }
+
+        inviter.getHolidayIds().add(newHoliday.getId());
 
         userRepository.saveAll(invitedHolidayMakers);
         groupRepository.save(group);
