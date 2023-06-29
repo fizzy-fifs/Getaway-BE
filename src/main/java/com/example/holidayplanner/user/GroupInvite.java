@@ -13,6 +13,9 @@ public class GroupInvite {
     @JsonProperty
     public User invitee;
 
+    public GroupInvite() {
+    }
+
     public GroupInvite(Group group, User invitee) {
         this.group = group;
         this.invitee = invitee;

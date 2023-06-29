@@ -13,6 +13,9 @@ public class HolidayInvite {
     @JsonProperty
     public User invitee;
 
+    public HolidayInvite() {
+    }
+
     public HolidayInvite(Holiday holiday, User invitee) {
         this.holiday = holiday;
         this.invitee = invitee;
