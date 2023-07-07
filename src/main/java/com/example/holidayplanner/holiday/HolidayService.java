@@ -62,11 +62,9 @@ public class HolidayService {
 
     public ResponseEntity<Object> create(Holiday holiday, Budget budget, AvailableDates availableDates) throws JsonProcessingException {
 
-        List<String> invitedHolidayMakersIds = holiday.getInvitedHolidayMakersIds();
-        invitedHolidayMakersIds.add(holiday.getHolidayMakersIds().get(0));
-        List<User> invitedHolidayMakers = (List<User>) userRepository.findAllById(invitedHolidayMakersIds);
+        List<User> invitedHolidayMakers = (List<User>) userRepository.findAllById(holiday.getInvitedHolidayMakersIds());
 
-        if (invitedHolidayMakers.size() != invitedHolidayMakersIds.size()) {
+        if (invitedHolidayMakers.size() != holiday.getInvitedHolidayMakersIds().size()) {
             return ResponseEntity.badRequest().body("One of the userIds added is invalid");
         }
 

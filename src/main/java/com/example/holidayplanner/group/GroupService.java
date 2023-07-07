@@ -33,10 +33,6 @@ public class GroupService implements ServiceInterface<Group> {
     @Autowired
     private final MongoTemplate mongoTemplate;
 
-    private final int pageNumber = 0;
-
-    private final int pageSize = 10;
-
     @Autowired
     public GroupService(GroupRepository groupRepository, UserRepository userRepository, ObjectMapper mapper, MongoTemplate mongoTemplate) {
         this.groupRepository = groupRepository;
@@ -48,21 +44,22 @@ public class GroupService implements ServiceInterface<Group> {
     @Override
     public ResponseEntity<Object> create(Group group) throws JsonProcessingException {
          //Find group members
-        List<String> groupMembersUsernames = group.getGroupMembers().stream().map(User::getUserName).collect(Collectors.toList());
-        List<User> groupMembers = userRepository.findByUserNameIn(groupMembersUsernames);
+        List<User> invitedGroupMembers = userRepository.findByUserNameIn(group.getInvitedGroupMembersIds());
 
-        if (groupMembers.size() != group.getGroupMembers().size()) {
+        if (invitedGroupMembers.size() != group.getInvitedGroupMembersIds().size()) {
              return ResponseEntity.badRequest().body("One of the usernames added is invalid");
         }
 
-         //Insert group in DB
-        Group newGroup = groupRepository.insert(group);
+        GroupInvite newGroupInvite = new GroupInvite(group, group.getGroupMembers().get(0));
 
-        for (User member : groupMembers){
-             member.addGroup(newGroup.getId());
+        for (User invitedMember : invitedGroupMembers){
+            invitedMember.addGroupInvite(newGroupInvite);
         }
 
-        userRepository.saveAll(groupMembers);
+        //Insert group in DB
+        Group newGroup = groupRepository.insert(group);
+
+        userRepository.saveAll(invitedGroupMembers);
 
         //Convert group object to json
         ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
@@ -154,6 +151,8 @@ public class GroupService implements ServiceInterface<Group> {
         );
 
         searchQuery .addCriteria(criteria);
+        int pageSize = 10;
+        int pageNumber = 0;
         searchQuery.with(PageRequest.of(pageNumber, pageSize));
 
         List<Group> groups = mongoTemplate.find(searchQuery, Group.class);

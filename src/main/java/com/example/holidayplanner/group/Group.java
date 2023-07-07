@@ -26,6 +26,9 @@ public class Group {
     private List<User> groupMembers = new ArrayList<>();
 
     @JsonProperty
+    private List<String> invitedGroupMembersIds = new ArrayList<>();
+
+    @JsonProperty
     private String description;
 
     @JsonProperty
@@ -43,7 +46,13 @@ public class Group {
     }
 
     public Group(String name, List<User> groupMembers) { this.name = name; this.groupMembers = groupMembers; }
-    
+
+    public Group(String name, List<User> groupMembers, List<String> invitedGroupMembersIds) {
+        this.name = name;
+        this.groupMembers = groupMembers;
+        this.invitedGroupMembersIds = invitedGroupMembersIds;
+    }
+
     public Group(String name, List<User> groupMembers, String description) {
         this.name = name;
         this.groupMembers = groupMembers;

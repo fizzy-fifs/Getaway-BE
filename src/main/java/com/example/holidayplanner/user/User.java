@@ -128,6 +128,8 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
+    public void addGroupInvite(GroupInvite groupInvite) { groupInvites.add(groupInvite); }
+
     public void addGroup(String groupId) { groupIds.add(groupId); }
 
     public void addFriendRequest(String friendId) { friendRequests.add(friendId); }
