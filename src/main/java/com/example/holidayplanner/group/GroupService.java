@@ -43,25 +43,24 @@ public class GroupService implements ServiceInterface<Group> {
 
     @Override
     public ResponseEntity<Object> create(Group group) throws JsonProcessingException {
-         //Find group members
-        List<User> invitedGroupMembers = userRepository.findByUserNameIn(group.getInvitedGroupMembersIds());
+         if (!group.getInvitedGroupMembersIds().isEmpty()) {
+            List<User> invitedGroupMembers = userRepository.findByUserNameIn(group.getInvitedGroupMembersIds());
 
-        if (invitedGroupMembers.size() != group.getInvitedGroupMembersIds().size()) {
-             return ResponseEntity.badRequest().body("One of the usernames added is invalid");
-        }
+             if (invitedGroupMembers.size() != group.getInvitedGroupMembersIds().size()) {
+                 return ResponseEntity.badRequest().body("One of the usernames added is invalid");
+             }
 
-        GroupInvite newGroupInvite = new GroupInvite(group, group.getGroupMembers().get(0));
+             GroupInvite newGroupInvite = new GroupInvite(group, group.getGroupMembers().get(0));
 
-        for (User invitedMember : invitedGroupMembers){
-            invitedMember.addGroupInvite(newGroupInvite);
-        }
+             for (User invitedMember : invitedGroupMembers){
+                 invitedMember.addGroupInvite(newGroupInvite);
+             }
 
-        //Insert group in DB
+             userRepository.saveAll(invitedGroupMembers);
+         }
+
         Group newGroup = groupRepository.insert(group);
 
-        userRepository.saveAll(invitedGroupMembers);
-
-        //Convert group object to json
         ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
         String groupJson = mapper.writeValueAsString(newGroup);
 
