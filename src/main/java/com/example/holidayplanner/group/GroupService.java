@@ -16,8 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class GroupService implements ServiceInterface<Group> {
@@ -44,7 +42,8 @@ public class GroupService implements ServiceInterface<Group> {
     @Override
     public ResponseEntity<Object> create(Group group) throws JsonProcessingException {
          if (!group.getInvitedGroupMembersIds().isEmpty()) {
-            List<User> invitedGroupMembers = userRepository.findByUserNameIn(group.getInvitedGroupMembersIds());
+             System.out.println("InvitedGroupMembersIds is not empty");
+             List<User> invitedGroupMembers = userRepository.findByUserNameIn(group.getInvitedGroupMembersIds());
 
              if (invitedGroupMembers.size() != group.getInvitedGroupMembersIds().size()) {
                  return ResponseEntity.badRequest().body("One of the usernames added is invalid");
