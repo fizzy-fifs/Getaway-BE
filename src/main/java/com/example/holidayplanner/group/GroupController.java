@@ -80,9 +80,9 @@ public class GroupController implements ControllerInterface<Group> {
         return groupService.inviteUsers(groupId, inviteeId, userIds);
     }
 
-    @PostMapping(path = "/acceptinvitation/{groupId}")
+    @PostMapping(path = "/acceptinvitation/{groupId}/{userId}")
     @ApiOperation(value = "Accept an invitation to a group")
-    public ResponseEntity<Object> acceptInvitation(@PathVariable("groupId") String groupId, @RequestBody String userId) throws JsonProcessingException {
+    public ResponseEntity<Object> acceptInvitation(@PathVariable("groupId") String groupId, @PathVariable String userId) throws JsonProcessingException {
         return groupService.acceptInvitation(groupId, userId);
     }
 
