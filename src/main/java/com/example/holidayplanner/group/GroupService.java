@@ -41,22 +41,28 @@ public class GroupService implements ServiceInterface<Group> {
 
     @Override
     public ResponseEntity<Object> create(Group group) throws JsonProcessingException {
-         if (!group.getInvitedGroupMembersIds().isEmpty()) {
-             System.out.println("InvitedGroupMembersIds is not empty");
-             List<User> invitedGroupMembers = userRepository.findByUserNameIn(group.getInvitedGroupMembersIds());
+        if (!group.getInvitedGroupMembersIds().isEmpty()) {
+            List<String> userIds = group.getInvitedGroupMembersIds();
+            userIds.add(group.getGroupMembersIds().get(0));
 
-             if (invitedGroupMembers.size() != group.getInvitedGroupMembersIds().size()) {
-                 return ResponseEntity.badRequest().body("One of the usernames added is invalid");
-             }
+            List<User> users = (List<User>) userRepository.findAllById(userIds);
 
-             GroupInvite newGroupInvite = new GroupInvite(group, group.getGroupMembers().get(0));
+            if (users.size() != userIds.size()) {
+                return ResponseEntity.badRequest().body("One of the users added does not exist");
+            }
+            User groupCreator = users.stream().filter(user ->
+                    user.getId().equals(group.getGroupMembersIds().get(0)))
+                    .findFirst().get();
+            users.remove(groupCreator);
 
-             for (User invitedMember : invitedGroupMembers){
-                 invitedMember.addGroupInvite(newGroupInvite);
-             }
+            GroupInvite newGroupInvite = new GroupInvite(group, groupCreator);
 
-             userRepository.saveAll(invitedGroupMembers);
-         }
+            for (User invitedMember : users) {
+                invitedMember.addGroupInvite(newGroupInvite);
+            }
+
+            userRepository.saveAll(users);
+        }
 
         Group newGroup = groupRepository.insert(group);
 
@@ -67,7 +73,9 @@ public class GroupService implements ServiceInterface<Group> {
     }
 
     @Override
-    public List<Group> getAll() { return groupRepository.findAll(); }
+    public List<Group> getAll() {
+        return groupRepository.findAll();
+    }
 
     @Override
     public String update(String entityId, Group newEntityInfo) {
@@ -81,20 +89,24 @@ public class GroupService implements ServiceInterface<Group> {
 
         groupRepository.delete(group);
 
-        return  group.getName() + " has been deleted" ;
+        return group.getName() + " has been deleted";
     }
 
     public ResponseEntity<Object> addGroupMember(String groupId, String userId) {
 
         User newGroupMember = userRepository.findById(new ObjectId(userId));
 
-        if (newGroupMember == null) { return ResponseEntity.badRequest().body("user with id " + userId + " does not exists"); }
+        if (newGroupMember == null) {
+            return ResponseEntity.badRequest().body("user with id " + userId + " does not exists");
+        }
 
         Group group = groupRepository.findById(new ObjectId(groupId));
 
-        if (group == null) { return ResponseEntity.badRequest().body("Group with id " + groupId + " does not exist"); }
+        if (group == null) {
+            return ResponseEntity.badRequest().body("Group with id " + groupId + " does not exist");
+        }
 
-        group.addNewMember(newGroupMember);
+        group.addNewMemberId(newGroupMember.getId());
         newGroupMember.addGroup(group.getId());
 
         groupRepository.save(group);
@@ -106,7 +118,9 @@ public class GroupService implements ServiceInterface<Group> {
     public String removeGroupMember(String groupId, String userId) {
         Group group = groupRepository.findById(new ObjectId(groupId));
 
-        if (group == null) { return "group with id " + groupId + " does not exists"; }
+        if (group == null) {
+            return "group with id " + groupId + " does not exists";
+        }
         group.removeMember(userId);
 
         groupRepository.save(group);
@@ -116,11 +130,15 @@ public class GroupService implements ServiceInterface<Group> {
 
     public ResponseEntity<Object> findMultipleById(List<String> groupIds) throws JsonProcessingException {
 
-        if (groupIds == null || groupIds.isEmpty()) { return ResponseEntity.badRequest().body("No group id provided"); }
+        if (groupIds == null || groupIds.isEmpty()) {
+            return ResponseEntity.badRequest().body("No group id provided");
+        }
 
         List<Group> groups = (List<Group>) groupRepository.findAllById(groupIds);
 
-        if (groups.isEmpty()) { return ResponseEntity.badRequest().body("No group found"); }
+        if (groups.isEmpty()) {
+            return ResponseEntity.badRequest().body("No group found");
+        }
 
         String groupJson = mapper.writeValueAsString(groups);
 
@@ -128,11 +146,15 @@ public class GroupService implements ServiceInterface<Group> {
     }
 
     public ResponseEntity<Object> findById(String groupId) throws JsonProcessingException {
-        if (groupId == null || groupId.isEmpty()) { return ResponseEntity.badRequest().body("No group id provided"); }
+        if (groupId == null || groupId.isEmpty()) {
+            return ResponseEntity.badRequest().body("No group id provided");
+        }
 
         Group group = groupRepository.findById(new ObjectId(groupId));
 
-        if (group == null) { return ResponseEntity.badRequest().body("No group found"); }
+        if (group == null) {
+            return ResponseEntity.badRequest().body("No group found");
+        }
 
         String groupJson = mapper.writeValueAsString(group);
 
@@ -148,7 +170,7 @@ public class GroupService implements ServiceInterface<Group> {
                 Criteria.where("description").regex(sanitizedSearchTerm, "i")
         );
 
-        searchQuery .addCriteria(criteria);
+        searchQuery.addCriteria(criteria);
         int pageSize = 10;
         int pageNumber = 0;
         searchQuery.with(PageRequest.of(pageNumber, pageSize));
@@ -160,21 +182,33 @@ public class GroupService implements ServiceInterface<Group> {
 
 
     public ResponseEntity<Object> inviteUsers(String groupId, String inviteeId, List<String> inviteeIds) {
-        if (groupId == null || groupId.isEmpty()) { return ResponseEntity.badRequest().body("No group id provided"); }
-        if (inviteeIds == null || inviteeIds.isEmpty()) { return ResponseEntity.badRequest().body("No user id provided"); }
-        if (inviteeId == null || inviteeId.isEmpty()) { return ResponseEntity.badRequest().body("Please include the id of the invitee"); }
+        if (groupId == null || groupId.isEmpty()) {
+            return ResponseEntity.badRequest().body("No group id provided");
+        }
+        if (inviteeIds == null || inviteeIds.isEmpty()) {
+            return ResponseEntity.badRequest().body("No user id provided");
+        }
+        if (inviteeId == null || inviteeId.isEmpty()) {
+            return ResponseEntity.badRequest().body("Please include the id of the invitee");
+        }
 
         Group group = groupRepository.findById(new ObjectId(groupId));
 
-        if (group == null) { return ResponseEntity.badRequest().body("No group found"); }
+        if (group == null) {
+            return ResponseEntity.badRequest().body("No group found");
+        }
 
         List<User> invitees = (List<User>) userRepository.findAllById(inviteeIds);
 
-        if (invitees.size() != inviteeIds.size()) { return ResponseEntity.badRequest().body("One or more of the userIds cannot be found"); }
+        if (invitees.size() != inviteeIds.size()) {
+            return ResponseEntity.badRequest().body("One or more of the userIds cannot be found");
+        }
 
         User inviter = userRepository.findById(new ObjectId(inviteeId));
 
-        if (inviter == null) { return ResponseEntity.badRequest().body("User with id " + inviteeId + " does not exist"); }
+        if (inviter == null) {
+            return ResponseEntity.badRequest().body("User with id " + inviteeId + " does not exist");
+        }
 
         GroupInvite newGroupInvitation = new GroupInvite(group, inviter);
 
@@ -188,21 +222,27 @@ public class GroupService implements ServiceInterface<Group> {
     }
 
     public ResponseEntity<Object> acceptInvitation(String groupId, String userId) {
-        if (groupId == null || groupId.isEmpty()) { return ResponseEntity.badRequest().body("No group id provided"); }
+        if (groupId == null || groupId.isEmpty()) {
+            return ResponseEntity.badRequest().body("No group id provided");
+        }
 
         Group group = groupRepository.findById(new ObjectId(groupId));
 
-        if (group == null) { return ResponseEntity.badRequest().body("No group found"); }
+        if (group == null) {
+            return ResponseEntity.badRequest().body("No group found");
+        }
 
         User user = userRepository.findById(new ObjectId(userId));
 
-        if (user == null) { return ResponseEntity.badRequest().body("User with id " + userId + " does not exist"); }
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User with id " + userId + " does not exist");
+        }
 
         user.addGroup(group.getId());
 
         user.getGroupInvites().remove(group.getId());
 
-        group.addNewMember(user);
+        group.addNewMemberId(user.getId());
 
         userRepository.save(user);
 
@@ -212,15 +252,21 @@ public class GroupService implements ServiceInterface<Group> {
     }
 
     public ResponseEntity<Object> declineInvitation(String groupId, String userId) {
-        if (groupId == null || groupId.isEmpty()) { return ResponseEntity.badRequest().body("No group id provided"); }
+        if (groupId == null || groupId.isEmpty()) {
+            return ResponseEntity.badRequest().body("No group id provided");
+        }
 
         Group group = groupRepository.findById(new ObjectId(groupId));
 
-        if (group == null) { return ResponseEntity.badRequest().body("No group found"); }
+        if (group == null) {
+            return ResponseEntity.badRequest().body("No group found");
+        }
 
         User user = userRepository.findById(new ObjectId(userId));
 
-        if (user == null) { return ResponseEntity.badRequest().body("User with id " + userId + " does not exist"); }
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User with id " + userId + " does not exist");
+        }
 
         user.getGroupInvites().remove(group.getId());
 
