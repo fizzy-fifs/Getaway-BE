@@ -43,7 +43,7 @@ public class GroupService implements ServiceInterface<Group> {
     public ResponseEntity<Object> create(Group group) throws JsonProcessingException {
         if (!group.getInvitedGroupMembersIds().isEmpty()) {
             List<String> userIds = group.getInvitedGroupMembersIds();
-            userIds.add(group.getGroupMembersIds().get(0));
+            userIds.add(group.getGroupMembers().get(0).getId());
 
             List<User> users = (List<User>) userRepository.findAllById(userIds);
           
@@ -51,7 +51,7 @@ public class GroupService implements ServiceInterface<Group> {
                 return ResponseEntity.badRequest().body("One of the users added does not exist");
             }
             User groupCreator = users.stream().filter(user ->
-                    user.getId().equals(group.getGroupMembersIds().get(0)))
+                    user.getId().equals(group.getGroupMembers().get(0).getId()))
                     .findFirst().get();
             users.remove(groupCreator);
           
@@ -106,7 +106,7 @@ public class GroupService implements ServiceInterface<Group> {
             return ResponseEntity.badRequest().body("Group with id " + groupId + " does not exist");
         }
 
-        group.addNewMemberId(newGroupMember.getId());
+        group.addNewMember(newGroupMember);
         newGroupMember.addGroup(group.getId());
 
         groupRepository.save(group);
@@ -242,7 +242,7 @@ public class GroupService implements ServiceInterface<Group> {
 
         user.getGroupInvites().remove(group.getId());
 
-        group.addNewMemberId(user.getId());
+        group.addNewMember(user);
 
         userRepository.save(user);
 
