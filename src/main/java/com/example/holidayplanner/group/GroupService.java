@@ -46,7 +46,7 @@ public class GroupService implements ServiceInterface<Group> {
             userIds.add(group.getGroupMembersIds().get(0));
 
             List<User> users = (List<User>) userRepository.findAllById(userIds);
-
+          
             if (users.size() != userIds.size()) {
                 return ResponseEntity.badRequest().body("One of the users added does not exist");
             }
@@ -54,8 +54,8 @@ public class GroupService implements ServiceInterface<Group> {
                     user.getId().equals(group.getGroupMembersIds().get(0)))
                     .findFirst().get();
             users.remove(groupCreator);
-
-            GroupInvite newGroupInvite = new GroupInvite(group, groupCreator);
+          
+           GroupInvite newGroupInvite = new GroupInvite(group.getId(), groupCreator.getId());
 
             for (User invitedMember : users) {
                 invitedMember.addGroupInvite(newGroupInvite);
@@ -210,7 +210,7 @@ public class GroupService implements ServiceInterface<Group> {
             return ResponseEntity.badRequest().body("User with id " + inviteeId + " does not exist");
         }
 
-        GroupInvite newGroupInvitation = new GroupInvite(group, inviter);
+        GroupInvite newGroupInvitation = new GroupInvite(group.getId(), inviter.getId());
 
         for (User user : invitees) {
             user.getGroupInvites().add(newGroupInvitation);
