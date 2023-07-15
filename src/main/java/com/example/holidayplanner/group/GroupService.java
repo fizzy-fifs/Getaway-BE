@@ -49,7 +49,7 @@ public class GroupService implements ServiceInterface<Group> {
                  return ResponseEntity.badRequest().body("One of the usernames added is invalid");
              }
 
-             GroupInvite newGroupInvite = new GroupInvite(group, group.getGroupMembers().get(0));
+             GroupInvite newGroupInvite = new GroupInvite(group.getId(), group.getGroupMembers().get(0).getId());
 
              for (User invitedMember : invitedGroupMembers){
                  invitedMember.addGroupInvite(newGroupInvite);
@@ -176,7 +176,7 @@ public class GroupService implements ServiceInterface<Group> {
 
         if (inviter == null) { return ResponseEntity.badRequest().body("User with id " + inviteeId + " does not exist"); }
 
-        GroupInvite newGroupInvitation = new GroupInvite(group, inviter);
+        GroupInvite newGroupInvitation = new GroupInvite(group.getId(), inviter.getId());
 
         for (User user : invitees) {
             user.getGroupInvites().add(newGroupInvitation);
