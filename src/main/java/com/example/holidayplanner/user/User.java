@@ -78,7 +78,7 @@ public class User {
     private List<String> groupIds = new ArrayList<>();
 
     @JsonProperty
-    private List<GroupInvite> groupInvites = new ArrayList<>();
+    private List<String> groupInvitesIds = new ArrayList<>();
 
     @JsonProperty
     private List<String> holidayIds = new ArrayList<>();
@@ -128,7 +128,7 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public void addGroupInvite(GroupInvite groupInvite) { groupInvites.add(groupInvite); }
+    public void addGroupInvite(String groupInviteId) { groupInvitesIds.add(groupInviteId); }
 
     public void addGroup(String groupId) { groupIds.add(groupId); }
 

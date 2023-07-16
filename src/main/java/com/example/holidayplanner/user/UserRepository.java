@@ -9,11 +9,10 @@ import java.util.List;
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
     User findById(ObjectId userId);
+
     User findByEmail(String email);
+
     User findByUserName(String userName);
-    List<User> findByUserNameIn(List<String> userName);
 
     List<User> findByPhoneNumberInOrEmailIn(List<String> phoneNumbers, List<String> emails);
-
-    List<User> findByIdIn(List<String> userIds);
 }
