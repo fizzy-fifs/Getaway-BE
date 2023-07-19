@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.lang.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,10 @@ public class Holiday {
 
     @JsonProperty
     private String name;
+
+    @JsonProperty
+    @Nullable
+    private String image;
 
     @JsonProperty
     @JsonBackReference
