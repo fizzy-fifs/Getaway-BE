@@ -2,8 +2,10 @@ package com.example.holidayplanner.groupInvite;
 
 import com.example.holidayplanner.group.Group;
 import com.example.holidayplanner.user.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -19,10 +21,13 @@ public class GroupInvite {
 
     @JsonProperty
     @NotNull
+    @DBRef
     public Group group;
 
     @JsonProperty
     @NotNull
+    @JsonBackReference
+    @DBRef
     public User invitee;
 
     public GroupInvite() {

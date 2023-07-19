@@ -6,8 +6,8 @@ import com.example.holidayplanner.budget.Budget;
 import com.example.holidayplanner.budget.BudgetRepository;
 import com.example.holidayplanner.group.Group;
 import com.example.holidayplanner.group.GroupRepository;
-import com.example.holidayplanner.interfaces.ServiceInterface;
-import com.example.holidayplanner.user.HolidayInvite;
+import com.example.holidayplanner.holidayInvite.HolidayInvite;
+import com.example.holidayplanner.holidayInvite.HolidayInviteRepository;
 import com.example.holidayplanner.user.User;
 import com.example.holidayplanner.user.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,19 +16,17 @@ import org.apache.commons.math3.stat.descriptive.moment.Mean;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class HolidayService {
@@ -50,80 +48,80 @@ public class HolidayService {
     @Autowired
     private final AvailableDatesRepository availableDatesRepository;
 
-    public HolidayService(HolidayRepository holidayRepository, UserRepository userRepository, GroupRepository groupRepository, ObjectMapper mapper, BudgetRepository budgetRepository, AvailableDatesRepository availableDatesRepository) {
+    @Autowired
+    private HolidayInviteRepository holidayInviteRepository;
+
+    public HolidayService(HolidayRepository holidayRepository, UserRepository userRepository, GroupRepository groupRepository, ObjectMapper mapper, BudgetRepository budgetRepository, AvailableDatesRepository availableDatesRepository, HolidayInviteRepository holidayInviteRepository) {
         this.holidayRepository = holidayRepository;
         this.userRepository = userRepository;
         this.groupRepository = groupRepository;
         this.mapper = mapper;
         this.budgetRepository = budgetRepository;
         this.availableDatesRepository = availableDatesRepository;
+        this.holidayInviteRepository = holidayInviteRepository;
     }
 
 
     public ResponseEntity<Object> create(Holiday holiday, Budget budget, AvailableDates availableDates) throws JsonProcessingException {
 
-        List<String> userIds = holiday.getInvitedHolidayMakersIds();
-        userIds.add(holiday.getInvitedHolidayMakersIds().get(0));
-        List<User> invitedHolidayMakers = (List<User>) userRepository.findAllById(userIds);
+        List<User> invitedHolidayMakers = holiday.getInvitedHolidayMakers();
+        User holidayCreator = holiday.getHolidayMakers().get(0);
 
-        if (invitedHolidayMakers.size() != holiday.getInvitedHolidayMakersIds().size()) {
+        List<String> userIdsToCheck = invitedHolidayMakers.stream()
+                .map(User::getId)
+                .collect(Collectors.toList());
+
+        userIdsToCheck.add(holidayCreator.getId());
+
+        List<User> confirmedUsers = (List<User>) userRepository.findAllById(userIdsToCheck);
+
+        if (confirmedUsers.size() != userIdsToCheck.size()) {
             return ResponseEntity.badRequest().body("One of the userIds added is invalid");
         }
 
-        String groupId = holiday.getGroupId();
+        Group group = holiday.getGroup();
 
-        if (groupId == null || groupId.isEmpty()) {
+        if (group == null) {
             return ResponseEntity.badRequest().body("Group id is null or empty. Please add a valid group id");
         }
 
-        Group group;
+        Group confirmedGroup = groupRepository.findById(new ObjectId(group.getId()));
 
-        try {
-            group = groupRepository.findById(new ObjectId(groupId));
-        } catch (IllegalArgumentException e) {
+        if (confirmedGroup == null) {
             return ResponseEntity.badRequest().body("Group id is invalid. Please add a valid group id");
         }
 
         Budget newBudget = budgetRepository.insert(budget);
-        AvailableDates newAvailableDates = availableDatesRepository.insert(availableDates);
+        holiday.getBudgets().add(newBudget);
 
-        holiday.getBudgetIds().add(newBudget.getId());
-        holiday.getAvailableDatesIds().add(newAvailableDates.getId());
+        AvailableDates newAvailableDates = availableDatesRepository.insert(availableDates);
+        holiday.getAvailableDates().add(newAvailableDates);
 
         Holiday newHoliday = holidayRepository.insert(holiday);
 
-        group.addHoliday(newHoliday.getId());
+        group.addHoliday(newHoliday);
 
-        User inviter = invitedHolidayMakers.stream().filter(holidayMaker -> holidayMaker.getId().equals(newHoliday.getHolidayMakersIds().get(0))).findFirst().get();
+        User inviter = confirmedUsers.stream().filter(holidayMaker ->
+                        holidayMaker.getId().equals(newHoliday.getHolidayMakers().get(0).getId()))
+                .findFirst().get();
 
         HolidayInvite holidayInvite = new HolidayInvite(newHoliday, inviter);
-        for (User invitedHolidayMaker : invitedHolidayMakers) {
-            invitedHolidayMaker.getHolidayInvites().add(holidayInvite);
+        HolidayInvite newHolidayInvite = holidayInviteRepository.insert(holidayInvite);
+
+        for (User invitedHolidayMaker : confirmedUsers) {
+            if (!invitedHolidayMaker.getId().equals(inviter.getId())) {
+                invitedHolidayMaker.getHolidayInvites().add(newHolidayInvite);
+            }
         }
 
-        inviter.getHolidayIds().add(newHoliday.getId());
+        inviter.addHoliday(newHoliday);
 
-        userRepository.saveAll(invitedHolidayMakers);
+        userRepository.saveAll(confirmedUsers);
         groupRepository.save(group);
 
         String holidayJson = mapper.writeValueAsString(newHoliday);
 
         return ResponseEntity.ok(holidayJson);
-    }
-
-    public ResponseEntity<Object> addHolidayMaker(String holidayId, String userId) {
-        User newHolidayMaker = userRepository.findById(new ObjectId(userId));
-
-        if (newHolidayMaker == null) {
-            return ResponseEntity.badRequest().body("User with user id" + userId + "does not exists");
-        }
-
-        Holiday holiday = holidayRepository.findById(new ObjectId(holidayId));
-        holiday.addHolidayMaker(newHolidayMaker.getId());
-
-        holidayRepository.save(holiday);
-
-        return ResponseEntity.ok(newHolidayMaker.getFirstName() + " has been successfully added to " + holiday.getName());
     }
 
     public String removeHolidayMaker(String holidayId, String userId) {
@@ -134,7 +132,7 @@ public class HolidayService {
         }
 
         Holiday holiday = holidayRepository.findById(holidayId).get();
-        holiday.removeHolidayMaker(user.getId());
+        holiday.removeHolidayMaker(user);
 
         return user.getFirstName() + " has been removed from " + holiday.getName();
     }
@@ -150,16 +148,24 @@ public class HolidayService {
             return ResponseEntity.badRequest().body("Holiday id is invalid. Please add a valid holiday id");
         }
 
-        List<String> budgetIds = holiday.getBudgetIds();
-        List<String> availableDatesIds = holiday.getAvailableDatesIds();
+        List<Budget> budgets = holiday.getBudgets();
+        var budgetIdsToCheck = budgets.stream()
+                .map(Budget::getId)
+                .toList();
 
-        List<Budget> budgets = (List<Budget>) budgetRepository.findAllById(budgetIds);
-        if (budgets.isEmpty()) {
+        List<Budget> confirmedBudgets = (List<Budget>) budgetRepository.findAllById(budgetIdsToCheck);
+
+        if (confirmedBudgets.isEmpty() || confirmedBudgets.size() != budgets.size()) {
             return ResponseEntity.badRequest().body("No budgets found. Please enter valid budget ids");
         }
 
-        List<AvailableDates> availableDates = (List<AvailableDates>) availableDatesRepository.findAllById(availableDatesIds);
-        if (availableDates.isEmpty()) {
+        List<AvailableDates> availableDates = holiday.getAvailableDates();
+        var availableDatesIdsToCheck = availableDates.stream()
+                .map(AvailableDates::getId)
+                .toList();
+
+        List<AvailableDates> confirmedAvailableDates = (List<AvailableDates>) availableDatesRepository.findAllById(availableDatesIdsToCheck);
+        if (confirmedAvailableDates.isEmpty() || confirmedAvailableDates.size() != availableDates.size()) {
             return ResponseEntity.badRequest().body("No dates found. Please enter valid date ids");
         }
 
@@ -209,11 +215,11 @@ public class HolidayService {
         return ResponseEntity.ok(holidayJson);
     }
 
-    public ResponseEntity<Object> acceptInvite(String holidayId, String userId) {
-        Holiday holiday = holidayRepository.findById(new ObjectId(holidayId));
+    public ResponseEntity<Object> acceptInvite(String holidayInviteId, String userId) {
+        HolidayInvite holidayInvite = holidayInviteRepository.findById(new ObjectId(holidayInviteId));
 
-        if (holiday == null) {
-            return ResponseEntity.badRequest().body("No holiday found");
+        if (holidayInvite == null) {
+            return ResponseEntity.badRequest().body("Invite does not exist");
         }
 
         User user = userRepository.findById(new ObjectId(userId));
@@ -222,15 +228,17 @@ public class HolidayService {
             return ResponseEntity.badRequest().body("No user found");
         }
 
-        if (!holiday.getInvitedHolidayMakersIds().contains(user.getId())) {
+        Holiday holiday = holidayInvite.getHoliday();
+
+        if (!holiday.getInvitedHolidayMakers().contains(user)) {
             return ResponseEntity.badRequest().body("Unfortunately, you have not been invited to this holiday");
         }
 
-        holiday.removeInvitedHolidayMaker(user.getId());
-        user.deleteHolidayInvite(holiday.getId());
+        holiday.removeInvitedHolidayMaker(user);
+        user.deleteHolidayInvite(holidayInvite);
 
-        holiday.addHolidayMaker(user.getId());
-        user.addHoliday(holiday.getId());
+        holiday.addHolidayMaker(user);
+        user.addHoliday(holiday);
 
         holidayRepository.save(holiday);
         userRepository.save(user);
@@ -238,11 +246,11 @@ public class HolidayService {
         return ResponseEntity.ok("You have successfully accepted the invite");
     }
 
-    public ResponseEntity declineInvite(String holidayId, String userId) {
-        Holiday holiday = holidayRepository.findById(new ObjectId(holidayId));
+    public ResponseEntity declineInvite(String holidayInviteId, String userId) {
+        HolidayInvite holidayInvite = holidayInviteRepository.findById(new ObjectId(holidayInviteId));
 
-        if (holiday == null) {
-            return ResponseEntity.badRequest().body("No holiday found");
+        if (holidayInvite == null) {
+            return ResponseEntity.badRequest().body("Invite does not exist");
         }
 
         User user = userRepository.findById(new ObjectId(userId));
@@ -251,12 +259,14 @@ public class HolidayService {
             return ResponseEntity.badRequest().body("No user found");
         }
 
-        if (!holiday.getInvitedHolidayMakersIds().contains(user.getId())) {
+        Holiday holiday = holidayInvite.getHoliday();
+
+        if (!holiday.getInvitedHolidayMakers().contains(user.getId())) {
             return ResponseEntity.badRequest().body("Unfortunately, you have not been invited to this holiday");
         }
 
-        holiday.removeInvitedHolidayMaker(user.getId());
-        user.deleteHolidayInvite(holiday.getId());
+        holiday.removeInvitedHolidayMaker(user);
+        user.deleteHolidayInvite(holidayInvite);
 
         holidayRepository.save(holiday);
         userRepository.save(user);
@@ -268,8 +278,7 @@ public class HolidayService {
 
         double[] medianBudget = new double[budgets.size()];
         for (int i = 0; i < budgets.size(); i++) {
-            var median = calculateMedian(budgets.get(i).getBudgetUpperLimit(),
-                    budgets.get(i).getBudgetLowerLimit());
+            var median = calculateMedian(budgets.get(i).getBudgetUpperLimit(), budgets.get(i).getBudgetLowerLimit());
             medianBudget[i] = median;
         }
 
@@ -303,29 +312,19 @@ public class HolidayService {
         var sdOfStartDates = (long) findSd.evaluate(startDatesArray);
         var sdOfEndDates = (long) findSd.evaluate(endDatesArray);
 
-        LocalDate suggestedStartDate1 = Instant.ofEpochMilli(averageStartDate - sdOfStartDates)
-                .atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate suggestedStartDate1 = Instant.ofEpochMilli(averageStartDate - sdOfStartDates).atZone(ZoneId.systemDefault()).toLocalDate();
 
-        LocalDate suggestedStartDate2 = Instant.ofEpochMilli(averageStartDate)
-                .atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate suggestedStartDate2 = Instant.ofEpochMilli(averageStartDate).atZone(ZoneId.systemDefault()).toLocalDate();
 
-        LocalDate suggestedStartDate3 = Instant.ofEpochMilli(averageStartDate + sdOfStartDates)
-                .atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate suggestedStartDate3 = Instant.ofEpochMilli(averageStartDate + sdOfStartDates).atZone(ZoneId.systemDefault()).toLocalDate();
 
-        LocalDate suggestedEndDate1 = Instant.ofEpochMilli(averageEndDate - sdOfEndDates)
-                .atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate suggestedEndDate1 = Instant.ofEpochMilli(averageEndDate - sdOfEndDates).atZone(ZoneId.systemDefault()).toLocalDate();
 
-        LocalDate suggestedEndDate2 = Instant.ofEpochMilli(averageEndDate)
-                .atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate suggestedEndDate2 = Instant.ofEpochMilli(averageEndDate).atZone(ZoneId.systemDefault()).toLocalDate();
 
-        LocalDate suggestedEndDate3 = Instant.ofEpochMilli(averageEndDate + sdOfEndDates)
-                .atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate suggestedEndDate3 = Instant.ofEpochMilli(averageEndDate + sdOfEndDates).atZone(ZoneId.systemDefault()).toLocalDate();
 
-        return new String[]{
-                suggestedStartDate1 + "-" + suggestedEndDate1,
-                suggestedStartDate2 + "-" + suggestedEndDate2,
-                suggestedStartDate3 + "-" + suggestedEndDate3
-        };
+        return new String[]{suggestedStartDate1 + "-" + suggestedEndDate1, suggestedStartDate2 + "-" + suggestedEndDate2, suggestedStartDate3 + "-" + suggestedEndDate3};
     }
 
     private double calculateMedian(double upperLimit, double lowerLimit) {

@@ -1,12 +1,19 @@
 package com.example.holidayplanner.holiday;
 
+import com.example.holidayplanner.availableDates.AvailableDates;
+import com.example.holidayplanner.budget.Budget;
+import com.example.holidayplanner.group.Group;
+import com.example.holidayplanner.user.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,65 +32,74 @@ public class Holiday {
     private String name;
 
     @JsonProperty
-    private String groupId;
+    @JsonBackReference
+    @DBRef
+    private Group group;
 
     @JsonProperty
-    private List<String> holidayMakersIds = new ArrayList<>();
+    @JsonBackReference
+    @DBRef
+    private List<User> holidayMakers = new ArrayList<>();
 
     @JsonProperty
-    private List<String> invitedHolidayMakersIds = new ArrayList<>();
+    @JsonBackReference
+    @DBRef
+    private List<User> invitedHolidayMakers = new ArrayList<>();
 
     @JsonProperty
-    private List<String> budgetIds = new ArrayList<>();
+    @DBRef
+    private List<Budget> budgets = new ArrayList<>();
 
     @JsonProperty
-    private List<String> availableDatesIds = new ArrayList<>();
+    private List<AvailableDates> availableDates = new ArrayList<>();
 
     public Holiday(String name) {
         this.name = name;
     }
 
-    public Holiday(String name, String groupId) {
+    public Holiday(String name, Group group) {
         this.name = name;
-        this.groupId = groupId;
+        this.group = group;
     }
 
-    public Holiday(String name, String groupId, List<String> holidayMakersIds) {
+    public Holiday(String name, Group group, List<User> holidayMakers) {
         this.name = name;
-        this.groupId = groupId;
-        this.holidayMakersIds = holidayMakersIds;
+        this.group = group;
+        this.holidayMakers = holidayMakers;
     }
 
-    public Holiday(String name, String groupId, List<String> holidayMakersIds, List<String> budgetIds) {
+    public Holiday(String name, Group group, List<User> holidayMakers, List<Budget> budgets) {
         this.name = name;
-        this.groupId = groupId;
-        this.holidayMakersIds = holidayMakersIds;
-        this.budgetIds = budgetIds;
+        this.group = group;
+        this.holidayMakers = holidayMakers;
+        this.budgets = budgets;
     }
 
-    public Holiday(String name, String groupId, List<String> holidayMakersIds, List<String> budgetIds, List<String> availableDatesIds) {
+    public Holiday(String name, Group group, List<User> holidayMakers, List<Budget> budgets, List<AvailableDates> availableDates) {
         this.name = name;
-        this.groupId = groupId;
-        this.holidayMakersIds = holidayMakersIds;
-        this.budgetIds = budgetIds;
-        this.availableDatesIds = availableDatesIds;
+        this.group = group;
+        this.holidayMakers = holidayMakers;
+        this.budgets = budgets;
+        this.availableDates = availableDates;
     }
 
-    public void addHolidayMaker(String newHolidayMakerId) {
-        this.holidayMakersIds.add(newHolidayMakerId);
+    public void addHolidayMaker(User newHolidayMaker) {
+        this.holidayMakers.add(newHolidayMaker);
     }
 
-    public void removeHolidayMaker(String userId) {
-        this.holidayMakersIds.remove(userId);
+    public void removeHolidayMaker(User user) {
+        this.holidayMakers.removeIf(holidayMaker -> holidayMaker.getId().equals(user.getId()));
     }
 
-    public void removeInvitedHolidayMaker(String userId) { this.invitedHolidayMakersIds.remove(userId); }
-
-    public void addBudget(String newBudgetId) {
-        this.budgetIds.add(newBudgetId);
+    public void removeInvitedHolidayMaker(User user) {
+        this.invitedHolidayMakers.removeIf(invitedHolidayMaker -> invitedHolidayMaker.getId().equals(user));
     }
 
-    public void addAvailableDates(String availableDatesId) {
-        this.availableDatesIds.add(availableDatesId);
+    public void addBudget(Budget newBudget) {
+        this.budgets.add(newBudget);
+    }
+
+    public void addAvailableDates(AvailableDates availableDates) {
+        this.availableDates.add(availableDates);
     }
 }

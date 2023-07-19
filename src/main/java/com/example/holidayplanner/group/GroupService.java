@@ -9,7 +9,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -17,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GroupService implements ServiceInterface<Group> {
@@ -45,30 +48,33 @@ public class GroupService implements ServiceInterface<Group> {
 
     @Override
     public ResponseEntity<Object> create(Group group) throws JsonProcessingException {
-        if (!group.getInvitedGroupMembersIds().isEmpty()) {
+        if (!group.getInvitedGroupMembers().isEmpty()) {
             // Combining invited members and the group creator into one list and checking if all the users exist
-            List<String> userIds = group.getInvitedGroupMembersIds();
-            userIds.add(group.getGroupMembers().get(0).getId());
+            List<User> invitedMembers = group.getInvitedGroupMembers();
+            User groupCreator = group.getGroupMembers().get(0);
 
-            List<User> users = (List<User>) userRepository.findAllById(userIds);
-          
-            if (users.size() != userIds.size()) {
+            List<String> userIdsToCheck = invitedMembers.stream()
+                    .map(User::getId)
+                    .collect(Collectors.toList());
+            userIdsToCheck.add(groupCreator.getId());
+
+            List<User> confirmedUsers = (List<User>) userRepository.findAllById(userIdsToCheck);
+
+            if (confirmedUsers.size() != userIdsToCheck.size()) {
                 return ResponseEntity.badRequest().body("One of the users added does not exist");
             }
-            User groupCreator = users.stream().filter(user ->
-                    user.getId().equals(group.getGroupMembers().get(0).getId()))
-                    .findFirst().get();
-            users.remove(groupCreator);
-          
-           GroupInvite newGroupInvite = new GroupInvite(group, groupCreator);
 
-           GroupInvite savedGroupInvite = groupInviteRepository.save(newGroupInvite);
+            GroupInvite newGroupInvite = new GroupInvite(group, groupCreator);
 
-            for (User invitedMember : users) {
-                invitedMember.addGroupInvite(savedGroupInvite.getId());
+            GroupInvite savedGroupInvite = groupInviteRepository.insert(newGroupInvite);
+
+            for (User invitedMember : confirmedUsers) {
+                if (!invitedMember.getId().equals(groupCreator.getId())) {
+                    invitedMember.addGroupInvite(savedGroupInvite);
+                }
             }
 
-            userRepository.saveAll(users);
+            userRepository.saveAll(confirmedUsers);
         }
 
         Group newGroup = groupRepository.insert(group);
@@ -114,7 +120,7 @@ public class GroupService implements ServiceInterface<Group> {
         }
 
         group.addNewMember(newGroupMember);
-        newGroupMember.addGroup(group.getId());
+        newGroupMember.addGroup(group);
 
         groupRepository.save(group);
         userRepository.save(newGroupMember);
@@ -172,10 +178,7 @@ public class GroupService implements ServiceInterface<Group> {
         String sanitizedSearchTerm = searchTerm.trim().toLowerCase();
 
         Query searchQuery = new Query();
-        Criteria criteria = new Criteria().orOperator(
-                Criteria.where("name").regex(sanitizedSearchTerm, "i"),
-                Criteria.where("description").regex(sanitizedSearchTerm, "i")
-        );
+        Criteria criteria = new Criteria().orOperator(Criteria.where("name").regex(sanitizedSearchTerm, "i"), Criteria.where("description").regex(sanitizedSearchTerm, "i"));
 
         searchQuery.addCriteria(criteria);
         int pageSize = 10;
@@ -212,16 +215,14 @@ public class GroupService implements ServiceInterface<Group> {
             return ResponseEntity.badRequest().body("One or more of the userIds cannot be found");
         }
 
-        User inviter = users.stream().filter(user ->
-                user.getId().equals(inviteeId))
-                .findFirst().get();
+        User inviter = users.stream().filter(user -> user.getId().equals(inviteeId)).findFirst().get();
         users.remove(inviter);
 
         GroupInvite newGroupInvite = new GroupInvite(group, inviter);
         GroupInvite savedGroupInvite = groupInviteRepository.save(newGroupInvite);
 
         for (User user : users) {
-            user.getGroupInvitesIds().add(savedGroupInvite.getId());
+            user.getGroupInvites().add(savedGroupInvite);
         }
 
         userRepository.saveAll(users);
@@ -246,9 +247,9 @@ public class GroupService implements ServiceInterface<Group> {
             return ResponseEntity.badRequest().body("User not found");
         }
 
-        user.addGroup(groupInvite.group.getId());
+        user.addGroup(groupInvite.group);
 
-        user.getGroupInvitesIds().remove(groupInvite.getId());
+        user.getGroupInvites().remove(groupInvite);
 
         groupInvite.group.addNewMember(user);
 
@@ -276,9 +277,9 @@ public class GroupService implements ServiceInterface<Group> {
             return ResponseEntity.badRequest().body("User with id " + userId + " does not exist");
         }
 
-        user.getGroupInvitesIds().remove(groupInvite.getId());
+        user.getGroupInvites().remove(groupInvite);
 
-        groupInvite.group.getInvitedGroupMembersIds().remove(user.getId());
+        groupInvite.group.getInvitedGroupMembers().removeIf(invitedGroupMember -> invitedGroupMember.getId().equals(user.getId()));
 
         userRepository.save(user);
 

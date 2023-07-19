@@ -1,10 +1,12 @@
 package com.example.holidayplanner.availableDates;
 
+import com.example.holidayplanner.user.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -26,7 +28,8 @@ public class AvailableDates {
 
     @JsonProperty
     @NotEmpty
-    private String userId;
+    @DBRef
+    private User user;
 
     @JsonFormat( pattern = "dd/MM/yyyy" )
     @DateTimeFormat( pattern = "dd/MM/yyyy" )
@@ -48,21 +51,21 @@ public class AvailableDates {
     private int nights;
 
 
-    public AvailableDates(String userId, LocalDate startDate, LocalDate endDate) {
-        this.userId = userId;
+    public AvailableDates(User user, LocalDate startDate, LocalDate endDate) {
+        this.user = user;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public AvailableDates(String userId, LocalDate startDate, LocalDate endDate, int flexibility) {
-        this.userId = userId;
+    public AvailableDates(User user, LocalDate startDate, LocalDate endDate, int flexibility) {
+        this.user = user;
         this.startDate = startDate;
         this.endDate = endDate;
         this.flexibility = flexibility;
     }
 
-    public AvailableDates(String userId, LocalDate startDate, LocalDate endDate, int flexibility, int nights) {
-        this.userId = userId;
+    public AvailableDates(User user, LocalDate startDate, LocalDate endDate, int flexibility, int nights) {
+        this.user = user;
         this.startDate = startDate;
         this.endDate = endDate;
         this.flexibility = flexibility;

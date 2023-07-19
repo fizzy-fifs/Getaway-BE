@@ -1,5 +1,9 @@
 package com.example.holidayplanner.user;
 
+import com.example.holidayplanner.group.Group;
+import com.example.holidayplanner.groupInvite.GroupInvite;
+import com.example.holidayplanner.holiday.Holiday;
+import com.example.holidayplanner.holidayInvite.HolidayInvite;
 import com.example.holidayplanner.user.role.Role;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -8,6 +12,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.Data;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -21,7 +26,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Data
-@Document(collection="Users")
+@Document(collection = "Users")
 public class User {
     @MongoId(value = FieldType.OBJECT_ID)
     @JsonProperty
@@ -39,16 +44,16 @@ public class User {
     @Indexed
     private String lastName;
 
-    @JsonFormat( pattern = "dd/MM/yyyy" )
-    @DateTimeFormat( pattern = "dd/MM/yyyy" )
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonProperty
     private LocalDate dob;
 
     @NotBlank(message = "Email cannot be blank")
-    @Email(message="Please provide a valid email address")
-    @Pattern(regexp=".+@.+\\..+", message="Please provide a valid email address")
+    @Email(message = "Please provide a valid email address")
+    @Pattern(regexp = ".+@.+\\..+", message = "Please provide a valid email address")
     @JsonProperty
     @Indexed(unique = true)
     private String email;
@@ -75,15 +80,23 @@ public class User {
     private String image;
 
     @JsonProperty
-    private List<String> groupIds = new ArrayList<>();
+    @JsonManagedReference
+    @DBRef
+    private List<Group> groups = new ArrayList<>();
 
     @JsonProperty
-    private List<String> groupInvitesIds = new ArrayList<>();
+    @JsonManagedReference
+    @DBRef
+    private List<GroupInvite> groupInvites = new ArrayList<>();
 
     @JsonProperty
-    private List<String> holidayIds = new ArrayList<>();
+    @JsonManagedReference
+    @DBRef
+    private List<Holiday> holidays = new ArrayList<>();
 
     @JsonProperty
+    @JsonManagedReference
+    @DBRef
     private List<HolidayInvite> holidayInvites = new ArrayList<>();
 
     @JsonProperty
@@ -98,7 +111,9 @@ public class User {
 
 
     @JsonProperty
-    private List<String> friends = new ArrayList<>();
+    @JsonManagedReference
+    @DBRef
+    private List<User> friends = new ArrayList<>();
 
     @JsonProperty
     private Collection<Role> roles;
@@ -106,7 +121,8 @@ public class User {
     @JsonProperty
     private boolean enabled;
 
-    public User() {}
+    public User() {
+    }
 
     public User(String id, String firstName, String lastName, String userName, LocalDate dob, String email, String password) {
         this.id = id;
@@ -128,27 +144,49 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public void addGroupInvite(String groupInviteId) { groupInvitesIds.add(groupInviteId); }
+    public void addGroupInvite(GroupInvite groupInvite) {
+        groupInvites.add(groupInvite);
+    }
 
-    public void addGroup(String groupId) { groupIds.add(groupId); }
+    public void addGroup(Group group) {
+        groups.add(group);
+    }
 
-    public void addFriendRequest(String friendId) { friendRequests.add(friendId); }
+    public void addFriendRequest(String friendId) {
+        friendRequests.add(friendId);
+    }
 
-    public void addToFriendRequestsSent(String id) { friendRequestsSent.add(id); }
+    public void addToFriendRequestsSent(String id) {
+        friendRequestsSent.add(id);
+    }
 
-    public void removeFromFreindRequestsSent(String id) { friendRequestsSent.remove(id); }
+    public void removeFromFreindRequestsSent(String id) {
+        friendRequestsSent.remove(id);
+    }
 
-    public void deleteFriendRequest(String rejectedFriendId) {  friendRequests.remove(rejectedFriendId); }
+    public void deleteFriendRequest(String rejectedFriendId) {
+        friendRequests.remove(rejectedFriendId);
+    }
 
-    public void addFriend(String friendId) { friends.add(friendId); }
+    public void addFriend(User friend) {
+        friends.add(friend);
+    }
 
-    public void addHoliday(String holidayId) { holidayIds.add(holidayId); }
+    public void addHoliday(Holiday holiday) {
+        holidays.add(holiday);
+    }
 
-    public void deleteHoliday(String holidayId) { holidayIds.remove(holidayId); }
+    public void deleteHoliday(Holiday holiday) {
+        holidays.remove(holiday);
+    }
 
-    public void addHolidayInvite(HolidayInvite holidayInvite) { holidayInvites.add(holidayInvite); }
+    public void addHolidayInvite(HolidayInvite holidayInvite) {
+        holidayInvites.add(holidayInvite);
+    }
 
-    public void deleteHolidayInvite(String holidayId) { holidayInvites.remove(holidayId); }
+    public void deleteHolidayInvite(HolidayInvite holidayInvite) {
+        holidayInvites.removeIf(invite -> invite.getId().equals(holidayInvite.getId()));
+    }
 
 
 }

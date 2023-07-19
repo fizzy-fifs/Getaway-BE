@@ -29,11 +29,6 @@ public class HolidayController {
         return holidayService.create(holidayCreationRequest.getHoliday(), holidayCreationRequest.getBudget(), holidayCreationRequest.getAvailableDates());
     }
 
-    @GetMapping(path = "/addholidaymaker/holiday={holidayId}&user={userId}")
-    public ResponseEntity sendHolidayInvite(@PathVariable("holidayId") String holidayId, @PathVariable("userId") String userId) {
-        return holidayService.addHolidayMaker(holidayId, userId);
-    }
-
     @GetMapping(path = "/removeholidaymaker/holiday={holidayId}&user={userId}")
     public String removeHolidayMaker(@PathVariable("holidayId") String holidayId, @PathVariable("userId") String userId) {
         return holidayService.removeHolidayMaker(holidayId, userId);
@@ -56,15 +51,15 @@ public class HolidayController {
         return holidayService.findById(holidayId);
     }
 
-    @GetMapping(path= "/acceptinvite/holidayId={holidayId}&userId={userId}")
+    @GetMapping(path= "/acceptinvite/{holidayInviteId}/{userId}")
     @ApiOperation(value = "Accept a holiday invite")
-    public ResponseEntity<Object> acceptInvite(@PathVariable("holidayId") String holidayId, @PathVariable("userId") String userId) throws JsonProcessingException {
-        return holidayService.acceptInvite(holidayId, userId);
+    public ResponseEntity<Object> acceptInvite(@PathVariable("holidayId") String holidayInviteId, @PathVariable("userId") String userId) throws JsonProcessingException {
+        return holidayService.acceptInvite(holidayInviteId, userId);
     }
 
-    @GetMapping(path= "/declineinvite/holidayId={holidayId}&userId={userId}")
+    @GetMapping(path= "/declineinvite/{holidayInviteId}/{userId}")
     @ApiOperation(value = "Decline a holiday invite")
-    public ResponseEntity<Object> declineInvite(@PathVariable("holidayId") String holidayId, @PathVariable("userId") String userId) {
-        return holidayService.declineInvite(holidayId, userId);
+    public ResponseEntity<Object> declineInvite(@PathVariable("holidayInviteId") String holidayInviteId, @PathVariable("userId") String userId) {
+        return holidayService.declineInvite(holidayInviteId, userId);
     }
 }

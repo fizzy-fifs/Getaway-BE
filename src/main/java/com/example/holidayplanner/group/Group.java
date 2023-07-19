@@ -1,8 +1,12 @@
 package com.example.holidayplanner.group;
 
+import com.example.holidayplanner.holiday.Holiday;
 import com.example.holidayplanner.user.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -23,10 +27,14 @@ public class Group {
     private String name;
 
     @JsonProperty
+    @JsonBackReference
+    @DBRef
     private List<User> groupMembers = new ArrayList<>();
 
     @JsonProperty
-    private List<String> invitedGroupMembersIds = new ArrayList<>();
+    @JsonBackReference
+    @DBRef
+    private List<User> invitedGroupMembers = new ArrayList<>();
 
     @JsonProperty
     private String description;
@@ -35,7 +43,9 @@ public class Group {
     private String image;
 
     @JsonProperty
-    private List<String> holidayIds = new ArrayList<>();
+    @JsonManagedReference
+    @DBRef
+    private List<Holiday> holidays = new ArrayList<>();
 
 
     public Group() {
@@ -47,10 +57,10 @@ public class Group {
 
     public Group(String name, List<User> groupMembers) { this.name = name; this.groupMembers = groupMembers; }
 
-    public Group(String name, List<User> groupMembers, List<String> invitedGroupMembersIds) {
+    public Group(String name, List<User> groupMembers, List<User> invitedGroupMembers) {
         this.name = name;
         this.groupMembers = groupMembers;
-        this.invitedGroupMembersIds = invitedGroupMembersIds;
+        this.invitedGroupMembers = invitedGroupMembers;
     }
 
     public Group(String name, List<User> groupMembers, String description) {
@@ -70,5 +80,5 @@ public class Group {
 
     public void removeMember(String memberId) { this.groupMembers.removeIf(member -> Objects.equals(member.getId(), memberId)); }
 
-    public void addHoliday(String holidayId) { holidayIds.add(holidayId); }
+    public void addHoliday(Holiday holiday) { holidays.add(holiday); }
 }
