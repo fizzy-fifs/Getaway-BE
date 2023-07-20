@@ -2,9 +2,7 @@ package com.example.holidayplanner.group;
 
 import com.example.holidayplanner.holiday.Holiday;
 import com.example.holidayplanner.user.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -17,6 +15,7 @@ import java.util.Objects;
 
 @Data
 @Document(collection="Groups")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Group {
 
     @MongoId(value = FieldType.OBJECT_ID)
@@ -27,12 +26,10 @@ public class Group {
     private String name;
 
     @JsonProperty
-    @JsonBackReference
     @DBRef
     private List<User> groupMembers = new ArrayList<>();
 
     @JsonProperty
-    @JsonBackReference
     @DBRef
     private List<User> invitedGroupMembers = new ArrayList<>();
 
@@ -43,7 +40,6 @@ public class Group {
     private String image;
 
     @JsonProperty
-    @JsonManagedReference
     @DBRef
     private List<Holiday> holidays = new ArrayList<>();
 

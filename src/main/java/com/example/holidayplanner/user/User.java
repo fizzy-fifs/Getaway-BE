@@ -27,6 +27,7 @@ import java.util.List;
 
 @Data
 @Document(collection = "Users")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User {
     @MongoId(value = FieldType.OBJECT_ID)
     @JsonProperty
@@ -80,22 +81,22 @@ public class User {
     private String image;
 
     @JsonProperty
-    @JsonManagedReference
+
     @DBRef
     private List<Group> groups = new ArrayList<>();
 
     @JsonProperty
-    @JsonManagedReference
+
     @DBRef
     private List<GroupInvite> groupInvites = new ArrayList<>();
 
     @JsonProperty
-    @JsonManagedReference
+
     @DBRef
     private List<Holiday> holidays = new ArrayList<>();
 
     @JsonProperty
-    @JsonManagedReference
+
     @DBRef
     private List<HolidayInvite> holidayInvites = new ArrayList<>();
 
@@ -111,7 +112,7 @@ public class User {
 
 
     @JsonProperty
-    @JsonManagedReference
+
     @DBRef
     private List<User> friends = new ArrayList<>();
 

@@ -5,7 +5,9 @@ import com.example.holidayplanner.budget.Budget;
 import com.example.holidayplanner.group.Group;
 import com.example.holidayplanner.user.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +25,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "Holidays")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Holiday {
 
     @MongoId(value = FieldType.OBJECT_ID)
@@ -37,17 +40,14 @@ public class Holiday {
     private String image;
 
     @JsonProperty
-    @JsonBackReference
     @DBRef
     private Group group;
 
     @JsonProperty
-    @JsonBackReference
     @DBRef
     private List<User> holidayMakers = new ArrayList<>();
 
     @JsonProperty
-    @JsonBackReference
     @DBRef
     private List<User> invitedHolidayMakers = new ArrayList<>();
 
