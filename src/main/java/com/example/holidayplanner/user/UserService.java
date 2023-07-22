@@ -91,8 +91,8 @@ public class UserService implements ServiceInterface<User> {
             return ResponseEntity.badRequest().body("Username is already taken.");
         }
 
-        user.setFirstName(user.getFirstName().substring(0, 1).toUpperCase());
-        user.setLastName(user.getLastName().substring(0, 1).toUpperCase());
+        user.setFirstName(user.getFirstName().toLowerCase());
+        user.setLastName(user.getLastName().toLowerCase());
         user.setEmail(user.getEmail().toLowerCase());
         user.setUserName(user.getUserName().toLowerCase());
 
