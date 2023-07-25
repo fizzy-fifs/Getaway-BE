@@ -48,36 +48,35 @@ public class GroupService implements ServiceInterface<Group> {
 
     @Override
     public ResponseEntity<Object> create(Group group) throws JsonProcessingException {
-        if (!group.getInvitedGroupMembers().isEmpty()) {
-            // Combining invited members and the group creator into one list and checking if all the users exist
-            List<User> invitedMembers = group.getInvitedGroupMembers();
-            User groupCreator = group.getGroupMembers().get(0);
+        // Combining invited members and the group creator into one list and checking if all the users exist
+        List<User> invitedMembers = group.getInvitedGroupMembers();
+        User groupCreator = group.getGroupMembers().get(0);
 
-            List<String> userIdsToCheck = invitedMembers.stream()
-                    .map(User::getId)
-                    .collect(Collectors.toList());
-            userIdsToCheck.add(groupCreator.getId());
+        List<String> userIdsToCheck = invitedMembers.stream()
+                .map(User::getId)
+                .collect(Collectors.toList());
+        userIdsToCheck.add(groupCreator.getId());
 
-            List<User> confirmedUsers = (List<User>) userRepository.findAllById(userIdsToCheck);
+        List<User> confirmedUsers = (List<User>) userRepository.findAllById(userIdsToCheck);
 
-            if (confirmedUsers.size() != userIdsToCheck.size()) {
-                return ResponseEntity.badRequest().body("One of the users added does not exist");
-            }
-
-            GroupInvite newGroupInvite = new GroupInvite(group, groupCreator);
-
-            GroupInvite savedGroupInvite = groupInviteRepository.insert(newGroupInvite);
-
-            for (User invitedMember : confirmedUsers) {
-                if (!invitedMember.getId().equals(groupCreator.getId())) {
-                    invitedMember.addGroupInvite(savedGroupInvite);
-                }
-            }
-
-            userRepository.saveAll(confirmedUsers);
+        if (confirmedUsers.size() != userIdsToCheck.size()) {
+            return ResponseEntity.badRequest().body("One of the users added does not exist");
         }
 
+        GroupInvite newGroupInvite = new GroupInvite(group, groupCreator);
+
+        GroupInvite savedGroupInvite = groupInviteRepository.insert(newGroupInvite);
+
+        for (User invitedMember : confirmedUsers) {
+            if (!invitedMember.getId().equals(groupCreator.getId())) {
+                invitedMember.addGroupInvite(savedGroupInvite);
+            }
+        }
         Group newGroup = groupRepository.insert(group);
+
+        groupCreator.addGroup(newGroup);
+
+        userRepository.saveAll(confirmedUsers);
 
         ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
         String groupJson = mapper.writeValueAsString(newGroup);

@@ -110,9 +110,7 @@ public class User {
     @Nullable
     private String deviceToken;
 
-
     @JsonProperty
-
     @DBRef
     private List<User> friends = new ArrayList<>();
 
