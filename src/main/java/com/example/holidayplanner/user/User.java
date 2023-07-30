@@ -111,7 +111,7 @@ public class User {
 
     @JsonProperty
     @DBRef
-    private List<String> friendIds = new ArrayList<>();
+    private List<String> friends = new ArrayList<>();
 
     @JsonProperty
     private Collection<Role> roles;
@@ -167,7 +167,7 @@ public class User {
     }
 
     public void addFriend(String friendId) {
-        friendIds.add(friendId);
+        friends.add(friendId);
     }
 
     public void addHoliday(String holidayId) {
