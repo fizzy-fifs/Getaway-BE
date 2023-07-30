@@ -1,6 +1,5 @@
 package com.example.holidayplanner.user;
 
-import com.example.holidayplanner.group.Group;
 import com.example.holidayplanner.groupInvite.GroupInvite;
 import com.example.holidayplanner.holiday.Holiday;
 import com.example.holidayplanner.holidayInvite.HolidayInvite;
@@ -83,7 +82,7 @@ public class User {
     @JsonProperty
 
     @DBRef
-    private List<Group> groups = new ArrayList<>();
+    private List<String> groupIds = new ArrayList<>();
 
     @JsonProperty
 
@@ -93,7 +92,7 @@ public class User {
     @JsonProperty
 
     @DBRef
-    private List<Holiday> holidays = new ArrayList<>();
+    private List<String> holidayIds = new ArrayList<>();
 
     @JsonProperty
 
@@ -112,7 +111,7 @@ public class User {
 
     @JsonProperty
     @DBRef
-    private List<User> friends = new ArrayList<>();
+    private List<String> friendIds = new ArrayList<>();
 
     @JsonProperty
     private Collection<Role> roles;
@@ -147,8 +146,8 @@ public class User {
         groupInvites.add(groupInvite);
     }
 
-    public void addGroup(Group group) {
-        groups.add(group);
+    public void addGroup(String groupId) {
+        groupIds.add(groupId);
     }
 
     public void addFriendRequest(String friendId) {
@@ -167,16 +166,16 @@ public class User {
         friendRequests.remove(rejectedFriendId);
     }
 
-    public void addFriend(User friend) {
-        friends.add(friend);
+    public void addFriend(String friendId) {
+        friendIds.add(friendId);
     }
 
-    public void addHoliday(Holiday holiday) {
-        holidays.add(holiday);
+    public void addHoliday(String holidayId) {
+        holidayIds.add(holidayId);
     }
 
     public void deleteHoliday(Holiday holiday) {
-        holidays.remove(holiday);
+        holidayIds.remove(holiday);
     }
 
     public void addHolidayInvite(HolidayInvite holidayInvite) {

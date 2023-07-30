@@ -24,7 +24,7 @@ public class Budget {
     @NotBlank
     @NotEmpty
     @DBRef
-    private User user;
+    private String userId;
 
     @JsonProperty
     @NotBlank
@@ -36,8 +36,8 @@ public class Budget {
     @NotEmpty
     private double budgetLowerLimit;
 
-    public Budget(User user, double budgetUpperLimit, double budgetLowerLimit) {
-        this.user = user;
+    public Budget(String userId, double budgetUpperLimit, double budgetLowerLimit) {
+        this.userId = userId;
         this.budgetUpperLimit = budgetUpperLimit;
         this.budgetLowerLimit = budgetLowerLimit;
     }

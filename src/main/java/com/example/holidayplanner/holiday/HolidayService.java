@@ -64,14 +64,10 @@ public class HolidayService {
 
     public ResponseEntity<Object> create(Holiday holiday, Budget budget, AvailableDates availableDates) throws JsonProcessingException {
 
-        List<User> invitedHolidayMakers = holiday.getInvitedHolidayMakers();
-        User holidayCreator = holiday.getHolidayMakers().get(0);
+        List<String> userIdsToCheck = holiday.getInvitedHolidayMakersIds();
+        String holidayCreatorId = holiday.getHolidayMakersIds().get(0);
 
-        List<String> userIdsToCheck = invitedHolidayMakers.stream()
-                .map(User::getId)
-                .collect(Collectors.toList());
-
-        userIdsToCheck.add(holidayCreator.getId());
+        userIdsToCheck.add(holidayCreatorId);
 
         List<User> confirmedUsers = (List<User>) userRepository.findAllById(userIdsToCheck);
 
@@ -79,30 +75,30 @@ public class HolidayService {
             return ResponseEntity.badRequest().body("One of the userIds added is invalid");
         }
 
-        Group group = holiday.getGroup();
+        String groupId = holiday.getGroupId();
 
-        if (group == null) {
+        if (groupId == null) {
             return ResponseEntity.badRequest().body("Group id is null or empty. Please add a valid group id");
         }
 
-        Group confirmedGroup = groupRepository.findById(new ObjectId(group.getId()));
+        Group group = groupRepository.findById(new ObjectId(groupId));
 
-        if (confirmedGroup == null) {
+        if (group == null) {
             return ResponseEntity.badRequest().body("Group id is invalid. Please add a valid group id");
         }
 
         Budget newBudget = budgetRepository.insert(budget);
-        holiday.getBudgets().add(newBudget);
+        holiday.getBudgetIds().add(newBudget.getId());
 
         AvailableDates newAvailableDates = availableDatesRepository.insert(availableDates);
-        holiday.getAvailableDates().add(newAvailableDates);
+        holiday.getAvailableDatesIds().add(newAvailableDates.getId());
 
         Holiday newHoliday = holidayRepository.insert(holiday);
 
-        group.addHoliday(newHoliday);
+        group.addHoliday(newHoliday.getId());
 
         User inviter = confirmedUsers.stream().filter(holidayMaker ->
-                        holidayMaker.getId().equals(newHoliday.getHolidayMakers().get(0).getId()))
+                        holidayMaker.getId().equals(holidayCreatorId))
                 .findFirst().get();
 
         HolidayInvite holidayInvite = new HolidayInvite(newHoliday, inviter);
@@ -114,7 +110,7 @@ public class HolidayService {
             }
         }
 
-        inviter.addHoliday(newHoliday);
+        inviter.addHoliday(newHoliday.getId());
 
         userRepository.saveAll(confirmedUsers);
         groupRepository.save(group);
@@ -132,7 +128,7 @@ public class HolidayService {
         }
 
         Holiday holiday = holidayRepository.findById(holidayId).get();
-        holiday.removeHolidayMaker(user);
+        holiday.removeHolidayMaker(user.getId());
 
         return user.getFirstName() + " has been removed from " + holiday.getName();
     }
@@ -148,24 +144,18 @@ public class HolidayService {
             return ResponseEntity.badRequest().body("Holiday id is invalid. Please add a valid holiday id");
         }
 
-        List<Budget> budgets = holiday.getBudgets();
-        var budgetIdsToCheck = budgets.stream()
-                .map(Budget::getId)
-                .toList();
+        List<String> budgetIdsToCheck = holiday.getBudgetIds();
 
-        List<Budget> confirmedBudgets = (List<Budget>) budgetRepository.findAllById(budgetIdsToCheck);
+        List<Budget> budgets = (List<Budget>) budgetRepository.findAllById(budgetIdsToCheck);
 
-        if (confirmedBudgets.isEmpty() || confirmedBudgets.size() != budgets.size()) {
+        if (budgets.isEmpty() || budgets.size() != budgetIdsToCheck.size()) {
             return ResponseEntity.badRequest().body("No budgets found. Please enter valid budget ids");
         }
 
-        List<AvailableDates> availableDates = holiday.getAvailableDates();
-        var availableDatesIdsToCheck = availableDates.stream()
-                .map(AvailableDates::getId)
-                .toList();
+        List<String> availableDatesIdsToCheck = holiday.getAvailableDatesIds();
 
-        List<AvailableDates> confirmedAvailableDates = (List<AvailableDates>) availableDatesRepository.findAllById(availableDatesIdsToCheck);
-        if (confirmedAvailableDates.isEmpty() || confirmedAvailableDates.size() != availableDates.size()) {
+        List<AvailableDates> availableDates = (List<AvailableDates>) availableDatesRepository.findAllById(availableDatesIdsToCheck);
+        if (availableDates.isEmpty() || availableDates.size() != availableDatesIdsToCheck.size()) {
             return ResponseEntity.badRequest().body("No dates found. Please enter valid date ids");
         }
 
@@ -230,15 +220,15 @@ public class HolidayService {
 
         Holiday holiday = holidayInvite.getHoliday();
 
-        if (!holiday.getInvitedHolidayMakers().contains(user)) {
+        if (!holiday.getInvitedHolidayMakersIds().contains(user.getId())) {
             return ResponseEntity.badRequest().body("Unfortunately, you have not been invited to this holiday");
         }
 
-        holiday.removeInvitedHolidayMaker(user);
+        holiday.removeInvitedHolidayMaker(user.getId());
         user.deleteHolidayInvite(holidayInvite);
 
-        holiday.addHolidayMaker(user);
-        user.addHoliday(holiday);
+        holiday.addHolidayMaker(user.getId());
+        user.addHoliday(holiday.getId());
 
         holidayRepository.save(holiday);
         userRepository.save(user);
@@ -261,11 +251,11 @@ public class HolidayService {
 
         Holiday holiday = holidayInvite.getHoliday();
 
-        if (!holiday.getInvitedHolidayMakers().contains(user.getId())) {
+        if (!holiday.getInvitedHolidayMakersIds().contains(user.getId())) {
             return ResponseEntity.badRequest().body("Unfortunately, you have not been invited to this holiday");
         }
 
-        holiday.removeInvitedHolidayMaker(user);
+        holiday.removeInvitedHolidayMaker(user.getId());
         user.deleteHolidayInvite(holidayInvite);
 
         holidayRepository.save(holiday);

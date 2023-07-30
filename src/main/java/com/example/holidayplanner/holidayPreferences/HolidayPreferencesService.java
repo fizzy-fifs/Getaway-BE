@@ -52,8 +52,8 @@ public class HolidayPreferencesService {
         Budget savedBudget =  budgetRepository.save(budget);
         AvailableDates savedAvailableDates = availableDatesRepository.save(availableDates);
 
-        holiday.addBudget(savedBudget);
-        holiday.addAvailableDates(savedAvailableDates);
+        holiday.addBudget(savedBudget.getId());
+        holiday.addAvailableDates(savedAvailableDates.getId());
 
         Holiday savedHoliday = holidayRepository.save(holiday);
         String savedHolidayJson = mapper.writeValueAsString(savedHoliday);

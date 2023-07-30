@@ -1,6 +1,5 @@
 package com.example.holidayplanner.group;
 
-import com.example.holidayplanner.holiday.Holiday;
 import com.example.holidayplanner.user.User;
 import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
@@ -41,7 +40,7 @@ public class Group {
 
     @JsonProperty
     @DBRef
-    private List<Holiday> holidays = new ArrayList<>();
+    private List<String> holidayIds = new ArrayList<>();
 
 
     public Group() {
@@ -76,5 +75,5 @@ public class Group {
 
     public void removeMember(String memberId) { this.groupMembers.removeIf(member -> Objects.equals(member.getId(), memberId)); }
 
-    public void addHoliday(Holiday holiday) { holidays.add(holiday); }
+    public void addHoliday(String holidayId) { holidayIds.add(holidayId); }
 }

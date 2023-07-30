@@ -2,9 +2,7 @@ package com.example.holidayplanner.holiday;
 
 import com.example.holidayplanner.availableDates.AvailableDates;
 import com.example.holidayplanner.budget.Budget;
-import com.example.holidayplanner.group.Group;
 import com.example.holidayplanner.user.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -41,70 +39,70 @@ public class Holiday {
 
     @JsonProperty
     @DBRef
-    private Group group;
+    private String groupId;
 
     @JsonProperty
     @DBRef
-    private List<User> holidayMakers = new ArrayList<>();
+    private List<String> holidayMakersIds = new ArrayList<>();
 
     @JsonProperty
     @DBRef
-    private List<User> invitedHolidayMakers = new ArrayList<>();
+    private List<String> invitedHolidayMakersIds = new ArrayList<>();
 
     @JsonProperty
     @DBRef
-    private List<Budget> budgets = new ArrayList<>();
+    private List<String> budgetIds = new ArrayList<>();
 
     @JsonProperty
-    private List<AvailableDates> availableDates = new ArrayList<>();
+    private List<String> availableDatesIds = new ArrayList<>();
 
     public Holiday(String name) {
         this.name = name;
     }
 
-    public Holiday(String name, Group group) {
+    public Holiday(String name, String groupId) {
         this.name = name;
-        this.group = group;
+        this.groupId = groupId;
     }
 
-    public Holiday(String name, Group group, List<User> holidayMakers) {
+    public Holiday(String name, String groupId, List<String> holidayMakersIds) {
         this.name = name;
-        this.group = group;
-        this.holidayMakers = holidayMakers;
+        this.groupId = groupId;
+        this.holidayMakersIds = holidayMakersIds;
     }
 
-    public Holiday(String name, Group group, List<User> holidayMakers, List<Budget> budgets) {
+    public Holiday(String name, String groupId, List<String> holidayMakersIds, List<String> budgetIds) {
         this.name = name;
-        this.group = group;
-        this.holidayMakers = holidayMakers;
-        this.budgets = budgets;
+        this.groupId = groupId;
+        this.holidayMakersIds = holidayMakersIds;
+        this.budgetIds = budgetIds;
     }
 
-    public Holiday(String name, Group group, List<User> holidayMakers, List<Budget> budgets, List<AvailableDates> availableDates) {
+    public Holiday(String name, String groupId, List<String> holidayMakersIds, List<String> budgetIds, List<String> availableDates) {
         this.name = name;
-        this.group = group;
-        this.holidayMakers = holidayMakers;
-        this.budgets = budgets;
-        this.availableDates = availableDates;
+        this.groupId = groupId;
+        this.holidayMakersIds = holidayMakersIds;
+        this.budgetIds = budgetIds;
+        this.availableDatesIds = availableDatesIds;
     }
 
-    public void addHolidayMaker(User newHolidayMaker) {
-        this.holidayMakers.add(newHolidayMaker);
+    public void addHolidayMaker(String newHolidayMakerId) {
+        this.holidayMakersIds.add(newHolidayMakerId);
     }
 
-    public void removeHolidayMaker(User user) {
-        this.holidayMakers.removeIf(holidayMaker -> holidayMaker.getId().equals(user.getId()));
+    public void removeHolidayMaker(String userId) {
+        this.holidayMakersIds.removeIf(holidayMakerId -> holidayMakerId.equals(userId));
     }
 
-    public void removeInvitedHolidayMaker(User user) {
-        this.invitedHolidayMakers.removeIf(invitedHolidayMaker -> invitedHolidayMaker.getId().equals(user));
+    public void removeInvitedHolidayMaker(String userId) {
+        this.invitedHolidayMakersIds.removeIf(invitedHolidayMakerId -> invitedHolidayMakerId.equals(userId));
     }
 
-    public void addBudget(Budget newBudget) {
-        this.budgets.add(newBudget);
+    public void addBudget(String newBudgetId) {
+        this.budgetIds.add(newBudgetId);
     }
 
-    public void addAvailableDates(AvailableDates availableDates) {
-        this.availableDates.add(availableDates);
+    public void addAvailableDates(String availableDatesIds) {
+        this.availableDatesIds.add(availableDatesIds);
     }
 }

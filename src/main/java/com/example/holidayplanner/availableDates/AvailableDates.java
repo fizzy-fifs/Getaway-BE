@@ -29,7 +29,7 @@ public class AvailableDates {
     @JsonProperty
     @NotEmpty
     @DBRef
-    private User user;
+    private String userId;
 
     @JsonFormat( pattern = "dd/MM/yyyy" )
     @DateTimeFormat( pattern = "dd/MM/yyyy" )
@@ -51,21 +51,21 @@ public class AvailableDates {
     private int nights;
 
 
-    public AvailableDates(User user, LocalDate startDate, LocalDate endDate) {
-        this.user = user;
+    public AvailableDates(String userId, LocalDate startDate, LocalDate endDate) {
+        this.userId = userId;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public AvailableDates(User user, LocalDate startDate, LocalDate endDate, int flexibility) {
-        this.user = user;
+    public AvailableDates(String userId, LocalDate startDate, LocalDate endDate, int flexibility) {
+        this.userId = userId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.flexibility = flexibility;
     }
 
-    public AvailableDates(User user, LocalDate startDate, LocalDate endDate, int flexibility, int nights) {
-        this.user = user;
+    public AvailableDates(String userId, LocalDate startDate, LocalDate endDate, int flexibility, int nights) {
+        this.userId = userId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.flexibility = flexibility;

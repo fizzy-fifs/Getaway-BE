@@ -286,8 +286,8 @@ public class UserService implements ServiceInterface<User> {
 
 
         //Add friend to principal's friend's list and vice versa
-        principal.addFriend(friend);
-        friend.addFriend(principal);
+        principal.addFriend(friend.getId());
+        friend.addFriend(principal.getId());
 
         //Remove the request from the friendRequest list, friendRequestSent list and save to db
         friendRequests.remove(friendId);

@@ -74,7 +74,7 @@ public class GroupService implements ServiceInterface<Group> {
         }
         Group newGroup = groupRepository.insert(group);
 
-        groupCreator.addGroup(newGroup);
+        groupCreator.addGroup(newGroup.getId());
 
         userRepository.saveAll(confirmedUsers);
 
@@ -119,7 +119,7 @@ public class GroupService implements ServiceInterface<Group> {
         }
 
         group.addNewMember(newGroupMember);
-        newGroupMember.addGroup(group);
+        newGroupMember.addGroup(group.getId());
 
         groupRepository.save(group);
         userRepository.save(newGroupMember);
@@ -246,7 +246,7 @@ public class GroupService implements ServiceInterface<Group> {
             return ResponseEntity.badRequest().body("User not found");
         }
 
-        user.addGroup(groupInvite.group);
+        user.addGroup(groupInvite.group.getId());
 
         user.getGroupInvites().remove(groupInvite);
 
