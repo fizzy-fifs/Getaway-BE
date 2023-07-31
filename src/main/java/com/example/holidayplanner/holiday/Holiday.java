@@ -38,19 +38,15 @@ public class Holiday {
     private String image;
 
     @JsonProperty
-    @DBRef
     private String groupId;
 
     @JsonProperty
-    @DBRef
     private List<String> holidayMakersIds = new ArrayList<>();
 
     @JsonProperty
-    @DBRef
     private List<String> invitedHolidayMakersIds = new ArrayList<>();
 
     @JsonProperty
-    @DBRef
     private List<String> budgetIds = new ArrayList<>();
 
     @JsonProperty

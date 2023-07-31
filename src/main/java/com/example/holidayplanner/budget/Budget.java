@@ -23,7 +23,6 @@ public class Budget {
     @JsonProperty
     @NotBlank
     @NotEmpty
-    @DBRef
     private String userId;
 
     @JsonProperty

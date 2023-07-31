@@ -80,23 +80,15 @@ public class User {
     private String image;
 
     @JsonProperty
-
-    @DBRef
     private List<String> groupIds = new ArrayList<>();
 
     @JsonProperty
-
-    @DBRef
     private List<GroupInvite> groupInvites = new ArrayList<>();
 
     @JsonProperty
-
-    @DBRef
     private List<String> holidayIds = new ArrayList<>();
 
     @JsonProperty
-
-    @DBRef
     private List<HolidayInvite> holidayInvites = new ArrayList<>();
 
     @JsonProperty
@@ -110,7 +102,6 @@ public class User {
     private String deviceToken;
 
     @JsonProperty
-    @DBRef
     private List<String> friends = new ArrayList<>();
 
     @JsonProperty

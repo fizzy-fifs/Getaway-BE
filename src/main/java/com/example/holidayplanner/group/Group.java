@@ -25,11 +25,9 @@ public class Group {
     private String name;
 
     @JsonProperty
-    @DBRef
     private List<User> groupMembers = new ArrayList<>();
 
     @JsonProperty
-    @DBRef
     private List<User> invitedGroupMembers = new ArrayList<>();
 
     @JsonProperty
@@ -39,7 +37,6 @@ public class Group {
     private String image;
 
     @JsonProperty
-    @DBRef
     private List<String> holidayIds = new ArrayList<>();
 
 

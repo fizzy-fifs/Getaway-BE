@@ -28,7 +28,6 @@ public class AvailableDates {
 
     @JsonProperty
     @NotEmpty
-    @DBRef
     private String userId;
 
     @JsonFormat( pattern = "dd/MM/yyyy" )
