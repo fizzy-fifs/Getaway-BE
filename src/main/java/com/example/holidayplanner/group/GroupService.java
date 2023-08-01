@@ -49,17 +49,14 @@ public class GroupService implements ServiceInterface<Group> {
     @Override
     public ResponseEntity<Object> create(Group group) throws JsonProcessingException {
         // Combining invited members and the group creator into one list and checking if all the users exist
-        List<User> invitedMembers = group.getInvitedGroupMembers();
+        List<String> userIds = group.getInvitedGroupMembersIds();
         User groupCreator = group.getGroupMembers().get(0);
 
-        List<String> userIdsToCheck = invitedMembers.stream()
-                .map(User::getId)
-                .collect(Collectors.toList());
-        userIdsToCheck.add(groupCreator.getId());
+        userIds.add(groupCreator.getId());
 
-        List<User> confirmedUsers = (List<User>) userRepository.findAllById(userIdsToCheck);
+        List<User> users = (List<User>) userRepository.findAllById(userIds);
 
-        if (confirmedUsers.size() != userIdsToCheck.size()) {
+        if (users.size() != userIds.size()) {
             return ResponseEntity.badRequest().body("One of the users added does not exist");
         }
 
@@ -69,7 +66,7 @@ public class GroupService implements ServiceInterface<Group> {
 
         GroupInvite savedGroupInvite = groupInviteRepository.insert(newGroupInvite);
 
-        for (User invitedMember : confirmedUsers) {
+        for (User invitedMember : users) {
             if (!invitedMember.getId().equals(groupCreator.getId())) {
                 invitedMember.addGroupInvite(savedGroupInvite);
             }
@@ -77,7 +74,7 @@ public class GroupService implements ServiceInterface<Group> {
 
         groupCreator.addGroup(newGroup.getId());
 
-        userRepository.saveAll(confirmedUsers);
+        userRepository.saveAll(users);
 
         ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
         String groupJson = mapper.writeValueAsString(newGroup);

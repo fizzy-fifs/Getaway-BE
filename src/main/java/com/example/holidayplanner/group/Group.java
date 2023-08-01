@@ -27,7 +27,7 @@ public class Group {
     private List<User> groupMembers = new ArrayList<>();
 
     @JsonProperty
-    private List<User> invitedGroupMembers = new ArrayList<>();
+    private List<String> invitedGroupMembersIds = new ArrayList<>();
 
     @JsonProperty
     private String description;
@@ -51,10 +51,10 @@ public class Group {
         this.groupMembers = groupMembers;
     }
 
-    public Group(String name, List<User> groupMembers, List<User> invitedGroupMembers) {
+    public Group(String name, List<User> groupMembers, List<String> invitedGroupMembersIds) {
         this.name = name;
         this.groupMembers = groupMembers;
-        this.invitedGroupMembers = invitedGroupMembers;
+        this.invitedGroupMembersIds = invitedGroupMembersIds;
     }
 
     public Group(String name, List<User> groupMembers, String description) {
@@ -83,6 +83,6 @@ public class Group {
     }
 
     public void removeInvitedMember(String invitedMemberId) {
-        this.invitedGroupMembers.removeIf(member -> Objects.equals(member.getId(), invitedMemberId));
+        this.invitedGroupMembersIds.removeIf(memberId -> Objects.equals(memberId, invitedMemberId));
     }
 }
