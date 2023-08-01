@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Data
-@Document(collection="Groups")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@Document(collection = "Groups")
 public class Group {
 
     @MongoId(value = FieldType.OBJECT_ID)
@@ -47,7 +46,10 @@ public class Group {
         this.name = name;
     }
 
-    public Group(String name, List<User> groupMembers) { this.name = name; this.groupMembers = groupMembers; }
+    public Group(String name, List<User> groupMembers) {
+        this.name = name;
+        this.groupMembers = groupMembers;
+    }
 
     public Group(String name, List<User> groupMembers, List<User> invitedGroupMembers) {
         this.name = name;
@@ -68,9 +70,19 @@ public class Group {
         this.image = image;
     }
 
-    public void addNewMember(User newGroupMember) { this.groupMembers.add(newGroupMember); }
+    public void addNewMember(User newGroupMember) {
+        this.groupMembers.add(newGroupMember);
+    }
 
-    public void removeMember(String memberId) { this.groupMembers.removeIf(member -> Objects.equals(member.getId(), memberId)); }
+    public void removeMember(String memberId) {
+        this.groupMembers.removeIf(member -> Objects.equals(member.getId(), memberId));
+    }
 
-    public void addHoliday(String holidayId) { holidayIds.add(holidayId); }
+    public void addHoliday(String holidayId) {
+        holidayIds.add(holidayId);
+    }
+
+    public void removeInvitedMember(String invitedMemberId) {
+        this.invitedGroupMembers.removeIf(member -> Objects.equals(member.getId(), invitedMemberId));
+    }
 }

@@ -63,7 +63,9 @@ public class GroupService implements ServiceInterface<Group> {
             return ResponseEntity.badRequest().body("One of the users added does not exist");
         }
 
-        GroupInvite newGroupInvite = new GroupInvite(group, groupCreator);
+        Group newGroup = groupRepository.insert(group);
+
+        GroupInvite newGroupInvite = new GroupInvite(newGroup.getId(), groupCreator.getId());
 
         GroupInvite savedGroupInvite = groupInviteRepository.insert(newGroupInvite);
 
@@ -72,7 +74,6 @@ public class GroupService implements ServiceInterface<Group> {
                 invitedMember.addGroupInvite(savedGroupInvite);
             }
         }
-        Group newGroup = groupRepository.insert(group);
 
         groupCreator.addGroup(newGroup.getId());
 
@@ -217,7 +218,7 @@ public class GroupService implements ServiceInterface<Group> {
         User inviter = users.stream().filter(user -> user.getId().equals(inviteeId)).findFirst().get();
         users.remove(inviter);
 
-        GroupInvite newGroupInvite = new GroupInvite(group, inviter);
+        GroupInvite newGroupInvite = new GroupInvite(group.getId(), inviter.getId());
         GroupInvite savedGroupInvite = groupInviteRepository.save(newGroupInvite);
 
         for (User user : users) {
@@ -246,15 +247,21 @@ public class GroupService implements ServiceInterface<Group> {
             return ResponseEntity.badRequest().body("User not found");
         }
 
-        user.addGroup(groupInvite.group.getId());
+        Group group = groupRepository.findById(new ObjectId(groupInvite.groupId));
 
-        user.getGroupInvites().remove(groupInvite);
+        if (group == null) {
+            return ResponseEntity.badRequest().body("Group not found");
+        }
 
-        groupInvite.group.addNewMember(user);
+        user.addGroup(groupInvite.groupId);
+
+        user.deleteGroupInvite(groupInvite.getId());
+
+        group.addNewMember(user);
 
         userRepository.save(user);
 
-        groupRepository.save(groupInvite.group);
+        groupRepository.save(group);
 
         return ResponseEntity.ok("Invitation accepted");
     }
@@ -276,13 +283,19 @@ public class GroupService implements ServiceInterface<Group> {
             return ResponseEntity.badRequest().body("User with id " + userId + " does not exist");
         }
 
+        Group group = groupRepository.findById(new ObjectId(groupInvite.groupId));
+
+        if (group == null) {
+            return ResponseEntity.badRequest().body("Group not found");
+        }
+
         user.getGroupInvites().remove(groupInvite);
 
-        groupInvite.group.getInvitedGroupMembers().removeIf(invitedGroupMember -> invitedGroupMember.getId().equals(user.getId()));
+        group.removeInvitedMember(user.getId());
 
         userRepository.save(user);
 
-        groupRepository.save(groupInvite.group);
+        groupRepository.save(group);
 
         return ResponseEntity.ok("Invitation declined");
     }

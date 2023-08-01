@@ -26,7 +26,6 @@ import java.util.List;
 
 @Data
 @Document(collection = "Users")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User {
     @MongoId(value = FieldType.OBJECT_ID)
     @JsonProperty
@@ -177,5 +176,8 @@ public class User {
         holidayInvites.removeIf(invite -> invite.getId().equals(holidayInvite.getId()));
     }
 
+    public void deleteGroupInvite(String groupInviteId) {
+        groupInvites.removeIf(invite -> invite.getId().equals(groupInviteId));
+    }
 
 }
