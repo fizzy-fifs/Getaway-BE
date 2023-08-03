@@ -24,17 +24,19 @@ public class GroupInvite {
 
     @JsonProperty
     @NotNull
-    public String groupId;
+    @DBRef
+    public Group group;
 
     @JsonProperty
     @NotNull
-    public String inviteeId;
+    @DBRef
+    public User invitee;
 
     public GroupInvite() {
     }
 
-    public GroupInvite(String groupId, String inviteeId) {
-        this.groupId = groupId;
-        this.inviteeId = inviteeId;
+    public GroupInvite(Group group, User invitee) {
+        this.group = group;
+        this.invitee = invitee;
     }
 }

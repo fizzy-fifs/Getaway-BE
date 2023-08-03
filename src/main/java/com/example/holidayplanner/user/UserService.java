@@ -175,21 +175,7 @@ public class UserService implements ServiceInterface<User> {
         return "Your account has been deleted";
     }
 
-//    public ResponseEntity<?> logout(@RequestBody Map<String, String> tokens) {
-//        String jwt = tokens.get("jwt");
-//        String refreshToken = tokens.get("refreshToken");
-//      Check jwt and refresh tokens are valid, then delete the refresh token from the db.
-//    }
 
-    private boolean emailExists(User user) {
-        User findUser = userRepository.findByEmail(user.getEmail());
-        return findUser != null;
-    }
-
-    private boolean userNameExists(User user) {
-        User findUser = userRepository.findByUserName(user.getUserName().toLowerCase());
-        return findUser != null;
-    }
 
     public ResponseEntity<Object> sendFriendRequest(String userId, String allegedFriendId) {
 
@@ -366,5 +352,15 @@ public class UserService implements ServiceInterface<User> {
         userRepository.save(user);
 
         return ResponseEntity.ok("Device token saved");
+    }
+
+    private boolean emailExists(User user) {
+        User findUser = userRepository.findByEmail(user.getEmail());
+        return findUser != null;
+    }
+
+    private boolean userNameExists(User user) {
+        User findUser = userRepository.findByUserName(user.getUserName().toLowerCase());
+        return findUser != null;
     }
 }
