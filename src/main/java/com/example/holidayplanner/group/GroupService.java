@@ -246,6 +246,8 @@ public class GroupService implements ServiceInterface<Group> {
 
         group.addNewMember(user);
 
+        group.removeInvitedMember(user.getId());
+
         user.getGroupInvites().removeIf(invite -> invite.group.getId().equals(group.getId()));
 
         userRepository.save(user);
