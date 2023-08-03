@@ -59,16 +59,6 @@ public class JwtUtil {
                 .signWith(secretKey).compact();
     }
 
-    public String generateRefreshToken(UserDetails userDetails, String tokenId) {
-        return Jwts.builder().setClaims(Map.of("tokenId", tokenId))
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt( new Date(System.currentTimeMillis()) )
-                .setExpiration( new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(60*60)) )
-                .signWith(secretKey).compact();
-    }
-
-
-
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }

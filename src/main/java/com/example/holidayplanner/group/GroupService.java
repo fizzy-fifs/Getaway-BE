@@ -9,17 +9,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class GroupService implements ServiceInterface<Group> {
@@ -36,20 +34,21 @@ public class GroupService implements ServiceInterface<Group> {
     private final MongoTemplate mongoTemplate;
 
     @Autowired
-    private GroupInviteRepository groupInviteRepository;
+    private final GroupInviteRepository groupInviteRepository;
 
     @Autowired
-    public GroupService(GroupRepository groupRepository, UserRepository userRepository, ObjectMapper mapper, MongoTemplate mongoTemplate) {
+    public GroupService(GroupRepository groupRepository, UserRepository userRepository, ObjectMapper mapper, MongoTemplate mongoTemplate, GroupInviteRepository groupInviteRepository) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
         this.mapper = mapper;
         this.mongoTemplate = mongoTemplate;
+        this.groupInviteRepository = groupInviteRepository;
     }
 
     @Override
     public ResponseEntity<Object> create(Group group) throws JsonProcessingException {
-        // Combining invited members and the group creator into one list and checking if all the users exist
-        List<String> userIds = group.getInvitedGroupMembersIds();
+
+        List<String> userIds = new ArrayList<>(group.getInvitedGroupMembersIds());
         User groupCreator = group.getGroupMembers().get(0);
 
         userIds.add(groupCreator.getId());
@@ -69,10 +68,12 @@ public class GroupService implements ServiceInterface<Group> {
         for (User invitedMember : users) {
             if (!invitedMember.getId().equals(groupCreator.getId())) {
                 invitedMember.addGroupInvite(savedGroupInvite);
+            } else {
+                invitedMember.addGroup(newGroup.getId());
             }
         }
 
-        groupCreator.addGroup(newGroup.getId());
+
 
         userRepository.saveAll(users);
 
