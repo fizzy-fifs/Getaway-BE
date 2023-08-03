@@ -16,7 +16,6 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Document(collection="Group Invites")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class GroupInvite {
     @MongoId(value = FieldType.OBJECT_ID)
     @JsonProperty
