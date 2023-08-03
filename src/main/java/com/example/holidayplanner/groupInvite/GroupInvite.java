@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 import javax.validation.constraints.NotNull;
 
 @Data
-@Document(collection="GroupInvites")
+@Document(collection="Group Invites")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class GroupInvite {
     @MongoId(value = FieldType.OBJECT_ID)
