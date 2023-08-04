@@ -24,6 +24,7 @@ public class Group {
     private String name;
 
     @JsonProperty
+    @DBRef
     private List<User> groupMembers = new ArrayList<>();
 
     @JsonProperty
