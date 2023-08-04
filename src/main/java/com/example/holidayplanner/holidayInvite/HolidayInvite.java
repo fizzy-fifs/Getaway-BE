@@ -4,6 +4,7 @@ import com.example.holidayplanner.holiday.Holiday;
 import com.example.holidayplanner.user.User;
 import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -16,9 +17,11 @@ public class HolidayInvite {
     private String id;
 
     @JsonProperty
+    @DBRef
     private Holiday holiday;
 
     @JsonProperty
+    @DBRef
     private User invitee;
 
     public HolidayInvite() {

@@ -24,6 +24,7 @@ import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -64,7 +65,7 @@ public class HolidayService {
 
     public ResponseEntity<Object> create(Holiday holiday, Budget budget, AvailableDates availableDates) throws JsonProcessingException {
 
-        List<String> userIdsToCheck = holiday.getInvitedHolidayMakersIds();
+        List<String> userIdsToCheck = new ArrayList<>(holiday.getInvitedHolidayMakersIds());
         String holidayCreatorId = holiday.getHolidayMakersIds().get(0);
 
         userIdsToCheck.add(holidayCreatorId);
