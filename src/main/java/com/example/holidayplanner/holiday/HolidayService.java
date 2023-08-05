@@ -65,9 +65,14 @@ public class HolidayService {
 
     public ResponseEntity<Object> create(Holiday holiday, Budget budget, AvailableDates availableDates) throws JsonProcessingException {
 
-        List<String> userIdsToCheck = new ArrayList<>(holiday.getInvitedHolidayMakersIds());
-        String holidayCreatorId = holiday.getHolidayMakersIds().get(0);
+        List<String> userIdsToCheck = new ArrayList<>();
 
+        holiday.getInvitedHolidayMakers()
+                .stream()
+                .map(User::getId)
+                .forEach(userIdsToCheck::add);
+
+        String holidayCreatorId = holiday.getHolidayMakers().get(0).getId();
         userIdsToCheck.add(holidayCreatorId);
 
         List<User> confirmedUsers = (List<User>) userRepository.findAllById(userIdsToCheck);
@@ -98,9 +103,7 @@ public class HolidayService {
 
         group.addHoliday(newHoliday.getId());
 
-        User inviter = confirmedUsers.stream().filter(holidayMaker ->
-                        holidayMaker.getId().equals(holidayCreatorId))
-                .findFirst().get();
+        User inviter = confirmedUsers.stream().filter(holidayMaker -> holidayMaker.getId().equals(holidayCreatorId)).findFirst().get();
 
         HolidayInvite holidayInvite = new HolidayInvite(newHoliday, inviter);
         HolidayInvite newHolidayInvite = holidayInviteRepository.insert(holidayInvite);
@@ -221,14 +224,14 @@ public class HolidayService {
 
         Holiday holiday = holidayInvite.getHoliday();
 
-        if (!holiday.getInvitedHolidayMakersIds().contains(user.getId())) {
+        if (!holiday.getInvitedHolidayMakers().contains(user.getId())) {
             return ResponseEntity.badRequest().body("Unfortunately, you have not been invited to this holiday");
         }
 
         holiday.removeInvitedHolidayMaker(user.getId());
         user.deleteHolidayInvite(holidayInvite);
 
-        holiday.addHolidayMaker(user.getId());
+        holiday.addHolidayMaker(user);
         user.addHoliday(holiday.getId());
 
         holidayRepository.save(holiday);
@@ -252,7 +255,7 @@ public class HolidayService {
 
         Holiday holiday = holidayInvite.getHoliday();
 
-        if (!holiday.getInvitedHolidayMakersIds().contains(user.getId())) {
+        if (!holiday.getInvitedHolidayMakers().contains(user.getId())) {
             return ResponseEntity.badRequest().body("Unfortunately, you have not been invited to this holiday");
         }
 
