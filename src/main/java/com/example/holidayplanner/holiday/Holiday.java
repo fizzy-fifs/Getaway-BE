@@ -2,6 +2,7 @@ package com.example.holidayplanner.holiday;
 
 import com.example.holidayplanner.availableDates.AvailableDates;
 import com.example.holidayplanner.budget.Budget;
+import com.example.holidayplanner.config.cascadeSaveMongoEventListener.CascadeSave;
 import com.example.holidayplanner.user.User;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -41,10 +42,12 @@ public class Holiday {
 
     @JsonProperty
     @DBRef
+    @CascadeSave
     private List<User> holidayMakers = new ArrayList<>();
 
     @JsonProperty
     @DBRef
+    @CascadeSave
     private List<User> invitedHolidayMakers = new ArrayList<>();
 
     @JsonProperty

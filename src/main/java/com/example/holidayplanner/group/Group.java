@@ -1,5 +1,6 @@
 package com.example.holidayplanner.group;
 
+import com.example.holidayplanner.config.cascadeSaveMongoEventListener.CascadeSave;
 import com.example.holidayplanner.user.User;
 import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
@@ -25,6 +26,7 @@ public class Group {
 
     @JsonProperty
     @DBRef
+    @CascadeSave
     private List<User> groupMembers = new ArrayList<>();
 
     @JsonProperty
