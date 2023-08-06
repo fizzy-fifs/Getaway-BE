@@ -82,7 +82,7 @@ public class User {
     private List<String> groupIds = new ArrayList<>();
 
     @JsonProperty
-    private List<GroupInvite> groupInvites = new ArrayList<>();
+    private List<String> groupInviteIds = new ArrayList<>();
 
     @JsonProperty
     private List<String> holidayIds = new ArrayList<>();
@@ -132,8 +132,8 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public void addGroupInvite(GroupInvite groupInvite) {
-        groupInvites.add(groupInvite);
+    public void addGroupInvite(String groupInviteId) {
+        groupInviteIds.add(groupInviteId);
     }
 
     public void addGroup(String groupId) {
@@ -177,7 +177,7 @@ public class User {
     }
 
     public void deleteGroupInvite(String groupInviteId) {
-        groupInvites.removeIf(invite -> invite.getId().equals(groupInviteId));
+        groupInviteIds.remove(groupInviteId);
     }
 
 }

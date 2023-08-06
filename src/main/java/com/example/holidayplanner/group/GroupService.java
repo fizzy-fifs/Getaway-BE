@@ -67,7 +67,7 @@ public class GroupService implements ServiceInterface<Group> {
 
         for (User invitedMember : users) {
             if (!invitedMember.getId().equals(groupCreator.getId())) {
-                invitedMember.addGroupInvite(savedGroupInvite);
+                invitedMember.addGroupInvite(savedGroupInvite.getId());
             } else {
                 invitedMember.addGroup(newGroup.getId());
             }
@@ -217,7 +217,7 @@ public class GroupService implements ServiceInterface<Group> {
         GroupInvite savedGroupInvite = groupInviteRepository.save(newGroupInvite);
 
         for (User user : users) {
-            user.getGroupInvites().add(savedGroupInvite);
+            user.getGroupInviteIds().add(savedGroupInvite.getId());
         }
 
         userRepository.saveAll(users);
@@ -225,9 +225,15 @@ public class GroupService implements ServiceInterface<Group> {
         return ResponseEntity.ok("Invitation sent");
     }
 
-    public ResponseEntity<Object> acceptInvitation(String groupId, String userId) {
-        if (groupId == null || groupId.isEmpty()) {
+    public ResponseEntity<Object> acceptInvitation(String groupInviteId, String userId) {
+        if (groupInviteId == null || groupInviteId.isEmpty()) {
             return ResponseEntity.badRequest().body("No group invite provided");
+        }
+
+        GroupInvite groupInvite = groupInviteRepository.findById(new ObjectId(groupInviteId));
+
+        if (groupInvite == null) {
+            return ResponseEntity.badRequest().body("Group invite not found");
         }
 
         User user = userRepository.findById(new ObjectId(userId));
@@ -236,11 +242,7 @@ public class GroupService implements ServiceInterface<Group> {
             return ResponseEntity.badRequest().body("User not found");
         }
 
-        Group group = groupRepository.findById(new ObjectId(groupId));
-
-        if (group == null) {
-            return ResponseEntity.badRequest().body("Group not found");
-        }
+        Group group = groupInvite.getGroup();
 
         user.addGroup(group.getId());
 
@@ -248,7 +250,7 @@ public class GroupService implements ServiceInterface<Group> {
 
         group.removeInvitedMember(user.getId());
 
-        user.getGroupInvites().removeIf(invite -> invite.group.getId().equals(group.getId()));
+        user.deleteGroupInvite(groupInvite.getId());
 
         userRepository.save(user);
 
@@ -257,9 +259,15 @@ public class GroupService implements ServiceInterface<Group> {
         return ResponseEntity.ok("Invitation accepted");
     }
 
-    public ResponseEntity<Object> declineInvitation(String groupId, String userId) {
-        if (groupId == null || groupId.isEmpty()) {
+    public ResponseEntity<Object> declineInvitation(String groupInviteId, String userId) {
+        if (groupInviteId == null || groupInviteId.isEmpty()) {
             return ResponseEntity.badRequest().body("No group invite provided");
+        }
+
+        GroupInvite groupInvite = groupInviteRepository.findById(new ObjectId(groupInviteId));
+
+        if (groupInvite == null) {
+            return ResponseEntity.badRequest().body("Group invite not found");
         }
 
         User user = userRepository.findById(new ObjectId(userId));
@@ -268,13 +276,13 @@ public class GroupService implements ServiceInterface<Group> {
             return ResponseEntity.badRequest().body("User with id " + userId + " does not exist");
         }
 
-        Group group = groupRepository.findById(new ObjectId(groupId));
+        Group group = groupInvite.getGroup();
 
         if (group == null) {
             return ResponseEntity.badRequest().body("Group not found");
         }
 
-        user.getGroupInvites().removeIf(invite -> invite.group.getId().equals(group.getId()));
+        user.deleteGroupInvite(groupInvite.getId());
 
         group.removeInvitedMember(user.getId());
 

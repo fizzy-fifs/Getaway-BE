@@ -1,5 +1,6 @@
 package com.example.holidayplanner.groupInvite;
 
+import com.example.holidayplanner.config.cascadeSaveMongoEventListener.CascadeSave;
 import com.example.holidayplanner.group.Group;
 import com.example.holidayplanner.user.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,11 +22,13 @@ public class GroupInvite {
     @JsonProperty
     @NotNull
     @DBRef
+    @CascadeSave
     public Group group;
 
     @JsonProperty
     @NotNull
     @DBRef
+    @CascadeSave
     public User invitee;
 
     public GroupInvite() {
