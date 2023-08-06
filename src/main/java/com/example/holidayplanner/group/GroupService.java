@@ -227,7 +227,7 @@ public class GroupService implements ServiceInterface<Group> {
 
     public ResponseEntity<Object> acceptInvitation(String groupInviteId, String userId) {
         if (groupInviteId == null || groupInviteId.isEmpty()) {
-            return ResponseEntity.badRequest().body("No group invite provided");
+            return ResponseEntity.badRequest().body("No group invite id provided");
         }
 
         GroupInvite groupInvite = groupInviteRepository.findById(new ObjectId(groupInviteId));

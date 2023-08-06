@@ -67,10 +67,7 @@ public class HolidayService {
 
         List<String> userIdsToCheck = new ArrayList<>();
 
-        holiday.getInvitedHolidayMakers()
-                .stream()
-                .map(User::getId)
-                .forEach(userIdsToCheck::add);
+        holiday.getInvitedHolidayMakers().stream().map(User::getId).forEach(userIdsToCheck::add);
 
         String holidayCreatorId = holiday.getHolidayMakers().get(0).getId();
         userIdsToCheck.add(holidayCreatorId);
@@ -103,14 +100,18 @@ public class HolidayService {
 
         group.addHoliday(newHoliday.getId());
 
-        User inviter = confirmedUsers.stream().filter(holidayMaker -> holidayMaker.getId().equals(holidayCreatorId)).findFirst().get();
+        User inviter = confirmedUsers.stream()
+                .filter(holidayMaker ->
+                        holidayMaker.getId()
+                        .equals(holidayCreatorId))
+                .findFirst().get();
 
         HolidayInvite holidayInvite = new HolidayInvite(newHoliday, inviter);
         HolidayInvite newHolidayInvite = holidayInviteRepository.insert(holidayInvite);
 
         for (User invitedHolidayMaker : confirmedUsers) {
             if (!invitedHolidayMaker.getId().equals(inviter.getId())) {
-                invitedHolidayMaker.getHolidayInvites().add(newHolidayInvite);
+                invitedHolidayMaker.getHolidayInviteIds().add(newHolidayInvite.getId());
             }
         }
 
@@ -131,7 +132,7 @@ public class HolidayService {
             return "User with user id" + userId + "does not exists";
         }
 
-        Holiday holiday = holidayRepository.findById(holidayId).get();
+        Holiday holiday = holidayRepository.findById(new ObjectId(holidayId));
         holiday.removeHolidayMaker(user.getId());
 
         return user.getFirstName() + " has been removed from " + holiday.getName();
@@ -210,6 +211,10 @@ public class HolidayService {
     }
 
     public ResponseEntity<Object> acceptInvite(String holidayInviteId, String userId) {
+        if (holidayInviteId == null || holidayInviteId.isEmpty()) {
+            return ResponseEntity.badRequest().body("No holiday invite id provided");
+        }
+
         HolidayInvite holidayInvite = holidayInviteRepository.findById(new ObjectId(holidayInviteId));
 
         if (holidayInvite == null) {
@@ -224,12 +229,12 @@ public class HolidayService {
 
         Holiday holiday = holidayInvite.getHoliday();
 
-        if (!holiday.getInvitedHolidayMakers().contains(user.getId())) {
+        if (!holiday.getInvitedHolidayMakers().contains(user)) {
             return ResponseEntity.badRequest().body("Unfortunately, you have not been invited to this holiday");
         }
 
         holiday.removeInvitedHolidayMaker(user.getId());
-        user.deleteHolidayInvite(holidayInvite);
+        user.deleteHolidayInvite(holidayInvite.getId());
 
         holiday.addHolidayMaker(user);
         user.addHoliday(holiday.getId());
@@ -255,12 +260,12 @@ public class HolidayService {
 
         Holiday holiday = holidayInvite.getHoliday();
 
-        if (!holiday.getInvitedHolidayMakers().contains(user.getId())) {
+        if (!holiday.getInvitedHolidayMakers().contains(user)) {
             return ResponseEntity.badRequest().body("Unfortunately, you have not been invited to this holiday");
         }
 
         holiday.removeInvitedHolidayMaker(user.getId());
-        user.deleteHolidayInvite(holidayInvite);
+        user.deleteHolidayInvite(holidayInvite.getId());
 
         holidayRepository.save(holiday);
         userRepository.save(user);

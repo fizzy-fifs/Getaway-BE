@@ -88,7 +88,7 @@ public class User {
     private List<String> holidayIds = new ArrayList<>();
 
     @JsonProperty
-    private List<HolidayInvite> holidayInvites = new ArrayList<>();
+    private List<String> holidayInviteIds = new ArrayList<>();
 
     @JsonProperty
     private List<String> friendRequests = new ArrayList<>();
@@ -168,12 +168,12 @@ public class User {
         holidayIds.remove(holiday);
     }
 
-    public void addHolidayInvite(HolidayInvite holidayInvite) {
-        holidayInvites.add(holidayInvite);
+    public void addHolidayInvite(String holidayInviteId) {
+        holidayInviteIds.add(holidayInviteId);
     }
 
-    public void deleteHolidayInvite(HolidayInvite holidayInvite) {
-        holidayInvites.removeIf(invite -> invite.getId().equals(holidayInvite.getId()));
+    public void deleteHolidayInvite(String holidayInviteId) {
+        holidayInviteIds.remove(holidayInviteId);
     }
 
     public void deleteGroupInvite(String groupInviteId) {
