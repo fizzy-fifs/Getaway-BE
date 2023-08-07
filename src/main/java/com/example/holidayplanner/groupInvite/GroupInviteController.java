@@ -14,7 +14,11 @@ import java.util.List;
 @Api(tags = "Group Invite")
 @SecurityRequirement(name = "holidayPlannerSecurity")
 public class GroupInviteController {
-    private GroupInviteService groupInviteService;
+    private final GroupInviteService groupInviteService;
+
+    public GroupInviteController(GroupInviteService groupInviteService) {
+        this.groupInviteService = groupInviteService;
+    }
 
     @GetMapping(path= "/{groupInviteId}")
     @ApiOperation(value = "Find group invite by id")

@@ -1,12 +1,8 @@
 package com.example.holidayplanner.holiday;
 
-import com.example.holidayplanner.availableDates.AvailableDates;
-import com.example.holidayplanner.budget.Budget;
 import com.example.holidayplanner.config.cascadeSaveMongoEventListener.CascadeSave;
 import com.example.holidayplanner.user.User;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
