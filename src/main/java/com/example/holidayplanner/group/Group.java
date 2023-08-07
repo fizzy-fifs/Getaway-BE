@@ -1,6 +1,7 @@
 package com.example.holidayplanner.group;
 
 import com.example.holidayplanner.config.cascadeSaveMongoEventListener.CascadeSave;
+import com.example.holidayplanner.holiday.Holiday;
 import com.example.holidayplanner.user.User;
 import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
@@ -39,7 +40,7 @@ public class Group {
     private String image;
 
     @JsonProperty
-    private List<String> holidayIds = new ArrayList<>();
+    private List<Holiday> holidays = new ArrayList<>();
 
 
     public Group() {
@@ -81,8 +82,8 @@ public class Group {
         this.groupMembers.removeIf(member -> Objects.equals(member.getId(), memberId));
     }
 
-    public void addHoliday(String holidayId) {
-        holidayIds.add(holidayId);
+    public void addHoliday(Holiday holidayId) {
+        holidays.add(holidayId);
     }
 
     public void removeInvitedMember(String invitedMemberId) {

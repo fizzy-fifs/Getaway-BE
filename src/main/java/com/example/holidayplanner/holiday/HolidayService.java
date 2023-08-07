@@ -98,7 +98,7 @@ public class HolidayService {
 
         Holiday newHoliday = holidayRepository.insert(holiday);
 
-        group.addHoliday(newHoliday.getId());
+        group.addHoliday(newHoliday);
 
         User inviter = confirmedUsers.stream()
                 .filter(holidayMaker ->
