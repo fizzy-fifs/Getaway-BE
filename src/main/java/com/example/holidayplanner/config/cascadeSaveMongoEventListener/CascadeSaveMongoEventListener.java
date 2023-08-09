@@ -42,9 +42,9 @@ public class CascadeSaveMongoEventListener extends AbstractMongoEventListener<Ob
         @Override
         public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
             //ReflectionUtils.makeAccessible(field);
-            if (field.isAnnotationPresent(org.springframework.data.annotation.Id.class)) {
+            //if (field.isAnnotationPresent(org.springframework.data.annotation.Id.class)) {
                 idFound = true;
-            }
+            //}
         }
 
         public boolean isIdFound() {
