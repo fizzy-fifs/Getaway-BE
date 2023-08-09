@@ -2,8 +2,8 @@ package com.example.holidayplanner.config.cascadeSaveMongoEventListener;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
-import org.springframework.data.mongodb.core.mapping.event.AfterConvertEvent;
 import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
 import org.springframework.util.ReflectionUtils;
 
@@ -14,7 +14,7 @@ public class CascadeSaveMongoEventListener extends AbstractMongoEventListener<Ob
     private MongoOperations mongoOperations;
 
     @Override
-    public void onAfterConvert(AfterConvertEvent<Object> event) {
+    public void onBeforeConvert(BeforeConvertEvent<Object> event) {
         var source = event.getSource();
         ReflectionUtils.doWithFields(source.getClass(), new ReflectionUtils.FieldCallback() {
             @Override
@@ -41,10 +41,10 @@ public class CascadeSaveMongoEventListener extends AbstractMongoEventListener<Ob
 
         @Override
         public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
-            //ReflectionUtils.makeAccessible(field);
-            //if (field.isAnnotationPresent(org.springframework.data.annotation.Id.class)) {
+            ReflectionUtils.makeAccessible(field);
+            if (field.isAnnotationPresent(MongoId.class)) {
                 idFound = true;
-            //}
+            }
         }
 
         public boolean isIdFound() {
