@@ -1,6 +1,6 @@
 package com.example.holidayplanner.config.mongoConfiguration;
 
-import com.example.holidayplanner.config.cascadeSaveMongoEventListener.CascadeSaveMongoEventListener;
+//import com.example.holidayplanner.config.cascadeSaveMongoEventListener.CascadeSaveMongoEventListener;
 import com.mongodb.ConnectionString;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -45,9 +45,9 @@ public class MongoConfig {
         return new MongoTemplate(factory);
     }
 
-    @Bean
-    public CascadeSaveMongoEventListener cascadingMongoEventListener() {
-        return new CascadeSaveMongoEventListener();
-    }
+//    @Bean
+//    public CascadeSaveMongoEventListener cascadingMongoEventListener() {
+//        return new CascadeSaveMongoEventListener();
+//    }
 
 }

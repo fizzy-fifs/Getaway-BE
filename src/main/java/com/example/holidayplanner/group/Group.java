@@ -40,6 +40,8 @@ public class Group {
     private String image;
 
     @JsonProperty
+    @DBRef
+    @CascadeSave
     private List<Holiday> holidays = new ArrayList<>();
 
 
