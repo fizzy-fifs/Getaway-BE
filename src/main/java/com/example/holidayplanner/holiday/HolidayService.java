@@ -75,7 +75,7 @@ public class HolidayService {
         List<User> confirmedUsers = (List<User>) userRepository.findAllById(userIdsToCheck);
 
         if (confirmedUsers.size() != userIdsToCheck.size()) {
-            return ResponseEntity.badRequest().body("One of the userIds added is invalid");
+            return ResponseEntity.badRequest().body("One of the user ids added is invalid");
         }
 
         String groupId = holiday.getGroupId();
@@ -96,9 +96,9 @@ public class HolidayService {
         AvailableDates newAvailableDates = availableDatesRepository.insert(availableDates);
         holiday.getAvailableDatesIds().add(newAvailableDates.getId());
 
-        Holiday newHoliday = holidayRepository.insert(holiday);
+        holiday.setId(new ObjectId().toString());
 
-        group.addHoliday(newHoliday);
+        group.addHoliday(holiday);
 
         User inviter = confirmedUsers.stream()
                 .filter(holidayMaker ->
@@ -106,7 +106,7 @@ public class HolidayService {
                         .equals(holidayCreatorId))
                 .findFirst().get();
 
-        HolidayInvite holidayInvite = new HolidayInvite(newHoliday, inviter);
+        HolidayInvite holidayInvite = new HolidayInvite(holiday, inviter);
         HolidayInvite newHolidayInvite = holidayInviteRepository.insert(holidayInvite);
 
         for (User invitedHolidayMaker : confirmedUsers) {
@@ -115,10 +115,11 @@ public class HolidayService {
             }
         }
 
-        inviter.addHoliday(newHoliday.getId());
+        inviter.addHoliday(holiday.getId());
 
         userRepository.saveAll(confirmedUsers);
         groupRepository.save(group);
+        Holiday newHoliday = holidayRepository.save(holiday);
 
         String holidayJson = mapper.writeValueAsString(newHoliday);
 
