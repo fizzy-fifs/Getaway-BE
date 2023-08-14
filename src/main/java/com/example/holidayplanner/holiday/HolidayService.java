@@ -75,6 +75,7 @@ public class HolidayService {
         List<User> confirmedUsers = (List<User>) userRepository.findAllById(userIdsToCheck);
 
         if (confirmedUsers.size() != userIdsToCheck.size()) {
+            System.out.println(confirmedUsers);
             return ResponseEntity.badRequest().body("One of the user ids added is invalid");
         }
 

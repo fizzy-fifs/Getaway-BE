@@ -27,7 +27,7 @@ import java.util.List;
 @Data
 @Document(collection = "Users")
 public class User {
-    //@MongoId(value = FieldType.OBJECT_ID)
+    @MongoId(value = FieldType.OBJECT_ID)
     @JsonProperty
     private String id;
 
