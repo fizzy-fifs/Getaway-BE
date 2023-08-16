@@ -186,14 +186,14 @@ public class GroupService implements ServiceInterface<Group> {
         return ResponseEntity.ok(groups);
     }
 
-    public ResponseEntity<Object> inviteUsers(String groupId, String inviteeId, List<String> invitedUsersIds) {
+    public ResponseEntity<Object> inviteUsers(String groupId, String inviterId, List<String> invitedUsersIds) {
         if (groupId == null || groupId.isEmpty()) {
             return ResponseEntity.badRequest().body("No group id provided");
         }
         if (invitedUsersIds == null || invitedUsersIds.isEmpty()) {
             return ResponseEntity.badRequest().body("No user id provided");
         }
-        if (inviteeId == null || inviteeId.isEmpty()) {
+        if (inviterId == null || inviterId.isEmpty()) {
             return ResponseEntity.badRequest().body("Please include the id of the invitee");
         }
 
@@ -203,14 +203,18 @@ public class GroupService implements ServiceInterface<Group> {
             return ResponseEntity.badRequest().body("No group found");
         }
 
-        invitedUsersIds.add(inviteeId);
-        List<User> users = (List<User>) userRepository.findAllById(invitedUsersIds);
+        List<String> userIdsToCheck = new ArrayList<>();
 
-        if (users.size() != invitedUsersIds.size() + 1) {
+        userIdsToCheck.add(inviterId);
+        userIdsToCheck.addAll(invitedUsersIds);
+
+        List<User> users = (List<User>) userRepository.findAllById(userIdsToCheck);
+
+        if (users.size() != userIdsToCheck.size()) {
             return ResponseEntity.badRequest().body("One or more of the userIds cannot be found");
         }
 
-        User inviter = users.stream().filter(user -> user.getId().equals(inviteeId)).findFirst().get();
+        User inviter = users.stream().filter(user -> user.getId().equals(inviterId)).findFirst().get();
         users.remove(inviter);
 
         GroupInvite newGroupInvite = new GroupInvite(group, inviter);
@@ -218,8 +222,10 @@ public class GroupService implements ServiceInterface<Group> {
 
         for (User user : users) {
             user.getGroupInviteIds().add(savedGroupInvite.getId());
+            group.getInvitedGroupMembersIds().add(user.getId());
         }
 
+        groupRepository.save(group);
         userRepository.saveAll(users);
 
         return ResponseEntity.ok("Invitation sent");
