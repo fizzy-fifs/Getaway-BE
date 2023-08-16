@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.data.mongodb.core.mapping.event.AfterSaveEvent;
+import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,7 @@ class CascadeSaveMongoEventListener extends AbstractMongoEventListener<Object> {
 
 
     @Override
-    public void onAfterSave(AfterSaveEvent<Object> event) {
+    public void onBeforeConvert(BeforeConvertEvent<Object> event) {
         Object source = event.getSource();
 
         ReflectionUtils.doWithFields(source.getClass(), new ReflectionUtils.FieldCallback() {
@@ -49,9 +50,9 @@ class CascadeSaveMongoEventListener extends AbstractMongoEventListener<Object> {
         try {
             DbRefFieldCallback callback = new DbRefFieldCallback(fieldValue);
             ReflectionUtils.doWithFields(fieldValue.getClass(), callback);
-//            if (!callback.isIdFound && callback.id == null) {
-//                mongoTemplate.insert(fieldValue);
-//            }
+            if (!callback.isIdFound && callback.id == null) {
+                mongoTemplate.insert(fieldValue);
+            }
 
             if (callback.id != null) {
                 var findById = mongoTemplate.exists(new Query(Criteria.where("_id").is(callback.id)), fieldValue.getClass());

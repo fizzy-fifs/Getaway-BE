@@ -75,7 +75,6 @@ public class HolidayService {
         List<User> confirmedUsers = (List<User>) userRepository.findAllById(userIdsToCheck);
 
         if (confirmedUsers.size() != userIdsToCheck.size()) {
-            System.out.println(confirmedUsers);
             return ResponseEntity.badRequest().body("One of the user ids added is invalid");
         }
 
@@ -118,9 +117,9 @@ public class HolidayService {
 
         inviter.addHoliday(holiday.getId());
 
-        userRepository.saveAll(confirmedUsers);
         groupRepository.save(group);
         Holiday newHoliday = holidayRepository.save(holiday);
+        userRepository.saveAll(confirmedUsers);
 
         String holidayJson = mapper.writeValueAsString(newHoliday);
 
