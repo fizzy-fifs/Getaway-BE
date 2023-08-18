@@ -87,11 +87,11 @@ public class Holiday {
     }
 
     public void removeHolidayMaker(String userId) {
-        this.holidayMakers.removeIf(holidayMakerId -> holidayMakerId.equals(userId));
+        this.holidayMakers.removeIf(holidayMaker -> holidayMaker.getId().equals(userId));
     }
 
     public void removeInvitedHolidayMaker(String userId) {
-        this.invitedHolidayMakers.removeIf(invitedHolidayMakerId -> invitedHolidayMakerId.equals(userId));
+        this.invitedHolidayMakers.removeIf(invitedHolidayMaker -> invitedHolidayMaker.getId().equals(userId));
     }
 
     public void addBudget(String newBudgetId) {
