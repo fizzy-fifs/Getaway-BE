@@ -1,6 +1,7 @@
 package com.example.holidayplanner.group;
 
 import com.example.holidayplanner.groupInvite.GroupInviteRepository;
+import com.example.holidayplanner.helpers.Helper;
 import com.example.holidayplanner.interfaces.ServiceInterface;
 import com.example.holidayplanner.groupInvite.GroupInvite;
 import com.example.holidayplanner.user.User;
@@ -58,6 +59,9 @@ public class GroupService implements ServiceInterface<Group> {
         if (users.size() != userIds.size()) {
             return ResponseEntity.badRequest().body("One of the users added does not exist");
         }
+
+        group.setName(Helper.toSentenceCase(group.getName()));
+        group.setDescription(Helper.toSentenceCase(group.getDescription()));
 
         Group newGroup = groupRepository.insert(group);
 

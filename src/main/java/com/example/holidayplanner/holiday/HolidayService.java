@@ -6,6 +6,7 @@ import com.example.holidayplanner.budget.Budget;
 import com.example.holidayplanner.budget.BudgetRepository;
 import com.example.holidayplanner.group.Group;
 import com.example.holidayplanner.group.GroupRepository;
+import com.example.holidayplanner.helpers.Helper;
 import com.example.holidayplanner.holidayInvite.HolidayInvite;
 import com.example.holidayplanner.holidayInvite.HolidayInviteRepository;
 import com.example.holidayplanner.user.User;
@@ -97,13 +98,14 @@ public class HolidayService {
         holiday.getAvailableDatesIds().add(newAvailableDates.getId());
 
         holiday.setId(new ObjectId().toString());
+        holiday.setName(Helper.toSentenceCase(holiday.getName()));
 
         group.addHoliday(holiday);
 
         User inviter = confirmedUsers.stream()
                 .filter(holidayMaker ->
                         holidayMaker.getId()
-                        .equals(holidayCreatorId))
+                                .equals(holidayCreatorId))
                 .findFirst().get();
 
         HolidayInvite holidayInvite = new HolidayInvite(holiday, inviter);

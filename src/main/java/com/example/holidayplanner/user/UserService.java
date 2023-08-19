@@ -2,6 +2,7 @@ package com.example.holidayplanner.user;
 
 import com.example.holidayplanner.config.MyUserDetailsService;
 import com.example.holidayplanner.config.jwt.JwtUtil;
+import com.example.holidayplanner.helpers.Helper;
 import com.example.holidayplanner.interfaces.ServiceInterface;
 import com.example.holidayplanner.user.role.RoleRepository;
 import com.example.holidayplanner.userLookupModel.UserLookupModel;
@@ -66,28 +67,28 @@ public class UserService implements ServiceInterface<User> {
         this.jwtTokenUtil = jwtTokenUtil;
         this.authenticationManager = authenticationManager;
         this.mongoTemplate = mongoTemplate;
-        this.mapper = new ObjectMapper().findAndRegisterModules();;
+        this.mapper = new ObjectMapper().findAndRegisterModules();
+        ;
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
-
 
 
     @Override
     public ResponseEntity<Object> create(User user) throws JsonProcessingException {
 
-       //Check if email is already registered
-        if( emailExists(user) ) {
+        //Check if email is already registered
+        if (emailExists(user)) {
             return ResponseEntity.badRequest().body("Email already exists");
         }
 
         //Check if username already exists
-        if(userNameExists(user) ) {
+        if (userNameExists(user)) {
             return ResponseEntity.badRequest().body("Username is already taken.");
         }
 
-        user.setFirstName(user.getFirstName().toLowerCase());
-        user.setLastName(user.getLastName().toLowerCase());
-        user.setEmail(user.getEmail().toLowerCase());
+        user.setFirstName(Helper.toSentenceCase(user.getFirstName()));
+        user.setLastName(Helper.toSentenceCase(user.getLastName()));
+        user.setEmail(Helper.toSentenceCase(user.getEmail()));
         user.setUserName(user.getUserName().toLowerCase());
 
         //Hash password and set role as user
@@ -105,7 +106,7 @@ public class UserService implements ServiceInterface<User> {
         //Put JWT and created user object in a map and send response
         Map<String, Object> responseData = new HashMap<>();
 
-            //Convert user object to json
+        //Convert user object to json
         ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
         String userJson = mapper.writeValueAsString(savedUser);
 
@@ -122,7 +123,7 @@ public class UserService implements ServiceInterface<User> {
         String password = emailAndPassword.get("password");
 
         try {
-            authenticationManager.authenticate( new UsernamePasswordAuthenticationToken(email, password) );
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
         } catch (BadCredentialsException e) {
             return ResponseEntity.badRequest().body("Invalid email or password");
         }
@@ -142,8 +143,11 @@ public class UserService implements ServiceInterface<User> {
         return ResponseEntity.ok(responseData);
 
     }
+
     @Override
-    public List<User> getAll() { return userRepository.findAll(); }
+    public List<User> getAll() {
+        return userRepository.findAll();
+    }
 
     @Override
     public String update(String userId, User newUserInfo) {
@@ -151,7 +155,9 @@ public class UserService implements ServiceInterface<User> {
 
         User currentUserInfo = userRepository.findById(userIdToObjectId);
 
-        if (currentUserInfo == null) {  return "user with id " + userId + " does not exists"; }
+        if (currentUserInfo == null) {
+            return "user with id " + userId + " does not exists";
+        }
 
         currentUserInfo.setFirstName(newUserInfo.getFirstName());
         currentUserInfo.setLastName(newUserInfo.getLastName());
@@ -169,12 +175,13 @@ public class UserService implements ServiceInterface<User> {
 
         User user = userRepository.findById(userIdToObjectId);
 
-        if (user == null){ return "user with id " + userId + " does not exists"; }
+        if (user == null) {
+            return "user with id " + userId + " does not exists";
+        }
 
         userRepository.delete(user);
         return "Your account has been deleted";
     }
-
 
 
     public ResponseEntity<Object> sendFriendRequest(String userId, String allegedFriendId) {
@@ -182,12 +189,14 @@ public class UserService implements ServiceInterface<User> {
         ArrayList<User> users;
 
         try {
-            users = (ArrayList<User>) userRepository.findAllById(Arrays.asList(userId,allegedFriendId)); //Returns Iterable list of users in random order
-        }catch(IllegalArgumentException e) {
+            users = (ArrayList<User>) userRepository.findAllById(Arrays.asList(userId, allegedFriendId)); //Returns Iterable list of users in random order
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid Id");
         }
 
-        if (users.size() != 2) { return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid"); }
+        if (users.size() != 2) {
+            return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid");
+        }
 
         User allegedFriend = null;
         User principal = null;
@@ -196,8 +205,7 @@ public class UserService implements ServiceInterface<User> {
 
             if (Objects.equals(user.getId(), allegedFriendId)) {
                 allegedFriend = user;
-            }
-            else if (Objects.equals(user.getId(), userId)) {
+            } else if (Objects.equals(user.getId(), userId)) {
                 principal = user;
             }
 
@@ -227,7 +235,9 @@ public class UserService implements ServiceInterface<User> {
             return ResponseEntity.badRequest().body("Invalid Id");
         }
 
-        if (users.size() != 2) { return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid"); }
+        if (users.size() != 2) {
+            return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid");
+        }
 
         User friend = null;
         User principal = null;
@@ -236,8 +246,7 @@ public class UserService implements ServiceInterface<User> {
 
             if (Objects.equals(user.getId(), friendId)) {
                 friend = user;
-            }
-            else if (Objects.equals(user.getId(), userId)) {
+            } else if (Objects.equals(user.getId(), userId)) {
                 principal = user;
             }
 
@@ -248,8 +257,9 @@ public class UserService implements ServiceInterface<User> {
         List<String> friendRequests = principal.getFriendRequests();
 
         assert friend != null;
-        if ( !friendRequests.contains(friend.getId()) ) { return ResponseEntity.badRequest().body("Friend Request does not exist"); }
-
+        if (!friendRequests.contains(friend.getId())) {
+            return ResponseEntity.badRequest().body("Friend Request does not exist");
+        }
 
 
         //Add friend to principal's friend's list and vice versa
@@ -259,7 +269,7 @@ public class UserService implements ServiceInterface<User> {
         //Remove the request from the friendRequest list, friendRequestSent list and save to db
         friendRequests.remove(friendId);
         friend.removeFromFreindRequestsSent(principal.getId());
-        List<User> savedUsers = userRepository.saveAll(Arrays.asList(principal,friend));
+        List<User> savedUsers = userRepository.saveAll(Arrays.asList(principal, friend));
 
         return ResponseEntity.ok("You are now friends with " + friend.getFirstName());
     }
@@ -288,11 +298,13 @@ public class UserService implements ServiceInterface<User> {
             return ResponseEntity.badRequest().body("Invalid Id");
         }
 
-        if (users.size() != 2) { return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid"); }
+        if (users.size() != 2) {
+            return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid");
+        }
 
-        for (User user: users) {
-        user.deleteFriendRequest(friendId);
-        user.removeFromFreindRequestsSent(userId);
+        for (User user : users) {
+            user.deleteFriendRequest(friendId);
+            user.removeFromFreindRequestsSent(userId);
         }
 
         List<User> savedUsers = userRepository.saveAll(users);
@@ -325,18 +337,24 @@ public class UserService implements ServiceInterface<User> {
 
         User user = userRepository.findById(new ObjectId(id));
 
-        if (user == null) { return ResponseEntity.badRequest().body("User with id " + id + " does not exist"); }
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User with id " + id + " does not exist");
+        }
 
         String userJson = mapper.writeValueAsString(user);
         return ResponseEntity.ok(userJson);
     }
 
     public ResponseEntity findMultipleById(List<String> userIds) throws JsonProcessingException {
-        if (userIds.isEmpty()) { return ResponseEntity.badRequest().body("No ids provided"); }
+        if (userIds.isEmpty()) {
+            return ResponseEntity.badRequest().body("No ids provided");
+        }
 
         List<User> users = (List<User>) userRepository.findAllById(userIds);
 
-        if (users.isEmpty()) { return ResponseEntity.badRequest().body("No users found"); }
+        if (users.isEmpty()) {
+            return ResponseEntity.badRequest().body("No users found");
+        }
 
         String usersJson = mapper.writeValueAsString(users);
 
@@ -346,7 +364,9 @@ public class UserService implements ServiceInterface<User> {
     public ResponseEntity saveDeviceToken(String userId, String deviceToken) {
         User user = userRepository.findById(new ObjectId(userId));
 
-        if (user == null) { return ResponseEntity.badRequest().body("User with id " + userId + " does not exist"); }
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User with id " + userId + " does not exist");
+        }
 
         user.setDeviceToken(deviceToken);
         userRepository.save(user);

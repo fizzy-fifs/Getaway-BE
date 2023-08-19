@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 import javax.validation.constraints.NotNull;
 
 @Data
-@Document(collection="Group Invites")
+@Document(collection = "Group Invites")
 public class GroupInvite {
     @MongoId(value = FieldType.OBJECT_ID)
     @JsonProperty
