@@ -46,8 +46,9 @@ public class JwtUtil {
         final String userName = extractEmail(token);
         return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
-    public String generateRefreshToken(UserDetails userDetails, String tokenid) {
-        return Jwts.builder().setClaims(Map.of("tokenId", tokenid))
+
+    public String generateRefreshToken(UserDetails userDetails) {
+        return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt( new Date(System.currentTimeMillis()) )
                 .setExpiration( new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(60)) )

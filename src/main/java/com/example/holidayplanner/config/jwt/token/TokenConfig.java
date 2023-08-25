@@ -1,16 +1,16 @@
-package com.example.holidayplanner.config.jwt.accessToken;
+package com.example.holidayplanner.config.jwt.token;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class AccessTokenConfig {
+public class TokenConfig {
 
     @Bean
-    CommandLineRunner commandLineRunner(AccessTokenRepository accessTokenRepository) {
+    CommandLineRunner refreshTokenRepoCommandLineRunner(TokenRepository tokenRepository) {
         return args -> {
-            accessTokenRepository.findAll();
+            tokenRepository.findAll();
         };
     }
 }

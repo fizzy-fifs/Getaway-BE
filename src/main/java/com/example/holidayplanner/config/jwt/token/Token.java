@@ -1,21 +1,20 @@
-package com.example.holidayplanner.config.jwt.refreshToken;
+package com.example.holidayplanner.config.jwt.token;
 
-import com.example.holidayplanner.user.User;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-@Document(collection = "Refresh Tokens")
+@Document(collection = "Tokens")
 @Data
-public class RefreshToken {
+public class Token {
 
     @MongoId(value = FieldType.OBJECT_ID)
     private String id;
 
-    private String ownerId;
+    private String userId;
 
-    public RefreshToken(String ownerId) {
-        this.ownerId = ownerId;
-    }
+    private String accessToken;
+
+    private String refreshToken;
 }

@@ -2,10 +2,8 @@ package com.example.holidayplanner.user;
 
 import com.example.holidayplanner.config.MyUserDetailsService;
 import com.example.holidayplanner.config.jwt.JwtUtil;
-import com.example.holidayplanner.config.jwt.accessToken.AccessToken;
-import com.example.holidayplanner.config.jwt.accessToken.AccessTokenRepository;
-import com.example.holidayplanner.config.jwt.refreshToken.RefreshToken;
-import com.example.holidayplanner.config.jwt.refreshToken.RefreshTokenRepository;
+import com.example.holidayplanner.config.jwt.token.Token;
+import com.example.holidayplanner.config.jwt.token.TokenService;
 import com.example.holidayplanner.helpers.Helper;
 import com.example.holidayplanner.interfaces.ServiceInterface;
 import com.example.holidayplanner.user.role.RoleRepository;
@@ -50,10 +48,7 @@ public class UserService implements ServiceInterface<User> {
     private final JwtUtil jwtTokenUtil;
 
     @Autowired
-    private final AccessTokenRepository accessTokenRepository;
-
-    @Autowired
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final TokenService tokenService;
 
     @Autowired
     private final AuthenticationManager authenticationManager;
@@ -70,13 +65,12 @@ public class UserService implements ServiceInterface<User> {
 
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, MyUserDetailsService myUserDetailsService, JwtUtil jwtTokenUtil, AccessTokenRepository accessTokenRepository, RefreshTokenRepository refreshTokenRepository, AuthenticationManager authenticationManager, MongoTemplate mongoTemplate) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, MyUserDetailsService myUserDetailsService, JwtUtil jwtTokenUtil, TokenService tokenService, AuthenticationManager authenticationManager, MongoTemplate mongoTemplate) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.myUserDetailsService = myUserDetailsService;
         this.jwtTokenUtil = jwtTokenUtil;
-        this.accessTokenRepository = accessTokenRepository;
-        this.refreshTokenRepository = refreshTokenRepository;
+        this.tokenService = tokenService;
         this.authenticationManager = authenticationManager;
         this.mongoTemplate = mongoTemplate;
         this.mapper = new ObjectMapper().findAndRegisterModules();
@@ -112,15 +106,15 @@ public class UserService implements ServiceInterface<User> {
 
         //Generate JWT
         final UserDetails userDetails = myUserDetailsService.loadUserByUsername(user.getEmail());
-        final String jwt = jwtTokenUtil.generateToken(userDetails);
+        final String accessToken = jwtTokenUtil.generateToken(userDetails);
+        final String refreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
 
-        AccessToken accessToken = new AccessToken(jwt);
-        accessTokenRepository.insert(accessToken);
+        Token token = new Token();
+        token.setUserId(user.getId());
+        token.setAccessToken(accessToken);
+        token.setRefreshToken(refreshToken);
 
-        RefreshToken refreshToken = new RefreshToken(savedUser.getId());
-        RefreshToken savedRefreshToken = refreshTokenRepository.insert(refreshToken);
-
-        String refreshTokenString = jwtTokenUtil.generateRefreshToken(userDetails, savedRefreshToken.getId());
+        tokenService.saveToken(token);
 
         //Put JWT and created user object in a map and send response
         Map<String, Object> responseData = new HashMap<>();
@@ -129,8 +123,8 @@ public class UserService implements ServiceInterface<User> {
         String userJson = mapper.writeValueAsString(savedUser);
 
         responseData.put("user", userJson);
-        responseData.put("jwt", jwt);
-        responseData.put("refreshToken", refreshTokenString);
+        responseData.put("accessToken", accessToken);
+        responseData.put("refreshToken", refreshToken);
 
         return ResponseEntity.ok(responseData);
     }
@@ -151,22 +145,22 @@ public class UserService implements ServiceInterface<User> {
 
 
         final UserDetails userDetails = myUserDetailsService.loadUserByUsername(email);
-        String jwt = jwtTokenUtil.generateToken(userDetails);
+        final String accessToken = jwtTokenUtil.generateToken(userDetails);
+        final String refreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
 
-        AccessToken accessToken = new AccessToken(jwt);
-        accessTokenRepository.insert(accessToken);
+        Token token = new Token();
+        token.setUserId(user.getId());
+        token.setAccessToken(accessToken);
+        token.setRefreshToken(refreshToken);
 
-        RefreshToken refreshToken = new RefreshToken(user.getId());
-        RefreshToken savedRefreshToken = refreshTokenRepository.insert(refreshToken);
-
-        String refreshTokenString = jwtTokenUtil.generateRefreshToken(userDetails, savedRefreshToken.getId());
+        tokenService.saveToken(token);
 
         String userJson = mapper.writeValueAsString(user);
 
         Map<String, String> responseData = new HashMap<>();
         responseData.put("user", userJson);
-        responseData.put("jwt", jwt);
-        responseData.put("refreshToken", refreshTokenString);
+        responseData.put("accessToken", accessToken);
+        responseData.put("refreshToken", refreshToken);
 
         return ResponseEntity.ok(responseData);
 
