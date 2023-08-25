@@ -12,9 +12,9 @@ public class AccessToken {
     @MongoId(value = FieldType.OBJECT_ID)
     private String id;
 
-    private String token;
+    private String ownerId;
 
-    public AccessToken(String token) {
-        this.token = token;
+    public AccessToken(String ownerId) {
+        this.ownerId = ownerId;
     }
 }
