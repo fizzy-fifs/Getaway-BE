@@ -5,18 +5,11 @@ import org.apache.catalina.filters.CorsFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -44,7 +37,7 @@ public class SecurityConfigurer {
         return http.cors(withDefaults())
             .csrf((csrf) -> csrf.disable())
             .authorizeHttpRequests((authorize) -> authorize
-                    .antMatchers("/api/v1.0/users/newuser", "/api/v1.0/users/login", "/", "/csrf", "/v3/api-docs",
+                    .requestMatchers("/api/v1.0/users/newuser", "/api/v1.0/users/login", "/", "/csrf", "/v3/api-docs",
                                 "/swagger-resources/configuration/ui", "/configuration/ui",
                                 "/swagger-resources", "/swagger-resources/configuration/security",
                                 "/configuration/security", "/swagger-ui/**", "/v2/api-docs/**", "/webjars/**", "/swagger-ui.html").permitAll())

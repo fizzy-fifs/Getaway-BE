@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication()
 @EnableScheduling
+@EnableMongoRepositories
 public class HolidayPlannerApplication {
 
 	public static void main(String[] args) {

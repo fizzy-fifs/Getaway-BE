@@ -1,8 +1,6 @@
 package com.example.holidayplanner.user;
 
-import com.example.holidayplanner.groupInvite.GroupInvite;
-import com.example.holidayplanner.holiday.Holiday;
-import com.example.holidayplanner.holidayInvite.HolidayInvite;
+import com.example.holidayplanner.holiday.Holiday;;
 import com.example.holidayplanner.user.role.Role;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -11,7 +9,6 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.Data;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
