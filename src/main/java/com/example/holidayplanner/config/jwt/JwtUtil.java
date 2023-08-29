@@ -1,9 +1,8 @@
 package com.example.holidayplanner.config.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -37,14 +36,12 @@ public class JwtUtil {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public Boolean validateAccessToken(String token, UserDetails userDetails) {
-        final String userName = extractEmail(token);
-        return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    public Boolean validateAccessToken(String accessToken) {
+        return (isTokenValid(accessToken) && !isTokenExpired(accessToken));
     }
 
-    public Boolean validateRefreshToken(String token, UserDetails userDetails) {
-        final String userName = extractEmail(token);
-        return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    public Boolean validateRefreshToken(String refeshToken) {
+        return (isTokenValid(refeshToken) && !isTokenExpired(refeshToken));
     }
 
     public String generateRefreshToken(UserDetails userDetails) {
@@ -68,7 +65,7 @@ public class JwtUtil {
         return Jwts.builder().setClaims(claims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt( new Date(System.currentTimeMillis()) )
-                .setExpiration( new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(12)) )
+                .setExpiration( new Date(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(60)) )
                 .signWith(secretKey).compact();
     }
 
@@ -76,5 +73,16 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
+    private Boolean isTokenValid(String token) {
+        try {
+            Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token);
 
+            return true;
+        } catch (ExpiredJwtException | MalformedJwtException | SignatureException exception) {
+            return false;
+        }
+    }
 }

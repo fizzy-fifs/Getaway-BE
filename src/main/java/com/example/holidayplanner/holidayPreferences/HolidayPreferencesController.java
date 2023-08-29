@@ -1,14 +1,14 @@
 package com.example.holidayplanner.holidayPreferences;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/v1.0/holidaypreferences")
-@Api(tags = "Holiday Preferences")
+@Tag(name = "Holiday Preferences")
 @SecurityRequirement(name = "holidayPlannerSecurity")
 public class HolidayPreferencesController {
 

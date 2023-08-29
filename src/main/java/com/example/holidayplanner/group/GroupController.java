@@ -2,9 +2,9 @@ package com.example.holidayplanner.group;
 
 import com.example.holidayplanner.interfaces.ControllerInterface;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/v1.0/groups")
-@Api(tags = "Group")
+@Tag(name = "Group")
 @SecurityRequirement(name = "holidayPlannerSecurity")
 public class GroupController implements ControllerInterface<Group> {
 
@@ -57,37 +57,37 @@ public class GroupController implements ControllerInterface<Group> {
 
 
     @PostMapping(path = "/findmultiplebyid")
-    @ApiOperation(value = "Find multiple groups by their ids")
+    @Operation(summary = "Find multiple groups by their ids")
     public ResponseEntity<Object> findMultipleById(@RequestBody List<String> groupIds) throws JsonProcessingException {
         return groupService.findMultipleById(groupIds);
     }
 
     @GetMapping(path = "/findbyid/{groupId}")
-    @ApiOperation(value = "Find a group by its id")
+    @Operation(summary = "Find a group by its id")
     public ResponseEntity<Object> findById(@PathVariable("groupId") String groupId) throws JsonProcessingException {
         return groupService.findById(groupId);
     }
 
     @GetMapping(path = "/search/{searchTerm}")
-    @ApiOperation(value = "Search for a group")
+    @Operation(summary = "Search for a group")
     public ResponseEntity<List<Group>> search(@PathVariable("searchTerm") String searchTerm) throws JsonProcessingException {
         return groupService.search(searchTerm);
     }
 
     @PostMapping(path = "/invite/{groupId}/{inviteeId}")
-    @ApiOperation(value = "Invite multiple users to a group")
+    @Operation(summary = "Invite multiple users to a group")
     public ResponseEntity<Object> inviteUsers(@PathVariable("groupId") String groupId, @PathVariable("inviteeId") String inviteeId, @RequestBody List<String> userIds) throws JsonProcessingException {
         return groupService.inviteUsers(groupId, inviteeId, userIds);
     }
 
     @PostMapping(path = "/acceptinvite/{groupInviteId}/{userId}")
-    @ApiOperation(value = "Accept an invitation to a group")
+    @Operation(summary = "Accept an invitation to a group")
     public ResponseEntity<Object> acceptInvitation(@PathVariable("groupInviteId") String groupInviteId, @PathVariable String userId) throws JsonProcessingException {
         return groupService.acceptInvitation(groupInviteId, userId);
     }
 
     @PostMapping(path = "/declineinvite/{groupInviteId}/{userId}")
-    @ApiOperation(value = "Decline an invitation to a group")
+    @Operation(summary = "Decline an invitation to a group")
     public ResponseEntity<Object> declineInvitation(@PathVariable("groupInviteId") String groupInviteId, @PathVariable String userId) throws JsonProcessingException {
         return groupService.declineInvitation(groupInviteId, userId);
     }

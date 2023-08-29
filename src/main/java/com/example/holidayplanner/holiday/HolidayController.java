@@ -1,9 +1,9 @@
 package com.example.holidayplanner.holiday;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/v1.0/holidays")
-@Api(tags = "Holiday")
+@Tag(name = "Holiday")
 @SecurityRequirement(name = "holidayPlannerSecurity")
 public class HolidayController {
 
@@ -40,25 +40,25 @@ public class HolidayController {
     }
 
     @PostMapping(path = "/findmultiplebyid")
-    @ApiOperation(value = "Find multiple holidays by their ids")
+    @Operation(summary = "Find multiple holidays by their ids")
     public ResponseEntity<Object> findMultipleById(@RequestBody List<String> holidayIds) throws JsonProcessingException {
         return holidayService.findMultipleById(holidayIds);
     }
 
     @GetMapping(path = "/findbyid/{holidayId}")
-    @ApiOperation(value = "Find a single holiday by its id")
+    @Operation(summary = "Find a single holiday by its id")
     public ResponseEntity<Object> findById(@PathVariable("holidayId") String holidayId) throws JsonProcessingException {
         return holidayService.findById(holidayId);
     }
 
     @GetMapping(path= "/acceptinvite/{holidayInviteId}/{userId}")
-    @ApiOperation(value = "Accept a holiday invite")
+    @Operation(summary = "Accept a holiday invite")
     public ResponseEntity<Object> acceptInvite(@PathVariable("holidayInviteId") String holidayInviteId, @PathVariable("userId") String userId) throws JsonProcessingException {
         return holidayService.acceptInvite(holidayInviteId, userId);
     }
 
     @GetMapping(path= "/declineinvite/{holidayInviteId}/{userId}")
-    @ApiOperation(value = "Decline a holiday invite")
+    @Operation(summary = "Decline a holiday invite")
     public ResponseEntity<Object> declineInvite(@PathVariable("holidayInviteId") String holidayInviteId, @PathVariable("userId") String userId) {
         return holidayService.declineInvite(holidayInviteId, userId);
     }

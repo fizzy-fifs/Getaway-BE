@@ -110,9 +110,11 @@ public class UserService implements ServiceInterface<User> {
         final String refreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
 
         Token token = new Token();
-        token.setUserId(user.getId());
+        token.setOwner(user);
         token.setAccessToken(accessToken);
+        token.setAccessTokenExpiration(jwtTokenUtil.extractExpiration(accessToken));
         token.setRefreshToken(refreshToken);
+        token.setRefreshTokenExpiration(jwtTokenUtil.extractExpiration(refreshToken));
 
         tokenService.saveToken(token);
 
@@ -149,9 +151,11 @@ public class UserService implements ServiceInterface<User> {
         final String refreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
 
         Token token = new Token();
-        token.setUserId(user.getId());
+        token.setOwner(user);
         token.setAccessToken(accessToken);
+        token.setAccessTokenExpiration(jwtTokenUtil.extractExpiration(accessToken));
         token.setRefreshToken(refreshToken);
+        token.setRefreshTokenExpiration(jwtTokenUtil.extractExpiration(refreshToken));
 
         tokenService.saveToken(token);
 

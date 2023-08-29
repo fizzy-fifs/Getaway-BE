@@ -1,5 +1,6 @@
 package com.example.holidayplanner.config.jwt.token;
 
+import com.example.holidayplanner.user.User;
 import org.springframework.stereotype.Service;
 @Service
 public class TokenService {
@@ -13,8 +14,8 @@ public class TokenService {
         return tokenRepository.save(token);
     }
 
-    public Token findByUserId(String userId) {
-        return tokenRepository.findByUserId(userId);
+    public Token findByUserId(User user) {
+        return tokenRepository.findByOwner(user);
     }
 
     public Token findByAccessToken(String accessToken) {

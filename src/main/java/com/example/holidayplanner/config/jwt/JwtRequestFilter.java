@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Date;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -23,12 +24,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private MyUserDetailsService myUserDetailsService;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
     @Autowired
     private final TokenService tokenService;
 
-    public JwtRequestFilter(TokenService tokenService) {
+    public JwtRequestFilter(JwtUtil jwtUtil, TokenService tokenService) {
+        this.jwtUtil = jwtUtil;
         this.tokenService = tokenService;
     }
 
@@ -38,31 +40,33 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         final String authorizationHeader = request.getHeader("Authorization");
 
         String jwt = null;
-        String email = null;
+//        String email = null;
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
-            email = jwtUtil.extractEmail(jwt);
+//            email = jwtUtil.extractEmail(jwt);
         }
 
-        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.myUserDetailsService.loadUserByUsername(email);
-
+        if (jwt != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             Token token = tokenService.findByAccessToken(jwt);
 
-            if (!jwtUtil.validateAccessToken(token.getAccessToken(), userDetails) && jwtUtil.validateRefreshToken(token.getRefreshToken(), userDetails)) {
+            UserDetails userDetails = this.myUserDetailsService.loadUserByUsername(token.getOwner().getEmail());
+
+            if (!jwtUtil.validateAccessToken(token.getAccessToken()) && token.getRefreshTokenExpiration().after(new Date())) {
                 String newAccessToken = jwtUtil.generateToken(userDetails);
 
                 String newRefreshToken = jwtUtil.generateRefreshToken(userDetails);
 
                 token.setAccessToken(newAccessToken);
+                token.setAccessTokenExpiration(jwtUtil.extractExpiration(newAccessToken));
                 token.setRefreshToken(newRefreshToken);
+                token.setRefreshTokenExpiration(jwtUtil.extractExpiration(newRefreshToken));
                 tokenService.saveToken(token);
 
                 response.setHeader("NewAccessToken", newAccessToken);
             }
 
-            if (jwtUtil.validateAccessToken(token.getAccessToken(), userDetails)) {
+            if (jwtUtil.validateAccessToken(token.getAccessToken())) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
