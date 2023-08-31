@@ -1,4 +1,4 @@
-FROM maven:3.8.3-openjdk-16
+FROM maven:3.8.7-openjdk-18-slim
 
 #Create a directory called App
 RUN mkdir app
