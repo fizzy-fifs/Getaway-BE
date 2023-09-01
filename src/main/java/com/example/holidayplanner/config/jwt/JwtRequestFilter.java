@@ -38,32 +38,40 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         final String authorizationHeader = request.getHeader("Authorization");
+        final String refreshTokenHeader = request.getHeader("Refresh-Token");
 
-        String jwt = null;
-//        String email = null;
+        String accessToken = null;
+        String refreshToken = null;
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7);
-//            email = jwtUtil.extractEmail(jwt);
+            accessToken = authorizationHeader.substring(7);
         }
 
-        if (jwt != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            Token token = tokenService.findByAccessToken(jwt);
+        if (refreshTokenHeader != null) {
+            refreshToken = authorizationHeader.substring(14);
+        }
+
+        if (accessToken != null && refreshToken != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            Token token = tokenService.findByAccessToken(accessToken);
+
+            if (token == null) {
+                token = tokenService.findByRefreshToken(refreshToken);
+            }
 
             UserDetails userDetails = this.myUserDetailsService.loadUserByUsername(token.getOwner().getEmail());
 
             if (!jwtUtil.validateAccessToken(token.getAccessToken()) && token.getRefreshTokenExpiration().after(new Date())) {
                 String newAccessToken = jwtUtil.generateToken(userDetails);
 
-                String newRefreshToken = jwtUtil.generateRefreshToken(userDetails);
-
                 token.setAccessToken(newAccessToken);
                 token.setAccessTokenExpiration(jwtUtil.extractExpiration(newAccessToken));
-                token.setRefreshToken(newRefreshToken);
-                token.setRefreshTokenExpiration(jwtUtil.extractExpiration(newRefreshToken));
                 tokenService.saveToken(token);
 
                 response.setHeader("NewAccessToken", newAccessToken);
+            }
+
+            if (token.getRefreshTokenExpiration().before(new Date())) {
+                filterChain.doFilter(request, response);
             }
 
             if (jwtUtil.validateAccessToken(token.getAccessToken())) {
