@@ -110,7 +110,7 @@ public class UserService implements ServiceInterface<User> {
         final String refreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
 
         Token token = new Token();
-        token.setOwner(user);
+        token.setOwner(savedUser);
         token.setAccessToken(accessToken);
         token.setAccessTokenExpiration(jwtTokenUtil.extractExpiration(accessToken));
         token.setRefreshToken(refreshToken);
