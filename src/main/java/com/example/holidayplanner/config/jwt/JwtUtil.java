@@ -48,7 +48,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt( new Date(System.currentTimeMillis()) )
-                .setExpiration( new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(60)) )
+                .setExpiration( new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(356)) )
                 .signWith(secretKey).compact();
     }
 
@@ -65,7 +65,7 @@ public class JwtUtil {
         return Jwts.builder().setClaims(claims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt( new Date(System.currentTimeMillis()) )
-                .setExpiration( new Date(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(60)) )
+                .setExpiration( new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(60)) )
                 .signWith(secretKey).compact();
     }
 
