@@ -61,7 +61,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             UserDetails userDetails = this.myUserDetailsService.loadUserByUsername(token.getOwner().getEmail());
 
             if (!jwtUtil.validateAccessToken(token.getAccessToken()) && token.getRefreshTokenExpiration().after(new Date())) {
-                String newAccessToken = jwtUtil.generateToken(userDetails);
+                String newAccessToken = jwtUtil.generateAccessToken(userDetails);
 
                 token.setAccessToken(newAccessToken);
                 token.setAccessTokenExpiration(jwtUtil.extractExpiration(newAccessToken));

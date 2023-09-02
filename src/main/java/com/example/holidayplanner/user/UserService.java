@@ -106,7 +106,7 @@ public class UserService implements ServiceInterface<User> {
 
         //Generate JWT
         final UserDetails userDetails = myUserDetailsService.loadUserByUsername(user.getEmail());
-        final String accessToken = jwtTokenUtil.generateToken(userDetails);
+        final String accessToken = jwtTokenUtil.generateAccessToken(userDetails);
         final String refreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
 
         Token token = new Token();
@@ -147,7 +147,7 @@ public class UserService implements ServiceInterface<User> {
 
 
         final UserDetails userDetails = myUserDetailsService.loadUserByUsername(email);
-        final String accessToken = jwtTokenUtil.generateToken(userDetails);
+        final String accessToken = jwtTokenUtil.generateAccessToken(userDetails);
         final String refreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
 
         Token token = new Token();
