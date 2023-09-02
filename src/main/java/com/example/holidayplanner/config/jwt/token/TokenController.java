@@ -1,5 +1,6 @@
 package com.example.holidayplanner.config.jwt.token;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class TokenController {
     }
 
     @PostMapping(path = "/refreshaccesstoken")
-    public ResponseEntity refreshAccessToken(@RequestBody String refreshToken) {
+    public ResponseEntity refreshAccessToken(@RequestBody String refreshToken) throws JsonProcessingException {
         return tokenService.refreshAccessToken(refreshToken);
     }
 }
