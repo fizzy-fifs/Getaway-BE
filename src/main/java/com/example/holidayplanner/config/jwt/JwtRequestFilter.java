@@ -47,8 +47,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             accessToken = authorizationHeader.substring(7);
         }
 
-        if (refreshTokenHeader != null) {
-            refreshToken = authorizationHeader.substring(14);
+        if (refreshTokenHeader != null && refreshTokenHeader.startsWith("Refresh Token ")) {
+            refreshToken = refreshTokenHeader.substring(14);
         }
 
         if (accessToken != null && refreshToken != null && SecurityContextHolder.getContext().getAuthentication() == null) {
