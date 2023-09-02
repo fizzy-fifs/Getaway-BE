@@ -20,12 +20,15 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .license(new License()
                         .name("Apache 2.0").url("http://springdoc.org")
                 ))
-                .components(new Components().addSecuritySchemes("Api Key", new SecurityScheme()
-                        .type(SecurityScheme.Type.APIKEY)
-                        .scheme("bearer")
-                        .bearerFormat("jwt")
-                        .in(SecurityScheme.In.HEADER)
-                        .name("Authorization")
-                )).addSecurityItem(new SecurityRequirement().addList("Api Key"));
+                .addSecurityItem(new SecurityRequirement().addList("Api Key"))
+                .components(new Components()
+                        .addSecuritySchemes("Api Key", new SecurityScheme()
+                                .name("holidayPlannerSecurity")
+                                .type(SecurityScheme.Type.APIKEY)
+                                .scheme("bearer")
+                                .bearerFormat("JWT")
+                                .in(SecurityScheme.In.HEADER)
+                                .name("Authorization")
+                ));
     }
 }
