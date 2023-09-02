@@ -6,6 +6,7 @@ import com.example.holidayplanner.user.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -56,11 +57,17 @@ public class TokenService {
     public ResponseEntity refreshAccessToken(String refreshToken) throws JsonProcessingException {
         Token token = findByRefreshToken(refreshToken);
         if (token == null) {
-            return ResponseEntity.badRequest().body("Invalid refresh token");
+            return ResponseEntity.status(403).body("Invalid refresh token");
         }
 
         if (token.getRefreshTokenExpiration().before(new Date())) {
-            return ResponseEntity.badRequest().body("Refresh token expired");
+            return ResponseEntity.status(403).body("Refresh token expired");
+        }
+
+        Boolean refreshTokenIsValid = jwtUtil.validateRefreshToken(refreshToken);
+
+        if (!refreshTokenIsValid) {
+            return ResponseEntity.status(403).body("Refresh token is not valid");
         }
 
         final UserDetails userDetails = myUserDetailsService.loadUserByUsername(token.getOwner().getEmail());
