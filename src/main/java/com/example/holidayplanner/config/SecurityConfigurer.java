@@ -35,7 +35,7 @@ public class SecurityConfigurer {
         return http.cors(withDefaults())
             .csrf((csrf) -> csrf.disable())
             .authorizeHttpRequests((authorize) -> authorize
-                    .requestMatchers("/api/v1.0/users/newuser", "/api/v1.0/users/login", "/", "/csrf",
+                    .requestMatchers("/api/v1.0/users/newuser", "/api/v1.0/users/login", "/api/v1.0/tokens/refreshaccesstoken", "/", "/csrf",
                                 "/swagger-resources/configuration/ui", "/configuration/ui",
                                 "/swagger-resources/**", "/swagger-resources/configuration/security",
                                 "/configuration/security", "configuration/**", "/swagger-ui/**", "/v3/api-docs/**", "/webjars/**", "/swagger-ui.html").permitAll()
