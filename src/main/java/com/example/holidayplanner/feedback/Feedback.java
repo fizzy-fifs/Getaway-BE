@@ -23,4 +23,9 @@ public class Feedback {
     public Feedback(User user) {
         this.user = user;
     }
+
+    public Feedback(User user, String feedback) {
+        this.user = user;
+        this.feedback = feedback;
+    }
 }
