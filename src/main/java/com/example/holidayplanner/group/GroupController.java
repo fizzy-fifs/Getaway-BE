@@ -40,6 +40,7 @@ public class GroupController implements ControllerInterface<Group> {
 
     @Override
     @GetMapping
+    @Operation(summary = "Get a list of all groups")
     public List<Group> getAll() { return groupService.getAll();}
 
     @Override
