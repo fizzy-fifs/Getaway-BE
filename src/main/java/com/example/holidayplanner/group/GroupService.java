@@ -183,17 +183,17 @@ public class GroupService implements ServiceInterface<Group> {
 
         String sanitizedSearchTerm = searchTerm.trim().toLowerCase();
 
-        List<String> recentGroupSearchTerms = user.getRecentGroupSearchTerms();
+        List<String> recentGroupSearchHistory = user.getRecentGroupSearchHistory();
 
-        recentGroupSearchTerms.remove(sanitizedSearchTerm);
+        recentGroupSearchHistory.remove(sanitizedSearchTerm);
 
-        recentGroupSearchTerms.add(0, sanitizedSearchTerm);
+        recentGroupSearchHistory.add(0, sanitizedSearchTerm);
 
-        if (recentGroupSearchTerms.size() > 15) {
-            recentGroupSearchTerms.remove(recentGroupSearchTerms.size() - 1);
+        if (recentGroupSearchHistory.size() > 10) {
+            recentGroupSearchHistory.remove(recentGroupSearchHistory.size() - 1);
         }
 
-        user.setRecentGroupSearchTerms(recentGroupSearchTerms);
+        user.setRecentGroupSearchHistory(recentGroupSearchHistory);
 
         Query searchQuery = new Query();
         Criteria criteria = new Criteria().orOperator(Criteria.where("name").regex(sanitizedSearchTerm, "i"), Criteria.where("description").regex(sanitizedSearchTerm, "i"));

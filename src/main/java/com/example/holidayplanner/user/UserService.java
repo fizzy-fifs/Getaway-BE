@@ -348,17 +348,18 @@ public class UserService implements ServiceInterface<User> {
 
         String sanitizedSearchTerm = searchTerm.trim().toLowerCase();
 
-        List<String> recentUserSearchTerms = user.getRecentUserSearchTerms();
+        List<String> recentUserSearchHistory = user.getRecentUserSearchHistory();
 
-        if (recentUserSearchTerms.contains(sanitizedSearchTerm)) {
-            recentUserSearchTerms.remove(sanitizedSearchTerm);
+        recentUserSearchHistory.remove(sanitizedSearchTerm);
+
+        recentUserSearchHistory.add(0, sanitizedSearchTerm);
+
+        if (recentUserSearchHistory.size() > 10)
+        {
+            recentUserSearchHistory.remove(recentUserSearchHistory.size() - 1);
         }
 
-        recentUserSearchTerms.add(0, sanitizedSearchTerm);
-
-        recentUserSearchTerms.remove(recentUserSearchTerms.size() - 1);
-
-         user.setRecentUserSearchTerms(recentUserSearchTerms);
+         user.setRecentUserSearchHistory(recentUserSearchHistory);
 
         Query searchQuery = new Query();
         Criteria criteria = new Criteria().orOperator(
