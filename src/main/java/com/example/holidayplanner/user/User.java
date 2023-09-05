@@ -101,6 +101,12 @@ public class User {
     private List<String> friends = new ArrayList<>();
 
     @JsonProperty
+    private List<String> recentUserSearches = new ArrayList<>();
+
+    @JsonProperty
+    private List<String> recentGroupSearches = new ArrayList<>();
+
+    @JsonProperty
     private Collection<Role> roles;
 
     @JsonProperty
