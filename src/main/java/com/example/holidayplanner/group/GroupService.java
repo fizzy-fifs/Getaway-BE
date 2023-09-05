@@ -174,8 +174,26 @@ public class GroupService implements ServiceInterface<Group> {
         return ResponseEntity.ok(groupJson);
     }
 
-    public ResponseEntity<List<Group>> search(String searchTerm) {
+    public ResponseEntity<Object> search(String searchTerm, String userId) {
+        User user = userRepository.findById(new ObjectId(userId));
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User with id " + userId + " does not exist");
+        }
+
         String sanitizedSearchTerm = searchTerm.trim().toLowerCase();
+
+        List<String> recentGroupSearchTerms = user.getRecentGroupSearchTerms();
+
+        recentGroupSearchTerms.remove(sanitizedSearchTerm);
+
+        recentGroupSearchTerms.add(0, sanitizedSearchTerm);
+
+        if (recentGroupSearchTerms.size() > 15) {
+            recentGroupSearchTerms.remove(recentGroupSearchTerms.size() - 1);
+        }
+
+        user.setRecentGroupSearchTerms(recentGroupSearchTerms);
 
         Query searchQuery = new Query();
         Criteria criteria = new Criteria().orOperator(Criteria.where("name").regex(sanitizedSearchTerm, "i"), Criteria.where("description").regex(sanitizedSearchTerm, "i"));
@@ -186,6 +204,8 @@ public class GroupService implements ServiceInterface<Group> {
         searchQuery.with(PageRequest.of(pageNumber, pageSize));
 
         List<Group> groups = mongoTemplate.find(searchQuery, Group.class);
+
+        userRepository.save(user);
 
         return ResponseEntity.ok(groups);
     }

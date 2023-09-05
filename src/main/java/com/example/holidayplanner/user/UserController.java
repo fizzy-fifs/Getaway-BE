@@ -127,7 +127,4 @@ public class UserController implements ControllerInterface<User> {
         scheduler.updateUserPropertiesIfNotPresent();
         return ResponseEntity.ok().build();
     }
-
-
-
 }

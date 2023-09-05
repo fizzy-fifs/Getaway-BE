@@ -356,11 +356,9 @@ public class UserService implements ServiceInterface<User> {
 
         recentUserSearchTerms.add(0, sanitizedSearchTerm);
 
-        if (recentUserSearchTerms.size() > 15) {
-            recentUserSearchTerms.remove(recentUserSearchTerms.size() - 1);
-        }
+        recentUserSearchTerms.remove(recentUserSearchTerms.size() - 1);
 
-        user.setRecentUserSearchTerms(recentUserSearchTerms);
+         user.setRecentUserSearchTerms(recentUserSearchTerms);
 
         Query searchQuery = new Query();
         Criteria criteria = new Criteria().orOperator(
