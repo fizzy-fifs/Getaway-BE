@@ -339,8 +339,28 @@ public class UserService implements ServiceInterface<User> {
     }
 
 
-    public ResponseEntity<List<User>> search(String searchTerm) {
+    public ResponseEntity<Object> search(String searchTerm, String userId) {
+        User user = userRepository.findById(new ObjectId(userId));
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User with id " + userId + " does not exist");
+        }
+
         String sanitizedSearchTerm = searchTerm.trim().toLowerCase();
+
+        List<String> recentUserSearchTerms = user.getRecentUserSearchTerms();
+
+        if (recentUserSearchTerms.contains(sanitizedSearchTerm)) {
+            recentUserSearchTerms.remove(sanitizedSearchTerm);
+        }
+
+        recentUserSearchTerms.add(0, sanitizedSearchTerm);
+
+        if (recentUserSearchTerms.size() > 15) {
+            recentUserSearchTerms.remove(recentUserSearchTerms.size() - 1);
+        }
+
+        user.setRecentUserSearchTerms(recentUserSearchTerms);
 
         Query searchQuery = new Query();
         Criteria criteria = new Criteria().orOperator(
@@ -356,6 +376,7 @@ public class UserService implements ServiceInterface<User> {
 
 
         List<User> users = mongoTemplate.find(searchQuery, User.class);
+        userRepository.save(user);
         return ResponseEntity.ok(users);
     }
 

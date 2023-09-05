@@ -95,10 +95,10 @@ public class UserController implements ControllerInterface<User> {
         return userService.findMultipleByPhoneNumberOrEmail(phoneNumbersAndEmails);
     }
 
-    @GetMapping(path = "/search/{searchTerm}")
+    @GetMapping(path = "/search/{searchTerm}/{userId}")
     @Operation(summary = "Search for a user")
-    public ResponseEntity<List<User>> search(@PathVariable("searchTerm") String searchTerm) throws JsonProcessingException {
-        return userService.search(searchTerm);
+    public ResponseEntity<Object> search(@PathVariable("searchTerm") String searchTerm, @PathVariable("userId") String userId) throws JsonProcessingException {
+        return userService.search(searchTerm, userId);
     }
 
     @PostMapping(path = "savedevicetoken/{userId}")
@@ -127,5 +127,7 @@ public class UserController implements ControllerInterface<User> {
         scheduler.updateUserPropertiesIfNotPresent();
         return ResponseEntity.ok().build();
     }
+
+
 
 }
