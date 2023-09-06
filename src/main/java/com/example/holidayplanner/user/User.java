@@ -1,5 +1,6 @@
 package com.example.holidayplanner.user;
 
+import com.example.holidayplanner.group.Group;
 import com.example.holidayplanner.holiday.Holiday;;
 import com.example.holidayplanner.user.role.Role;
 import com.fasterxml.jackson.annotation.*;
@@ -101,10 +102,10 @@ public class User {
     private List<String> friends = new ArrayList<>();
 
     @JsonProperty
-    private List<String> recentUserSearchHistory = new ArrayList<>();
+    private List<Object> recentUserSearchHistory = new ArrayList<>();
 
     @JsonProperty
-    private List<String> recentGroupSearchHistory = new ArrayList<>();
+    private List<Object> recentGroupSearchHistory = new ArrayList<>();
 
     @JsonProperty
     private Collection<Role> roles;

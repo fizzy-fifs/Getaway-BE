@@ -183,7 +183,7 @@ public class GroupService implements ServiceInterface<Group> {
 
         String sanitizedSearchTerm = searchTerm.trim().toLowerCase();
 
-        List<String> recentGroupSearchHistory = user.getRecentGroupSearchHistory();
+        List<Object> recentGroupSearchHistory = user.getRecentGroupSearchHistory();
 
         recentGroupSearchHistory.remove(sanitizedSearchTerm);
 

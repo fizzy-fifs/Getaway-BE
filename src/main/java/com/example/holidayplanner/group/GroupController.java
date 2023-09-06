@@ -78,7 +78,7 @@ public class GroupController implements ControllerInterface<Group> {
         return groupService.findById(groupId);
     }
 
-    @GetMapping(path = "/search/{searchTerm}/{userId}}")
+    @GetMapping(path = "/search/{searchTerm}/{userId}")
     @Operation(summary = "Search for a group")
     public ResponseEntity<Object> search(@PathVariable("searchTerm") String searchTerm, @PathVariable("userId") String userId) throws JsonProcessingException {
         return groupService.search(searchTerm, userId);

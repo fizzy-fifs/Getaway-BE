@@ -348,7 +348,7 @@ public class UserService implements ServiceInterface<User> {
 
         String sanitizedSearchTerm = searchTerm.trim().toLowerCase();
 
-        List<String> recentUserSearchHistory = user.getRecentUserSearchHistory();
+        List<Object> recentUserSearchHistory = user.getRecentUserSearchHistory();
 
         recentUserSearchHistory.remove(sanitizedSearchTerm);
 
