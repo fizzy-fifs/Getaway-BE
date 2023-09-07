@@ -170,6 +170,18 @@ public class UserService implements ServiceInterface<User> {
 
     }
 
+    public ResponseEntity logout(String userId) {
+        User user = userRepository.findById(new ObjectId(userId));
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User with id " + userId + " does not exist");
+        }
+
+        tokenService.deleteByOwner(user);
+
+        return ResponseEntity.ok("You have been logged out");
+    }
+
     @Override
     public List<User> getAll() {
         return userRepository.findAll();

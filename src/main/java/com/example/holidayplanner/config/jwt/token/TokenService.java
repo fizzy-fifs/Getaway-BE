@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class TokenService {
@@ -81,5 +82,9 @@ public class TokenService {
         String accesTokenJson = mapper.writeValueAsString(newAccessToken);
 
         return ResponseEntity.ok().body(accesTokenJson);
+    }
+
+    public void deleteByOwner(User user) {
+        tokenRepository.deleteAllByOwner(user);
     }
 }

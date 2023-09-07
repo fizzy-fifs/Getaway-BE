@@ -54,6 +54,12 @@ public class UserController implements ControllerInterface<User> {
         return userService.login(emailAndPassword);
     }
 
+    @GetMapping(path = "/logout/{userId}")
+     @Operation(summary = "Logout a user")
+    public ResponseEntity logout(@PathVariable("userId") String userId) {
+        return userService.logout(userId);
+    }
+
     @Override
     @GetMapping
     @Operation(summary = "Get a list of all users")
