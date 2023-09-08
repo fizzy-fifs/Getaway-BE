@@ -93,7 +93,6 @@ public class UserService implements ServiceInterface<User> {
 
         user.setFirstName(Helper.toSentenceCase(user.getFirstName()));
         user.setLastName(Helper.toSentenceCase(user.getLastName()));
-        user.setEmail(Helper.toSentenceCase(user.getEmail()));
         user.setUserName(user.getUserName().toLowerCase());
 
         //Hash password and set role as user
