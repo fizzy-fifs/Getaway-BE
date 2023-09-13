@@ -26,9 +26,6 @@ public class MongoConfig {
 
         MongoClient client = mongo.getObject();
         assert client != null;
-        client.listDatabaseNames()
-                .forEach(System.out::println)
-        ;
 
         return mongo;
     }

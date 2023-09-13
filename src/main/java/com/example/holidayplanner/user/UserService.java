@@ -207,13 +207,13 @@ public class UserService implements ServiceInterface<User> {
     }
 
     @Override
-    public String delete(String userId) {
-        var userIdToObjectId = new ObjectId(userId);
+    public String delete(String email) {
+//        var userIdToObjectId = new ObjectId(userId);
 
-        User user = userRepository.findById(userIdToObjectId);
+        User user = userRepository.findByEmail(email);
 
         if (user == null) {
-            return "user with id " + userId + " does not exists";
+            return "user with email " + email + " does not exists";
         }
 
         userRepository.delete(user);
