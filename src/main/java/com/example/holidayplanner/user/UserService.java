@@ -386,6 +386,8 @@ public class UserService implements ServiceInterface<User> {
 
 
         List<User> users = mongoTemplate.find(searchQuery, User.class);
+        users.remove(user);
+        users.removeIf(u -> u.getEmail().equals("admin@mail.com"));
         userRepository.save(user);
         return ResponseEntity.ok(users);
     }
