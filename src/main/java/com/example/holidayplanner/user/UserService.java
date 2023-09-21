@@ -98,6 +98,7 @@ public class UserService implements ServiceInterface<User> {
         user.setUserName(user.getUserName().toLowerCase());
         user.setEmail(user.getEmail().toLowerCase());
 
+        user.setDateJoined(LocalDate.now());
         user.setLastLogin(LocalDateTime.now());
 
 

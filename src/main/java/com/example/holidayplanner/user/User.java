@@ -100,7 +100,7 @@ public class User {
     private String deviceToken;
 
     @JsonProperty
-    private LocalDate dateJoined = LocalDate.now();
+    private LocalDate dateJoined;
 
     @JsonProperty
     private LocalDateTime lastLogin;
