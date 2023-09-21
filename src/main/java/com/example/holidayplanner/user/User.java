@@ -18,6 +18,7 @@ import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -97,6 +98,12 @@ public class User {
     @JsonProperty
     @Nullable
     private String deviceToken;
+
+    @JsonProperty
+    private LocalDate dateJoined = LocalDate.now();
+
+    @JsonProperty
+    private LocalDateTime lastLogin;
 
     @JsonProperty
     private List<String> friends = new ArrayList<>();

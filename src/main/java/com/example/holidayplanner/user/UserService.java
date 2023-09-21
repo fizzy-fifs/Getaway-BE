@@ -27,6 +27,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -94,6 +96,10 @@ public class UserService implements ServiceInterface<User> {
         user.setFirstName(Helper.toSentenceCase(user.getFirstName()));
         user.setLastName(Helper.toSentenceCase(user.getLastName()));
         user.setUserName(user.getUserName().toLowerCase());
+        user.setEmail(user.getEmail().toLowerCase());
+
+        user.setLastLogin(LocalDateTime.now());
+
 
         //Hash password and set role as user
         String encodedPassword = this.passwordEncoder.encode(user.getPassword());
@@ -164,6 +170,9 @@ public class UserService implements ServiceInterface<User> {
         responseData.put("user", userJson);
         responseData.put("accessToken", accessToken);
         responseData.put("refreshToken", refreshToken);
+
+        user.setLastLogin(LocalDateTime.now());
+        userRepository.save(user);
 
         return ResponseEntity.ok(responseData);
 
