@@ -208,7 +208,6 @@ public class UserService implements ServiceInterface<User> {
 
         currentUserInfo.setFirstName(newUserInfo.getFirstName());
         currentUserInfo.setLastName(newUserInfo.getLastName());
-        currentUserInfo.setDob(newUserInfo.getDob());
         currentUserInfo.setEmail(newUserInfo.getEmail());
         currentUserInfo.setPassword(newUserInfo.getPassword());
 

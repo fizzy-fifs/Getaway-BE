@@ -42,13 +42,6 @@ public class User {
     @Indexed
     private String lastName;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
-    @JsonProperty
-    private LocalDate dob;
-
     @NotBlank(message = "Email cannot be blank")
     @Email(message = "Please provide a valid email address")
     @Pattern(regexp = ".+@.+\\..+", message = "Please provide a valid email address")
@@ -123,24 +116,12 @@ public class User {
     public User() {
     }
 
-    public User(String id, String firstName, String lastName, String userName, LocalDate dob, String email, String password) {
-        this.id = id;
+    public User(String firstName, String lastName, String userName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
-        this.dob = dob;
         this.email = email;
         this.password = password;
-    }
-
-    public User(String firstName, String lastName, String userName, LocalDate dob, String email, String password, String phoneNumber) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.userName = userName;
-        this.dob = dob;
-        this.email = email;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
     }
 
     public void addGroupInvite(String groupInviteId) {
