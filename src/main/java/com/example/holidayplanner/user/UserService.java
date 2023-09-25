@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -224,7 +225,7 @@ public class UserService {
         var deactivationRequest = userDeactivationRequestRepository.findByUser(user);
 
         if (deactivationRequest != null) {
-            return ResponseEntity.badRequest().body("User account is already scheduled for deactivation");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("User account is already scheduled for deactivation");
         }
 
         user.setActive(false);
