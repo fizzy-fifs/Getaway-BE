@@ -225,7 +225,7 @@ public class UserService {
         var deactivationRequest = userDeactivationRequestRepository.findByUser(user);
 
         if (deactivationRequest != null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("User account is already scheduled for deactivation");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Your account is already scheduled for deactivation");
         }
 
         user.setActive(false);
