@@ -218,7 +218,13 @@ public class UserService {
         User user = userRepository.findById(new ObjectId(userId));
 
         if (user == null) {
-            return ResponseEntity.badRequest().body("User with id " + userId + " does not exist");
+            return ResponseEntity.badRequest().body("User does not exist");
+        }
+
+        var deactivationRequest = userDeactivationRequestRepository.findByUser(user);
+
+        if (deactivationRequest != null) {
+            return ResponseEntity.badRequest().body("User account is already scheduled for deactivation");
         }
 
         user.setActive(false);
@@ -228,7 +234,7 @@ public class UserService {
         userDeactivationRequestRepository.save(userDeactivationRequest);
         userRepository.save(user);
 
-        return ResponseEntity.ok("User account will be deactivated in 30 days");
+        return ResponseEntity.ok("Your account will be deactivated in 30 days");
     }
 
 
