@@ -93,6 +93,9 @@ public class User {
     private String deviceToken;
 
     @JsonProperty
+    private boolean isActive = true;
+
+    @JsonProperty
     private LocalDate dateJoined;
 
     @JsonProperty

@@ -1,6 +1,5 @@
 package com.example.holidayplanner.group;
 
-import com.example.holidayplanner.interfaces.ControllerInterface;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -17,14 +16,13 @@ import java.util.List;
 @RequestMapping(path = "/api/v1.0/groups")
 @Tag(name = "Group")
 @SecurityRequirement(name = "holidayPlannerSecurity")
-public class GroupController implements ControllerInterface<Group> {
+public class GroupController {
 
     private final GroupService groupService;
 
     @Autowired
     public GroupController(GroupService groupService) { this.groupService = groupService; }
 
-    @Override
     @PostMapping(path = "/newgroup")
     @Operation(summary = "Create a new group")
     public ResponseEntity<Object> create(@RequestBody @Valid Group group, Errors errors) throws JsonProcessingException {
@@ -39,17 +37,11 @@ public class GroupController implements ControllerInterface<Group> {
         return groupService.create(group);
     }
 
-    @Override
     @GetMapping
     @Operation(summary = "Get a list of all groups")
     public List<Group> getAll() { return groupService.getAll();}
 
-    @Override
-    public String update(String id, Group newInfo) {
-        return null;
-    }
 
-    @Override
     @DeleteMapping(path = "/{groupId}")
     public String delete(@PathVariable("groupId") String groupId) {
         return groupService.delete(groupId);

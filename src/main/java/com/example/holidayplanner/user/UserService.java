@@ -5,8 +5,9 @@ import com.example.holidayplanner.config.jwt.JwtUtil;
 import com.example.holidayplanner.config.jwt.token.Token;
 import com.example.holidayplanner.config.jwt.token.TokenService;
 import com.example.holidayplanner.helpers.Helper;
-import com.example.holidayplanner.interfaces.ServiceInterface;
 import com.example.holidayplanner.user.role.RoleRepository;
+import com.example.holidayplanner.user.userDeactivationRequest.UserDeactivationRequest;
+import com.example.holidayplanner.user.userDeactivationRequest.UserDeactivationRequestRepository;
 import com.example.holidayplanner.userLookupModel.UserLookupModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,7 +33,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-public class UserService implements ServiceInterface<User> {
+public class UserService {
 
     @Autowired
     private final UserRepository userRepository;
@@ -64,10 +65,11 @@ public class UserService implements ServiceInterface<User> {
     private final int pageNumber = 0;
 
     private final int pageSize = 10;
+    private final UserDeactivationRequestRepository userDeactivationRequestRepository;
 
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, MyUserDetailsService myUserDetailsService, JwtUtil jwtTokenUtil, TokenService tokenService, AuthenticationManager authenticationManager, MongoTemplate mongoTemplate) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, MyUserDetailsService myUserDetailsService, JwtUtil jwtTokenUtil, TokenService tokenService, AuthenticationManager authenticationManager, MongoTemplate mongoTemplate, UserDeactivationRequestRepository userDeactivationRequestRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.myUserDetailsService = myUserDetailsService;
@@ -75,12 +77,11 @@ public class UserService implements ServiceInterface<User> {
         this.tokenService = tokenService;
         this.authenticationManager = authenticationManager;
         this.mongoTemplate = mongoTemplate;
+        this.userDeactivationRequestRepository = userDeactivationRequestRepository;
         this.mapper = new ObjectMapper().findAndRegisterModules();
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-
-    @Override
     public ResponseEntity<Object> create(User user) throws JsonProcessingException {
 
         //Check if email is already registered
@@ -191,12 +192,10 @@ public class UserService implements ServiceInterface<User> {
         return ResponseEntity.ok("You have been logged out");
     }
 
-    @Override
     public List<User> getAll() {
         return userRepository.findAll();
     }
 
-    @Override
     public String update(String userId, User newUserInfo) {
         ObjectId userIdToObjectId = new ObjectId(userId);
 
@@ -215,18 +214,21 @@ public class UserService implements ServiceInterface<User> {
         return "User has been successfully updated";
     }
 
-    @Override
-    public String delete(String email) {
-//        var userIdToObjectId = new ObjectId(userId);
-
-        User user = userRepository.findByEmail(email);
+    public ResponseEntity<String> deactivateUserAccount(String userId) {
+        User user = userRepository.findById(new ObjectId(userId));
 
         if (user == null) {
-            return "user with email " + email + " does not exists";
+            return ResponseEntity.badRequest().body("User with id " + userId + " does not exist");
         }
 
-        userRepository.delete(user);
-        return "Your account has been deleted";
+        user.setActive(false);
+
+        UserDeactivationRequest userDeactivationRequest = new UserDeactivationRequest(user, LocalDateTime.now());
+
+        userDeactivationRequestRepository.save(userDeactivationRequest);
+        userRepository.save(user);
+
+        return ResponseEntity.ok("User account will be deactivated in 30 days");
     }
 
 

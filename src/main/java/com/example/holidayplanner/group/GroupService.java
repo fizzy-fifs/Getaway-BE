@@ -2,7 +2,6 @@ package com.example.holidayplanner.group;
 
 import com.example.holidayplanner.groupInvite.GroupInviteRepository;
 import com.example.holidayplanner.helpers.Helper;
-import com.example.holidayplanner.interfaces.ServiceInterface;
 import com.example.holidayplanner.groupInvite.GroupInvite;
 import com.example.holidayplanner.user.User;
 import com.example.holidayplanner.user.UserRepository;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class GroupService implements ServiceInterface<Group> {
+public class GroupService {
     @Autowired
     private final GroupRepository groupRepository;
 
@@ -46,7 +45,6 @@ public class GroupService implements ServiceInterface<Group> {
         this.groupInviteRepository = groupInviteRepository;
     }
 
-    @Override
     public ResponseEntity<Object> create(Group group) throws JsonProcessingException {
 
         List<String> userIds = new ArrayList<>(group.getInvitedGroupMembersIds());
@@ -85,17 +83,15 @@ public class GroupService implements ServiceInterface<Group> {
         return ResponseEntity.ok(groupJson);
     }
 
-    @Override
     public List<Group> getAll() {
         return groupRepository.findAll();
     }
 
-    @Override
+
     public String update(String entityId, Group newEntityInfo) {
         return null;
     }
 
-    @Override
     public String delete(String groupId) {
 
         Group group = groupRepository.findById(new ObjectId(groupId));

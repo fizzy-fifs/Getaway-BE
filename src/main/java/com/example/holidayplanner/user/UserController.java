@@ -1,6 +1,5 @@
 package com.example.holidayplanner.user;
 
-import com.example.holidayplanner.interfaces.ControllerInterface;
 import com.example.holidayplanner.scheduler.Scheduler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,7 +19,7 @@ import java.util.Map;
 @RequestMapping(path = "/api/v1.0/users")
 @Tag(name = "User")
 @SecurityRequirement(name = "holidayPlannerSecurity")
-public class UserController implements ControllerInterface<User> {
+public class UserController {
 
     private final UserService userService;
 
@@ -32,7 +31,6 @@ public class UserController implements ControllerInterface<User> {
         this.scheduler = scheduler;
     }
 
-    @Override
     @PostMapping(path = "/newuser")
     @Operation(summary = "Create a new user")
     public ResponseEntity create(@RequestBody @Valid User user, Errors errors) throws JsonProcessingException {
@@ -60,10 +58,16 @@ public class UserController implements ControllerInterface<User> {
         return userService.logout(userId);
     }
 
-    @Override
     @GetMapping
     @Operation(summary = "Get a list of all users")
     public List<User> getAll() { return userService.getAll(); }
+
+
+    @GetMapping(path = "/{userId}")
+    @Operation(summary = "Delete a user")
+    public ResponseEntity<String> deactivateUserAccount(@PathVariable("userId") String userId) {
+        return userService.deactivateUserAccount(userId);
+    }
 
     @GetMapping(path="/sendfriendrequest/{userId}/{allegedFriendId}")
     @Operation(summary = "Send a friend request")
@@ -113,18 +117,10 @@ public class UserController implements ControllerInterface<User> {
         return userService.saveDeviceToken(userId, deviceToken);
     }
 
-    @Override
     @PutMapping (path = "/{userId}")
     @Operation(summary = "Update user details")
     public String update(@PathVariable("userId") String userId, @RequestBody User newUserInfo) {
         return userService.update(userId, newUserInfo);
-    }
-
-    @Override
-    @DeleteMapping(path = "/{userId}")
-    @Operation(summary = "Delete a user")
-    public String delete(@PathVariable("userId") String userId) {
-        return userService.delete(userId);
     }
 
     @GetMapping(path = "/updateuserproperties")
