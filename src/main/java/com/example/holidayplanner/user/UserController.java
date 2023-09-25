@@ -63,8 +63,8 @@ public class UserController {
     public List<User> getAll() { return userService.getAll(); }
 
 
-    @GetMapping(path = "/{userId}")
-    @Operation(summary = "Delete a user")
+    @GetMapping(path = "deactivate/{userId}")
+    @Operation(summary = "Deactivate a user's account")
     public ResponseEntity<String> deactivateUserAccount(@PathVariable("userId") String userId) {
         return userService.deactivateUserAccount(userId);
     }
