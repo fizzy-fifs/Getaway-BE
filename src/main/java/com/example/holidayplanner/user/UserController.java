@@ -136,4 +136,10 @@ public class UserController {
     public ResponseEntity<Object> reportUser(@RequestBody ReportUser reportUser) throws JsonProcessingException {
         return userService.reportUser(reportUser);
     }
+
+    @GetMapping(path = "/reactivate/{userId}")
+    @Operation(summary = "Reactivate a user's account")
+    public ResponseEntity<Object> reactivateUserAccount(@PathVariable("userId") String userId) throws JsonProcessingException {
+        return userService.reactivateUserAccount(userId);
+    }
 }

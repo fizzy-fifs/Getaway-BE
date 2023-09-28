@@ -517,4 +517,34 @@ public class UserService {
         ReportUser savedReportUser = reportUserRepository.insert(newReportUser);
         return ResponseEntity.ok(savedReportUser);
     }
+
+    public ResponseEntity<Object> reactivateUserAccount(String userId) throws JsonProcessingException {
+        if (userId == null || userId.isEmpty()) {
+            return ResponseEntity.badRequest().body("User id cannot be null or empty");
+        }
+
+        User user = userRepository.findById(new ObjectId(userId));
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User with id " + userId + " does not exist");
+        }
+
+        if (user.isActive()) {
+            return ResponseEntity.badRequest().body("User is already active");
+        }
+
+        user.setActive(true);
+
+        UserDeactivationRequest userDeactivationRequest = userDeactivationRequestRepository.findByUser(user);
+
+        if (userDeactivationRequest != null) {
+            userDeactivationRequestRepository.delete(userDeactivationRequest);
+        }
+
+        User savedUser = userRepository.save(user);
+
+        var savedUserJson = mapper.writeValueAsString(savedUser);
+
+        return  ResponseEntity.ok(savedUserJson);
+    }
 }
