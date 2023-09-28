@@ -1,5 +1,6 @@
 package com.example.holidayplanner.user;
 
+import com.example.holidayplanner.config.cascadeSaveMongoEventListener.CascadeSave;
 import com.example.holidayplanner.group.Group;
 import com.example.holidayplanner.holiday.Holiday;;
 import com.example.holidayplanner.user.role.Role;
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.Data;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -87,6 +89,11 @@ public class User {
 
     @JsonProperty
     private List<String> friendRequestsSent = new ArrayList<>();
+
+    @JsonProperty
+    @DBRef
+    @CascadeSave
+    private List<User> blockedUsers = new ArrayList<>();
 
     @JsonProperty
     @Nullable

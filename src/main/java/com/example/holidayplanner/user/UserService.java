@@ -160,6 +160,11 @@ public class UserService {
 
         User user = userRepository.findByEmail(email);
 
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User with email " + email + " does not exist");
+        }
+
+
 
         final UserDetails userDetails = myUserDetailsService.loadUserByUsername(email);
         final String accessToken = jwtTokenUtil.generateAccessToken(userDetails);
@@ -180,6 +185,11 @@ public class UserService {
         responseData.put("user", userJson);
         responseData.put("accessToken", accessToken);
         responseData.put("refreshToken", refreshToken);
+
+        if (!user.isActive()) {
+            var deactivationRequest = userDeactivationRequestRepository.findByUser(user);
+            responseData.put("deactivationRequest", mapper.writeValueAsString(deactivationRequest));
+        }
 
         user.setLastLogin(LocalDateTime.now());
         userRepository.save(user);

@@ -1,5 +1,6 @@
 package com.example.holidayplanner.user.userDeactivationRequest;
 
+import com.example.holidayplanner.config.cascadeSaveMongoEventListener.CascadeSave;
 import com.example.holidayplanner.user.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -19,6 +20,7 @@ public class UserDeactivationRequest {
 
     @JsonProperty
     @DBRef
+    @CascadeSave
     private User user;
 
     @JsonProperty
