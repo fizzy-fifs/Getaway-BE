@@ -1,6 +1,7 @@
 package com.example.holidayplanner.user;
 
 import com.example.holidayplanner.scheduler.Scheduler;
+import com.example.holidayplanner.user.reportUser.ReportUser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -128,5 +129,11 @@ public class UserController {
     public ResponseEntity<Object> updateUserproperties() {
         scheduler.updateUserPropertiesIfNotPresent();
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(path = "/report")
+    @Operation(summary = "Report a user")
+    public ResponseEntity<Object> reportUser(@RequestBody ReportUser reportUser) throws JsonProcessingException {
+        return userService.reportUser(reportUser);
     }
 }

@@ -5,6 +5,8 @@ import com.example.holidayplanner.config.jwt.JwtUtil;
 import com.example.holidayplanner.config.jwt.token.Token;
 import com.example.holidayplanner.config.jwt.token.TokenService;
 import com.example.holidayplanner.helpers.Helper;
+import com.example.holidayplanner.user.reportUser.ReportUser;
+import com.example.holidayplanner.user.reportUser.ReportUserRepository;
 import com.example.holidayplanner.user.role.RoleRepository;
 import com.example.holidayplanner.user.userDeactivationRequest.UserDeactivationRequest;
 import com.example.holidayplanner.user.userDeactivationRequest.UserDeactivationRequestRepository;
@@ -63,14 +65,18 @@ public class UserService {
     @Autowired
     private final ObjectMapper mapper;
 
+    @Autowired
+    private final UserDeactivationRequestRepository userDeactivationRequestRepository;
+
+    @Autowired
+    private final ReportUserRepository reportUserRepository;
+
     private final int pageNumber = 0;
 
     private final int pageSize = 10;
-    private final UserDeactivationRequestRepository userDeactivationRequestRepository;
-
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, MyUserDetailsService myUserDetailsService, JwtUtil jwtTokenUtil, TokenService tokenService, AuthenticationManager authenticationManager, MongoTemplate mongoTemplate, UserDeactivationRequestRepository userDeactivationRequestRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, MyUserDetailsService myUserDetailsService, JwtUtil jwtTokenUtil, TokenService tokenService, AuthenticationManager authenticationManager, MongoTemplate mongoTemplate, UserDeactivationRequestRepository userDeactivationRequestRepository, ReportUserRepository reportUserRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.myUserDetailsService = myUserDetailsService;
@@ -79,6 +85,7 @@ public class UserService {
         this.authenticationManager = authenticationManager;
         this.mongoTemplate = mongoTemplate;
         this.userDeactivationRequestRepository = userDeactivationRequestRepository;
+        this.reportUserRepository = reportUserRepository;
         this.mapper = new ObjectMapper().findAndRegisterModules();
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
@@ -459,5 +466,45 @@ public class UserService {
     private boolean userNameExists(User user) {
         User findUser = userRepository.findByUserName(user.getUserName().toLowerCase());
         return findUser != null;
+    }
+
+    public ResponseEntity<Object> reportUser(ReportUser reportUser) {
+        if (reportUser.getUserToReport() == null || reportUser.getUserReporting() == null) {
+            return ResponseEntity.badRequest().body("User to report and user reporting cannot be null");
+        }
+
+        if (reportUser.getReason() == null || reportUser.getReason().isEmpty()) {
+            return ResponseEntity.badRequest().body("Reason cannot be null or empty");
+        }
+
+        if (reportUser.getUserToReport().getId().equals(reportUser.getUserReporting().getId())) {
+            return ResponseEntity.badRequest().body("You cannot report yourself");
+        }
+
+        List<User> users = (List<User>) userRepository.findAllById(Arrays.asList(reportUser.getUserToReport().getId(), reportUser.getUserReporting().getId()));
+
+        if (users.size() != 2) {
+            return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid");
+        }
+
+        User userToReport = null;
+        User userReporting = null;
+
+        for (User user : users) {
+
+            if (Objects.equals(user.getId(), reportUser.getUserToReport().getId())) {
+                userToReport = user;
+            } else if (Objects.equals(user.getId(), reportUser.getUserReporting().getId())) {
+                userReporting = user;
+            }
+        }
+
+        assert userToReport != null;
+        assert userReporting != null;
+
+        ReportUser newReportUser = new ReportUser(userToReport, userReporting, reportUser.getReason(), LocalDateTime.now());
+
+        ReportUser savedReportUser = reportUserRepository.insert(newReportUser);
+        return ResponseEntity.ok(savedReportUser);
     }
 }

@@ -355,9 +355,13 @@ public class GroupService {
             return ResponseEntity.badRequest().body("Group not found");
         }
 
-        User reportingUser = userRepository.findById(new ObjectId(user.getId()));
+        User userReporting = userRepository.findById(new ObjectId(user.getId()));
 
-        ReportGroup newReportGroup = new ReportGroup(groupToReport, reportingUser, reason, LocalDateTime.now());
+        if (userReporting == null) {
+            return ResponseEntity.badRequest().body("Reporting user not found");
+        }
+
+        ReportGroup newReportGroup = new ReportGroup(groupToReport, userReporting, reason, LocalDateTime.now());
 
         ReportGroup savedReportGroup = reportGroupRepository.insert(newReportGroup);
 

@@ -1,6 +1,5 @@
-package com.example.holidayplanner.group.reportGroup;
+package com.example.holidayplanner.user.reportUser;
 
-import com.example.holidayplanner.group.Group;
 import com.example.holidayplanner.user.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -12,19 +11,19 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 import java.time.LocalDateTime;
 
 @Data
-@Document(collection = "Reported Groups")
-public class ReportGroup {
+@Document(collection = "Reported Users")
+public class ReportUser {
     @MongoId(value = FieldType.OBJECT_ID)
     @JsonProperty
     private String id;
 
     @JsonProperty
     @DBRef
-    private Group group;
+    private User userToReport;
 
     @JsonProperty
     @DBRef
-    private User user;
+    private User userReporting;
 
     @JsonProperty
     private String reason;
@@ -32,12 +31,12 @@ public class ReportGroup {
     @JsonProperty
     private LocalDateTime dateReported;
 
-    public ReportGroup() {
+    public ReportUser() {
     }
 
-    public ReportGroup(Group group, User user, String reason, LocalDateTime dateReported) {
-        this.group = group;
-        this.user = user;
+    public ReportUser(User userToReport, User userReporting, String reason, LocalDateTime dateReported) {
+        this.userToReport = userToReport;
+        this.userReporting = userReporting;
         this.reason = reason;
         this.dateReported = dateReported;
     }
