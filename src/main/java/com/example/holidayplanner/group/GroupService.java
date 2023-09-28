@@ -1,5 +1,7 @@
 package com.example.holidayplanner.group;
 
+import com.example.holidayplanner.group.reportGroup.ReportGroup;
+import com.example.holidayplanner.group.reportGroup.ReportGroupRepository;
 import com.example.holidayplanner.groupInvite.GroupInviteRepository;
 import com.example.holidayplanner.helpers.Helper;
 import com.example.holidayplanner.groupInvite.GroupInvite;
@@ -16,6 +18,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,12 +40,16 @@ public class GroupService {
     private final GroupInviteRepository groupInviteRepository;
 
     @Autowired
-    public GroupService(GroupRepository groupRepository, UserRepository userRepository, ObjectMapper mapper, MongoTemplate mongoTemplate, GroupInviteRepository groupInviteRepository) {
+    private final ReportGroupRepository reportGroupRepository;
+
+    @Autowired
+    public GroupService(GroupRepository groupRepository, UserRepository userRepository, ObjectMapper mapper, MongoTemplate mongoTemplate, GroupInviteRepository groupInviteRepository, ReportGroupRepository reportGroupRepository) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
         this.mapper = mapper;
         this.mongoTemplate = mongoTemplate;
         this.groupInviteRepository = groupInviteRepository;
+        this.reportGroupRepository = reportGroupRepository;
     }
 
     public ResponseEntity<Object> create(Group group) throws JsonProcessingException {
@@ -317,5 +324,43 @@ public class GroupService {
         groupRepository.save(group);
 
         return ResponseEntity.ok("Invitation declined");
+    }
+
+    public ResponseEntity<Object> reportGroup(ReportGroup reportGroup) {
+        if (reportGroup == null) {
+            return ResponseEntity.badRequest().body("No report provided");
+        }
+
+        Group group = reportGroup.getGroup();
+
+        if (group == null) {
+            return ResponseEntity.badRequest().body("No group provided");
+        }
+
+        User user = reportGroup.getUser();
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body("No user provided");
+        }
+
+        String reason = reportGroup.getReason();
+
+        if (reason == null || reason.isEmpty()) {
+            return ResponseEntity.badRequest().body("No reason provided");
+        }
+
+        Group groupToReport = groupRepository.findById(new ObjectId(group.getId()));
+
+        if (groupToReport == null) {
+            return ResponseEntity.badRequest().body("Group not found");
+        }
+
+        User reportingUser = userRepository.findById(new ObjectId(user.getId()));
+
+        ReportGroup newReportGroup = new ReportGroup(groupToReport, reportingUser, reason, LocalDateTime.now());
+
+        ReportGroup savedReportGroup = reportGroupRepository.insert(newReportGroup);
+
+        return ResponseEntity.ok(savedReportGroup);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.holidayplanner.group;
 
+import com.example.holidayplanner.group.reportGroup.ReportGroup;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -92,6 +93,12 @@ public class GroupController {
     @Operation(summary = "Decline an invitation to a group")
     public ResponseEntity<Object> declineInvitation(@PathVariable("groupInviteId") String groupInviteId, @PathVariable String userId) throws JsonProcessingException {
         return groupService.declineInvitation(groupInviteId, userId);
+    }
+
+    @PostMapping(path = "/report")
+    @Operation(summary = "Report a group")
+    public ResponseEntity<Object> reportGroup(@RequestBody ReportGroup reportGroup) throws JsonProcessingException {
+        return groupService.reportGroup(reportGroup);
     }
 
 }
