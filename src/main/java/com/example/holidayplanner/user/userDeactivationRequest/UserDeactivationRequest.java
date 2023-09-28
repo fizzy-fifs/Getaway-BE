@@ -24,13 +24,13 @@ public class UserDeactivationRequest {
     private User user;
 
     @JsonProperty
-    private LocalDateTime requestTime = LocalDateTime.now();
+    private LocalDateTime dateRequested = LocalDateTime.now();
 
     public UserDeactivationRequest() {
     }
 
-    public UserDeactivationRequest(User user, LocalDateTime requestTime) {
+    public UserDeactivationRequest(User user, LocalDateTime dateRequested) {
         this.user = user;
-        this.requestTime = requestTime;
+        this.dateRequested = dateRequested;
     }
 }
