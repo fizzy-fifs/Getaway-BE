@@ -165,17 +165,21 @@ public class UserService {
         }
 
 
-
         final UserDetails userDetails = myUserDetailsService.loadUserByUsername(email);
         final String accessToken = jwtTokenUtil.generateAccessToken(userDetails);
         final String refreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
 
-        Token token = new Token();
-        token.setOwner(user);
-        token.setAccessToken(accessToken);
-        token.setAccessTokenExpiration(jwtTokenUtil.extractExpiration(accessToken));
-        token.setRefreshToken(refreshToken);
-        token.setRefreshTokenExpiration(jwtTokenUtil.extractExpiration(refreshToken));
+        Token token = tokenService.findByOwner(user);
+
+        if (token == null) {
+            token = new Token();
+            token.setOwner(user);
+            token.setAccessToken(accessToken);
+            token.setAccessTokenExpiration(jwtTokenUtil.extractExpiration(accessToken));
+            token.setRefreshToken(refreshToken);
+            token.setRefreshTokenExpiration(jwtTokenUtil.extractExpiration(refreshToken));
+        }
+
 
         tokenService.saveToken(token);
 
