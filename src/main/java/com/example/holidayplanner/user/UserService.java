@@ -468,16 +468,6 @@ public class UserService {
         return ResponseEntity.ok("Device token saved");
     }
 
-    private boolean emailExists(User user) {
-        User findUser = userRepository.findByEmail(user.getEmail());
-        return findUser != null;
-    }
-
-    private boolean userNameExists(User user) {
-        User findUser = userRepository.findByUserName(user.getUserName().toLowerCase());
-        return findUser != null;
-    }
-
     public ResponseEntity<Object> reportUser(ReportUser reportUser) {
         if (reportUser.getUserToReport() == null || reportUser.getUserReporting() == null) {
             return ResponseEntity.badRequest().body("User to report and user reporting cannot be null");
@@ -546,5 +536,15 @@ public class UserService {
         var savedUserJson = mapper.writeValueAsString(savedUser);
 
         return  ResponseEntity.ok(savedUserJson);
+    }
+
+    private boolean emailExists(User user) {
+        User findUser = userRepository.findByEmail(user.getEmail());
+        return findUser != null;
+    }
+
+    private boolean userNameExists(User user) {
+        User findUser = userRepository.findByUserName(user.getUserName().toLowerCase());
+        return findUser != null;
     }
 }

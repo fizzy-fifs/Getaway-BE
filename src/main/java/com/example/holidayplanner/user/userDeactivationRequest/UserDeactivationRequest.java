@@ -24,7 +24,7 @@ public class UserDeactivationRequest {
     private User user;
 
     @JsonProperty
-    private LocalDateTime dateRequested = LocalDateTime.now();
+    private LocalDateTime dateRequested;
 
     public UserDeactivationRequest() {
     }
