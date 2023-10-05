@@ -6,13 +6,11 @@ import com.example.holidayplanner.user.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class TokenService {
@@ -84,7 +82,7 @@ public class TokenService {
         return ResponseEntity.ok().body(accesTokenJson);
     }
 
-    public void deleteByOwner(User user) {
+    public void deleteAllByOwner(User user) {
         tokenRepository.deleteAllByOwner(user);
     }
 }

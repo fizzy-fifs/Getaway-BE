@@ -164,21 +164,18 @@ public class UserService {
             return ResponseEntity.badRequest().body("User with email " + email + " does not exist");
         }
 
+        tokenService.deleteAllByOwner(user);
 
         final UserDetails userDetails = myUserDetailsService.loadUserByUsername(email);
         final String accessToken = jwtTokenUtil.generateAccessToken(userDetails);
         final String refreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
 
-        Token token = tokenService.findByOwner(user);
-
-        if (token == null) {
-            token = new Token();
-            token.setOwner(user);
-            token.setAccessToken(accessToken);
-            token.setAccessTokenExpiration(jwtTokenUtil.extractExpiration(accessToken));
-            token.setRefreshToken(refreshToken);
-            token.setRefreshTokenExpiration(jwtTokenUtil.extractExpiration(refreshToken));
-        }
+        Token token = new Token();
+        token.setOwner(user);
+        token.setAccessToken(accessToken);
+        token.setAccessTokenExpiration(jwtTokenUtil.extractExpiration(accessToken));
+        token.setRefreshToken(refreshToken);
+        token.setRefreshTokenExpiration(jwtTokenUtil.extractExpiration(refreshToken));
 
 
         tokenService.saveToken(token);
@@ -209,7 +206,7 @@ public class UserService {
             return ResponseEntity.badRequest().body("User with id " + userId + " does not exist");
         }
 
-        tokenService.deleteByOwner(user);
+        tokenService.deleteAllByOwner(user);
 
         return ResponseEntity.ok("You have been logged out");
     }
