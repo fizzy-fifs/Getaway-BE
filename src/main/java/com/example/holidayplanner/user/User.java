@@ -91,9 +91,10 @@ public class User {
     private List<String> friendRequestsSent = new ArrayList<>();
 
     @JsonProperty
-    @DBRef
-    @CascadeSave
-    private List<User> blockedUsers = new ArrayList<>();
+    private List<String> blockedUserIds = new ArrayList<>();
+
+    @JsonProperty
+    private List<String> blockedByUserIds = new ArrayList<>();
 
     @JsonProperty
     @Nullable
@@ -162,12 +163,12 @@ public class User {
         friends.add(friendId);
     }
 
-    public void addHoliday(String holidayId) {
-        holidayIds.add(holidayId);
+    public void removeFriend(String friendId) {
+        friends.remove(friendId);
     }
 
-    public void deleteHoliday(Holiday holiday) {
-        holidayIds.remove(holiday);
+    public void addHoliday(String holidayId) {
+        holidayIds.add(holidayId);
     }
 
     public void addHolidayInvite(String holidayInviteId) {
@@ -182,4 +183,11 @@ public class User {
         groupInviteIds.remove(groupInviteId);
     }
 
+    public void addBlockedUser(String userId) {
+        blockedUserIds.add(userId);
+    }
+
+    public void addBlockedByUser(String userId) {
+        blockedByUserIds.add(userId);
+    }
 }

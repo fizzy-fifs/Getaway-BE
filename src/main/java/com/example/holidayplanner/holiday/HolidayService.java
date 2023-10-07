@@ -102,22 +102,25 @@ public class HolidayService {
 
         group.addHoliday(holiday);
 
-        User inviter = confirmedUsers.stream()
+        User invitingUser = confirmedUsers.stream()
                 .filter(holidayMaker ->
                         holidayMaker.getId()
                                 .equals(holidayCreatorId))
                 .findFirst().get();
 
-        HolidayInvite holidayInvite = new HolidayInvite(holiday, inviter);
+        confirmedUsers.remove(invitingUser);
+        confirmedUsers.removeIf(user -> user.getBlockedUserIds().contains(invitingUser.getId()));
+
+        HolidayInvite holidayInvite = new HolidayInvite(holiday, invitingUser);
         HolidayInvite newHolidayInvite = holidayInviteRepository.insert(holidayInvite);
 
         for (User invitedHolidayMaker : confirmedUsers) {
-            if (!invitedHolidayMaker.getId().equals(inviter.getId())) {
+            if (!invitedHolidayMaker.getId().equals(invitingUser.getId())) {
                 invitedHolidayMaker.getHolidayInviteIds().add(newHolidayInvite.getId());
             }
         }
 
-        inviter.addHoliday(holiday.getId());
+        invitingUser.addHoliday(holiday.getId());
 
         groupRepository.save(group);
         Holiday newHoliday = holidayRepository.save(holiday);

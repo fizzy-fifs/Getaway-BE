@@ -287,8 +287,16 @@ public class UserService {
         assert allegedFriend != null;
         assert principal != null;
 
+        if (allegedFriend.getBlockedByUserIds().contains(principal.getId())) {
+            return ResponseEntity.badRequest().body("You have been blocked by " + allegedFriend.getFirstName() + ". You cannot send a friend request to this user");
+        }
+
         if (allegedFriend.getFriendRequestsSent().contains(principal.getId())) {
             return ResponseEntity.badRequest().body("You have already sent a friend request to " + allegedFriend.getFirstName());
+        }
+
+        if (allegedFriend.getFriends().contains(principal.getId())) {
+            return ResponseEntity.badRequest().body("You are already friends with " + allegedFriend.getFirstName());
         }
 
         allegedFriend.addFriendRequest(principal.getId());
@@ -401,20 +409,14 @@ public class UserService {
 
         recentUserSearchHistory.add(0, sanitizedSearchTerm);
 
-        if (recentUserSearchHistory.size() > 10)
-        {
+        if (recentUserSearchHistory.size() > 10) {
             recentUserSearchHistory.remove(recentUserSearchHistory.size() - 1);
         }
 
-         user.setRecentUserSearchHistory(recentUserSearchHistory);
+        user.setRecentUserSearchHistory(recentUserSearchHistory);
 
         Query searchQuery = new Query();
-        Criteria criteria = new Criteria().orOperator(
-                Criteria.where("firstName").regex(sanitizedSearchTerm, "i"),
-                Criteria.where("lastName").regex(sanitizedSearchTerm, "i"),
-                Criteria.where("userName").regex(sanitizedSearchTerm, "i"),
-                Criteria.where("email").regex(sanitizedSearchTerm, "i")
-        );
+        Criteria criteria = new Criteria().orOperator(Criteria.where("firstName").regex(sanitizedSearchTerm, "i"), Criteria.where("lastName").regex(sanitizedSearchTerm, "i"), Criteria.where("userName").regex(sanitizedSearchTerm, "i"), Criteria.where("email").regex(sanitizedSearchTerm, "i"));
 
         searchQuery.addCriteria(criteria);
         int pageSize = 10;
@@ -536,7 +538,51 @@ public class UserService {
 
         var savedUserJson = mapper.writeValueAsString(savedUser);
 
-        return  ResponseEntity.ok(savedUserJson);
+        return ResponseEntity.ok(savedUserJson);
+    }
+
+    public ResponseEntity<Object> blockUser(String authenticatedUserId, String userId) {
+        if (authenticatedUserId == null || authenticatedUserId.isEmpty()) {
+            return ResponseEntity.badRequest().body("Authenticated user id cannot be null or empty");
+        }
+
+        if (userId == null || userId.isEmpty()) {
+            return ResponseEntity.badRequest().body("User id cannot be null or empty");
+        }
+
+        List<User> users = (List<User>) userRepository.findAllById(Arrays.asList(authenticatedUserId, userId));
+
+        if (users.size() != 2) {
+            return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid");
+        }
+
+        User authenticatedUser = null;
+        User userToBlock = null;
+
+        for (User user : users) {
+
+            if (Objects.equals(user.getId(), authenticatedUserId)) {
+                authenticatedUser = user;
+            } else if (Objects.equals(user.getId(), userId)) {
+                userToBlock = user;
+            }
+        }
+
+        assert authenticatedUser != null;
+        assert userToBlock != null;
+
+        if (authenticatedUser.getBlockedUserIds().contains(userToBlock.getId())) {
+            return ResponseEntity.badRequest().body("You have already blocked this user");
+        }
+
+        authenticatedUser.removeFriend(userToBlock.getId());
+        userToBlock.removeFriend(authenticatedUser.getId());
+
+        authenticatedUser.addBlockedUser(userToBlock.getId());
+        userToBlock.addBlockedByUser(authenticatedUser.getId());
+
+        userRepository.saveAll(Arrays.asList(authenticatedUser, userToBlock));
+        return ResponseEntity.ok("You have blocked " + userToBlock.getUserName());
     }
 
     private boolean emailExists(User user) {
@@ -548,4 +594,6 @@ public class UserService {
         User findUser = userRepository.findByUserName(user.getUserName().toLowerCase());
         return findUser != null;
     }
+
+
 }

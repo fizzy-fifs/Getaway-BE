@@ -65,6 +65,14 @@ public class GroupService {
             return ResponseEntity.badRequest().body("One of the users added does not exist");
         }
 
+        for (User user : users) {
+            if (user.getBlockedUserIds().contains(groupCreator.getId())) {
+                group.getGroupMembers().remove(user);
+                group.getInvitedGroupMembersIds().remove(user.getId());
+                users.remove(user);
+            }
+        }
+
         group.setName(Helper.toSentenceCase(group.getName()));
         group.setDescription(Helper.toSentenceCase(group.getDescription()));
 
@@ -213,16 +221,18 @@ public class GroupService {
         return ResponseEntity.ok(groups);
     }
 
-    public ResponseEntity<Object> inviteUsers(String groupId, String inviterId, List<String> invitedUsersIds) {
+    public ResponseEntity<Object> inviteUsers(String groupId, String invitingUserId, List<String> invitedUsersIds) {
         if (groupId == null || groupId.isEmpty()) {
             return ResponseEntity.badRequest().body("No group id provided");
         }
         if (invitedUsersIds == null || invitedUsersIds.isEmpty()) {
             return ResponseEntity.badRequest().body("No user id provided");
         }
-        if (inviterId == null || inviterId.isEmpty()) {
-            return ResponseEntity.badRequest().body("Please include the id of the invitee");
+        if (invitingUserId == null || invitingUserId.isEmpty()) {
+            return ResponseEntity.badRequest().body("Please include the id of the inviting user");
         }
+
+        invitedUsersIds.remove(invitingUserId);
 
         Group group = groupRepository.findById(new ObjectId(groupId));
 
@@ -232,7 +242,7 @@ public class GroupService {
 
         List<String> userIdsToCheck = new ArrayList<>();
 
-        userIdsToCheck.add(inviterId);
+        userIdsToCheck.add(invitingUserId);
         userIdsToCheck.addAll(invitedUsersIds);
 
         List<User> users = (List<User>) userRepository.findAllById(userIdsToCheck);
@@ -241,10 +251,12 @@ public class GroupService {
             return ResponseEntity.badRequest().body("One or more of the userIds cannot be found");
         }
 
-        User inviter = users.stream().filter(user -> user.getId().equals(inviterId)).findFirst().get();
-        users.remove(inviter);
+        User invitingUser = users.stream().filter(user -> user.getId().equals(invitingUserId)).findFirst().get();
+        users.remove(invitingUser);
+        users.removeIf(user -> group.getGroupMembers().contains(user) || group.getInvitedGroupMembersIds().contains(user.getId()) || user.getGroupIds().contains(group.getId()));
+        users.removeIf(user -> user.getBlockedUserIds().contains(invitingUser.getId()));
 
-        GroupInvite newGroupInvite = new GroupInvite(group, inviter);
+        GroupInvite newGroupInvite = new GroupInvite(group, invitingUser);
         GroupInvite savedGroupInvite = groupInviteRepository.save(newGroupInvite);
 
         for (User user : users) {

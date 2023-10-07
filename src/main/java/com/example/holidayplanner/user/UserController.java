@@ -37,10 +37,7 @@ public class UserController {
     public ResponseEntity create(@RequestBody @Valid User user, Errors errors) throws JsonProcessingException {
 
         if (errors.hasErrors()) {
-            return ResponseEntity.badRequest()
-                    .body(errors.getAllErrors()
-                    .get(0).getDefaultMessage())
-            ;
+            return ResponseEntity.badRequest().body(errors.getAllErrors().get(0).getDefaultMessage());
         }
         return userService.create(user);
     }
@@ -48,20 +45,22 @@ public class UserController {
     @PostMapping(path = "/login")
     @Operation(summary = "Authenticate users")
     @Transactional
-    public ResponseEntity login (@RequestBody  Map<String, String> emailAndPassword) throws JsonProcessingException {
+    public ResponseEntity login(@RequestBody Map<String, String> emailAndPassword) throws JsonProcessingException {
 
         return userService.login(emailAndPassword);
     }
 
     @GetMapping(path = "/logout/{userId}")
-     @Operation(summary = "Logout a user")
+    @Operation(summary = "Logout a user")
     public ResponseEntity logout(@PathVariable("userId") String userId) {
         return userService.logout(userId);
     }
 
     @GetMapping
     @Operation(summary = "Get a list of all users")
-    public List<User> getAll() { return userService.getAll(); }
+    public List<User> getAll() {
+        return userService.getAll();
+    }
 
 
     @GetMapping(path = "deactivate/{userId}")
@@ -70,13 +69,13 @@ public class UserController {
         return userService.deactivateUserAccount(userId);
     }
 
-    @GetMapping(path="/sendfriendrequest/{userId}/{allegedFriendId}")
+    @GetMapping(path = "/sendfriendrequest/{userId}/{allegedFriendId}")
     @Operation(summary = "Send a friend request")
     public ResponseEntity sendFriendRequest(@PathVariable String userId, @PathVariable String allegedFriendId) {
         return userService.sendFriendRequest(userId, allegedFriendId);
     }
 
-    @GetMapping(path="/acceptfriendrequest/{userId}/{friendId}")
+    @GetMapping(path = "/acceptfriendrequest/{userId}/{friendId}")
     @Operation(summary = "Add a Friend")
     public ResponseEntity acceptFriendRequest(@PathVariable("userId") String userId, @PathVariable("friendId") String friendId) {
         return userService.acceptFriendRequest(userId, friendId);
@@ -88,19 +87,19 @@ public class UserController {
         return userService.declineFriendRequest(userId, friendId);
     }
 
-    @GetMapping(path= "/findbyid/{id}")
+    @GetMapping(path = "/findbyid/{id}")
     @Operation(summary = "Find a user by their id")
     public ResponseEntity findById(@PathVariable("id") String id) throws JsonProcessingException {
         return userService.findById(id);
     }
 
-    @PostMapping(path="/findmultiplebyid")
+    @PostMapping(path = "/findmultiplebyid")
     @Operation(summary = "Find multiple users by their ids")
     public ResponseEntity findMultipleById(@RequestBody List<String> userIds) throws JsonProcessingException {
         return userService.findMultipleById(userIds);
     }
 
-    @PostMapping(path="/findmultiplebyphonenumberoremail")
+    @PostMapping(path = "/findmultiplebyphonenumberoremail")
     @Operation(summary = "Find multiple users by their phone numbers or email addresses")
     public ResponseEntity findMultipleByPhoneNumberOrEmail(@RequestBody Map<String, List<String>> phoneNumbersAndEmails) throws JsonProcessingException {
         return userService.findMultipleByPhoneNumberOrEmail(phoneNumbersAndEmails);
@@ -118,7 +117,7 @@ public class UserController {
         return userService.saveDeviceToken(userId, deviceToken);
     }
 
-    @PutMapping (path = "/{userId}")
+    @PutMapping(path = "/{userId}")
     @Operation(summary = "Update user details")
     public String update(@PathVariable("userId") String userId, @RequestBody User newUserInfo) {
         return userService.update(userId, newUserInfo);
@@ -141,5 +140,11 @@ public class UserController {
     @Operation(summary = "Reactivate a user's account")
     public ResponseEntity<Object> reactivateUserAccount(@PathVariable("userId") String userId) throws JsonProcessingException {
         return userService.reactivateUserAccount(userId);
+    }
+
+    @GetMapping(path = "/block?authenticatedUserId={authenticatedUserId}&userId={userId}")
+    @Operation(summary = "Block a user")
+    public ResponseEntity<Object> blockUser(@RequestParam(name = "authenticatedUserId") String authenticatedUserId, @RequestParam(name = "userId") String blockedUserId) throws JsonProcessingException {
+        return userService.blockUser(authenticatedUserId, blockedUserId);
     }
 }
