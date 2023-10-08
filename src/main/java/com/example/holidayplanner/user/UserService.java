@@ -287,7 +287,7 @@ public class UserService {
         assert allegedFriend != null;
         assert principal != null;
 
-        if (allegedFriend.getBlockedByUserIds().contains(principal.getId())) {
+        if (allegedFriend.getBlockedUserIds().contains(principal.getId())) {
             return ResponseEntity.badRequest().body("You have been blocked by " + allegedFriend.getFirstName() + ". You cannot send a friend request to this user");
         }
 
