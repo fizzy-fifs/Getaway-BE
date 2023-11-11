@@ -144,7 +144,13 @@ public class UserController {
 
     @GetMapping(path = "/block")
     @Operation(summary = "Block a user")
-    public ResponseEntity<Object> blockUser(@RequestParam(name = "authenticatedUserId") String authenticatedUserId, @RequestParam(name = "userId") String blockedUserId) throws JsonProcessingException {
-        return userService.blockUser(authenticatedUserId, blockedUserId);
+    public ResponseEntity<Object> blockUser(@RequestParam(name = "authenticatedUserId") String authenticatedUserId, @RequestParam(name = "userId") String userId) throws JsonProcessingException {
+        return userService.blockUser(authenticatedUserId, userId);
+    }
+
+    @GetMapping(path = "/unblock")
+    @Operation(summary = "Unblock a user")
+    public ResponseEntity<Object> unblockUser(@RequestParam(name = "authenticatedUserId") String authenticatedUserId, @RequestParam(name = "userId") String blockedUserId) throws JsonProcessingException {
+        return userService.unblockUser(authenticatedUserId, blockedUserId);
     }
 }

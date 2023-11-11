@@ -190,4 +190,12 @@ public class User {
     public void addBlockedByUser(String userId) {
         blockedByUserIds.add(userId);
     }
+
+    public void removeBlockedUser(String userId) {
+        blockedUserIds.remove(userId);
+    }
+
+    public void removeBlockedByUser(String userId) {
+        blockedByUserIds.remove(userId);
+    }
 }

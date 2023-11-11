@@ -585,6 +585,47 @@ public class UserService {
         return ResponseEntity.ok("You have blocked " + userToBlock.getUserName());
     }
 
+    public ResponseEntity<Object> unblockUser(String authenticatedUserId, String blockedUserId) {
+        if (authenticatedUserId == null || authenticatedUserId.isEmpty()) {
+            return ResponseEntity.badRequest().body("Authenticated user id cannot be null or empty");
+        }
+
+        if (blockedUserId == null || blockedUserId.isEmpty()) {
+            return ResponseEntity.badRequest().body("User id cannot be null or empty");
+        }
+
+        List<User> users = (List<User>) userRepository.findAllById(Arrays.asList(authenticatedUserId, blockedUserId));
+
+        if (users.size() != 2) {
+            return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid");
+        }
+
+        User authenticatedUser = null;
+        User blockedUser = null;
+
+        for (User user : users) {
+
+            if (Objects.equals(user.getId(), authenticatedUserId)) {
+                authenticatedUser = user;
+            } else if (Objects.equals(user.getId(), blockedUserId)) {
+                blockedUser = user;
+            }
+        }
+
+        assert authenticatedUser != null;
+        assert blockedUser != null;
+
+        if (!authenticatedUser.getBlockedUserIds().contains(blockedUser.getId())) {
+            return ResponseEntity.badRequest().body("You have not blocked this user");
+        }
+
+        authenticatedUser.removeBlockedUser(blockedUser.getId());
+        blockedUser.removeBlockedByUser(authenticatedUser.getId());
+
+        userRepository.saveAll(Arrays.asList(authenticatedUser, blockedUser));
+        return ResponseEntity.ok("You have unblocked " + blockedUser.getUserName());
+    }
+
     private boolean emailExists(User user) {
         User findUser = userRepository.findByEmail(user.getEmail());
         return findUser != null;
@@ -594,6 +635,7 @@ public class UserService {
         User findUser = userRepository.findByUserName(user.getUserName().toLowerCase());
         return findUser != null;
     }
+
 
 
 }
