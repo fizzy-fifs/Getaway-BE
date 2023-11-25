@@ -357,19 +357,15 @@ public class UserService {
 
     public ResponseEntity findMultipleByPhoneNumberOrEmail(Map<String, List<String>> phoneNumbersAndEmails) throws JsonProcessingException {
 
-        System.out.println(phoneNumbersAndEmails);
-
         List<User> users;
 
         try {
             UserLookupModel userLookup = mapper.convertValue(phoneNumbersAndEmails, UserLookupModel.class);
-            users = userRepository.findByPhoneNumberInOrEmailIn(userLookup.phoneNumbers, userLookup.emails);
+            users = userRepository.findByPhoneNumberInOrEmailIn(userLookup.phoneNumbers, userLookup.emails); // Replace with query.
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid Request Format. Request body must be a JSON object with phoneNumbers and emails properties");
         }
-
-        System.out.println(users);
 
         String usersJson = mapper.writeValueAsString(users);
         return ResponseEntity.ok(usersJson);
