@@ -361,7 +361,7 @@ public class UserService {
 
         try {
             UserLookupModel userLookup = mapper.convertValue(phoneNumbersAndEmails, UserLookupModel.class);
-            users = userRepository.findByPhoneNumberInOrEmailIn(userLookup.phoneNumbers, userLookup.emails); // Replace with query.
+            users = userRepository.findByEmailInOrPhoneNumberIn(userLookup.phoneNumbers, userLookup.emails); // Replace with query.
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid Request Format. Request body must be a JSON object with phoneNumbers and emails properties");
