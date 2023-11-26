@@ -366,13 +366,28 @@ public class UserService {
 
             System.out.println(lastDigitsOfPhoneNumbersRegex);
 
-            users = userRepository.findByLastDigitsOfPhoneNumberOrExactEmail(lastDigitsOfPhoneNumbersRegex, userLookup.getEmails());
+            Criteria[] phoneNumbersCriteria = lastDigitsOfPhoneNumbersRegex.stream()
+                    .map(regex -> Criteria.where("phoneNumber").regex(regex, "i"))
+                    .toArray(Criteria[]::new);
+
+            Criteria[] emailsCriteria = userLookup.getEmails().stream()
+                    .map(email -> Criteria.where("email").regex(email, "i"))
+                    .toArray(Criteria[]::new);
+
+//            Collection<Criteria> criteriaCollection = Arrays.asList(phoneNumbersCriteria, emailsCriteria);
+
+            Criteria orCriteria = new Criteria().orOperator(phoneNumbersCriteria).orOperator(emailsCriteria);
+            Query query = new Query(orCriteria);
+
+            users = mongoTemplate.find(query, User.class);
+
+//            users = userRepository.findByLastDigitsOfPhoneNumberOrExactEmail(lastDigitsOfPhoneNumbersRegex, userLookup.getEmails());
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid Request Format. Request body must be a JSON object with phoneNumbers and emails properties");
         }
 
-        for (User user : users){
+        for (User user : users) {
             System.out.println(user.getFirstName().toUpperCase() + " " + user.getLastName().toUpperCase());
             System.out.println(users);
             System.out.println("\n\n");
@@ -390,9 +405,9 @@ public class UserService {
 
             if (normalizedPhoneNumber.length() < 7) continue;
 
-            var lastDigits =  normalizedPhoneNumber.substring(normalizedPhoneNumber.length() - 7);
-//            lastDigits = "^.*" + lastDigits + "$";
-            
+            var lastDigits = normalizedPhoneNumber.substring(normalizedPhoneNumber.length() - 7);
+            lastDigits = "^.*" + lastDigits + "$";
+
             lastDigitsOfPhoneNumbersRegex.add(lastDigits);
         }
         return lastDigitsOfPhoneNumbersRegex;
