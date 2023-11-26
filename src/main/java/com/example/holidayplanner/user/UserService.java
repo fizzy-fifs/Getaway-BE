@@ -373,7 +373,11 @@ public class UserService {
             return ResponseEntity.badRequest().body("Invalid Request Format. Request body must be a JSON object with phoneNumbers and emails properties");
         }
 
-        System.out.println(users);
+        for (User user : users){
+            System.out.println(user.getFirstName().toUpperCase() + " " + user.getLastName().toUpperCase());
+            System.out.println(users);
+            System.out.println("\n\n");
+        }
 
         String usersJson = mapper.writeValueAsString(users);
         return ResponseEntity.ok(usersJson);
