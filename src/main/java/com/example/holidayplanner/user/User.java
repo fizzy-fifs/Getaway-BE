@@ -52,6 +52,8 @@ public class User {
     private String email;
 
     @NotBlank(message = "User name cannot be blank")
+    @NotNull(message = "Please provide a user name")
+    @NotEmpty(message = "Please add a user name")
     @Pattern(regexp = "^[a-zA-Z0-9_]*$", message = "User name can only contain letters, numbers and underscores")
     @JsonProperty
     @Indexed(unique = true)

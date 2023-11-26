@@ -391,7 +391,7 @@ public class UserService {
             if (normalizedPhoneNumber.length() < 7) continue;
 
             var lastDigits =  normalizedPhoneNumber.substring(normalizedPhoneNumber.length() - 7);
-            lastDigits = "^.*" + lastDigits + "$";
+//            lastDigits = "^.*" + lastDigits + "$";
             
             lastDigitsOfPhoneNumbersRegex.add(lastDigits);
         }
