@@ -386,6 +386,8 @@ public class UserService {
         for (String phoneNumber : phoneNumbers) {
             var normalizedPhoneNumber = phoneNumber.replaceAll("[^0-9]", "");
 
+            if (normalizedPhoneNumber.length() < 7) continue;
+
             var lastDigits =  normalizedPhoneNumber.substring(normalizedPhoneNumber.length() - 7);
             lastDigits = "^.*" + lastDigits + "$";
             
