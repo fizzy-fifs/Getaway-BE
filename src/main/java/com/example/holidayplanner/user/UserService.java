@@ -364,6 +364,8 @@ public class UserService {
 
             List<String> lastDigitsOfPhoneNumbersRegex = getLastDigitsOfPhoneNumbersRegex(userLookup.getPhoneNumbers());
 
+            System.out.println(lastDigitsOfPhoneNumbersRegex);
+
             users = userRepository.findByLastDigitsOfPhoneNumberOrExactEmail(lastDigitsOfPhoneNumbersRegex, userLookup.getEmails());
 
         } catch (IllegalArgumentException e) {
