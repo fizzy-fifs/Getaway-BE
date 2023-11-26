@@ -370,13 +370,13 @@ public class UserService {
                     .map(regex -> Criteria.where("phoneNumber").regex(regex, "i"))
                     .toArray(Criteria[]::new);
 
-            Criteria[] emailsCriteria = userLookup.getEmails().stream()
-                    .map(email -> Criteria.where("email").regex(email, "i"))
-                    .toArray(Criteria[]::new);
+//            Criteria[] emailsCriteria = userLookup.getEmails().stream()
+//                    .map(email -> Criteria.where("email").regex(email, "i"))
+//                    .toArray(Criteria[]::new);
 
 //            Collection<Criteria> criteriaCollection = Arrays.asList(phoneNumbersCriteria, emailsCriteria);
 
-            Criteria orCriteria = new Criteria().orOperator(phoneNumbersCriteria).orOperator(emailsCriteria);
+            Criteria orCriteria = new Criteria().orOperator(phoneNumbersCriteria);//.orOperator(emailsCriteria);
             Query query = new Query(orCriteria);
 
             users = mongoTemplate.find(query, User.class);
