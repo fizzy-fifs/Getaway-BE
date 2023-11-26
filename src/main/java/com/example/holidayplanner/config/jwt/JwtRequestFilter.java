@@ -52,6 +52,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
             if (token == null) {
                 filterChain.doFilter(request, response);
+                return;
             }
 
             UserDetails userDetails = this.myUserDetailsService.loadUserByUsername(token.getOwner().getEmail());

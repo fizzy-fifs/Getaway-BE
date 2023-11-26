@@ -15,8 +15,9 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     User findByUserName(String userName);
 
-    @Query("{'$or:[{'phoneNumber': { $regex: ?0 }}, {'email: ?1}]}")
+    @Query("{$or: [{'phoneNumber': {$in: ?0}}, {'email': {$in: ?1}}]}")
     List<User> findByLastDigitsOfPhoneNumberOrExactEmail(List<String> lastDigitsOfPhoneNumbers, List<String> emails);
 
+//    @Query("{'$or:[{'phoneNumber': { $regex: ?0 }}, {'email: ?1}]}")
     List<User> findAll();
 }

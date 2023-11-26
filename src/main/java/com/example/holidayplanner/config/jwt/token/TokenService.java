@@ -77,9 +77,9 @@ public class TokenService {
 
         saveToken(token);
         
-        String accesTokenJson = mapper.writeValueAsString(newAccessToken);
+        String accessTokenJson = mapper.writeValueAsString(newAccessToken);
 
-        return ResponseEntity.ok().body(accesTokenJson);
+        return ResponseEntity.ok().body(accessTokenJson);
     }
 
     public void deleteAllByOwner(User user) {
