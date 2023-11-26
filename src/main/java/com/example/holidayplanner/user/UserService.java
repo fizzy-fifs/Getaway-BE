@@ -355,19 +355,16 @@ public class UserService {
         return ResponseEntity.ok("You are now friends with " + friend.getFirstName());
     }
 
-    public ResponseEntity findMultipleByPhoneNumberOrEmail(Map<String, List<String>> phoneNumbersAndEmails) throws JsonProcessingException {
+    public ResponseEntity<String> findMultipleByPhoneNumberOrEmail(Map<String, List<String>> phoneNumbersAndEmails) throws JsonProcessingException, IllegalArgumentException {
         System.out.println(phoneNumbersAndEmails);
         List<User> users;
 
         try {
             UserLookupModel userLookup = mapper.convertValue(phoneNumbersAndEmails, UserLookupModel.class);
-            var phoneNumbers = userLookup.getPhoneNumbers();
-            var emails = userLookup.getEmails();
 
-            System.out.println("phoneNumbers: " + phoneNumbers);
-            System.out.println("\n\n");
-            System.out.println("emails: " + emails);
-            users = userRepository.findByPhoneNumberInOrEmailIn(phoneNumbers, emails); // TODO: Replace with query.
+            List<String> lastDigitsOfPhoneNumbersRegex = getlastDigitsOfPhoneNumbersRegex(userLookup.getPhoneNumbers());
+
+            users = userRepository.findByLastDigitsOfPhoneNumberOrExactEmail(lastDigitsOfPhoneNumbersRegex, userLookup.getEmails());
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid Request Format. Request body must be a JSON object with phoneNumbers and emails properties");
@@ -381,6 +378,19 @@ public class UserService {
 
         String usersJson = mapper.writeValueAsString(users);
         return ResponseEntity.ok(usersJson);
+    }
+
+    private static List<String> getlastDigitsOfPhoneNumbersRegex(List<String> phoneNumbers) {
+        List<String> lastDigitsOfPhoneNumbersRegex = new ArrayList<>();
+
+        for (String phoneNumber : phoneNumbers) {
+            var normalizedPhoneNumber = ".*" + phoneNumber.replaceAll("[^0-9]", "") + ".*";
+            var lastDigits =  normalizedPhoneNumber.substring(normalizedPhoneNumber.length() - 7);
+            lastDigits = lastDigits.concat("$");
+            lastDigits = "^.*" + lastDigits;
+            lastDigitsOfPhoneNumbersRegex.add(lastDigits);
+        }
+        return lastDigitsOfPhoneNumbersRegex;
     }
 
     public ResponseEntity<Object> declineFriendRequest(String userId, String friendId) {

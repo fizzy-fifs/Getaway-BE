@@ -2,6 +2,7 @@ package com.example.holidayplanner.user;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,7 +15,8 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     User findByUserName(String userName);
 
-    List<User> findByPhoneNumberInOrEmailIn(List<String> phoneNumbers, List<String> emails);
+    @Query("{'$or:[{'phoneNumber': { $regex: ?0 }}, {'email: ?1}]}")
+    List<User> findByLastDigitsOfPhoneNumberOrExactEmail(List<String> lastDigitsOfPhoneNumbers, List<String> emails);
 
     List<User> findAll();
 }
