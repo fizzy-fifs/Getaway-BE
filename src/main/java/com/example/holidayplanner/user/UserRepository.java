@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
@@ -15,9 +16,7 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     User findByUserName(String userName);
 
-    @Query("{$or: [{'phoneNumber': {$in: ?0}}, {'email': {$in: ?1}}]}")
-    List<User> findByLastDigitsOfPhoneNumberOrExactEmail(List<String> lastDigitsOfPhoneNumbers, List<String> emails);
-
-//    @Query("{'$or:[{'phoneNumber': { $regex: ?0 }}, {'email: ?1}]}")
     List<User> findAll();
+
+    Set<User> findByEmailIn(List<String> emails);
 }

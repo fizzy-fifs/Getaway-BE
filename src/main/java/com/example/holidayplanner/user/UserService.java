@@ -355,33 +355,25 @@ public class UserService {
         return ResponseEntity.ok("You are now friends with " + friend.getFirstName());
     }
 
-    public ResponseEntity<String> findMultipleByPhoneNumberOrEmail(Map<String, List<String>> phoneNumbersAndEmails) throws JsonProcessingException, IllegalArgumentException {
-        System.out.println(phoneNumbersAndEmails);
-        List<User> users;
+    public ResponseEntity<String> findMultipleByPhoneNumberOrEmail(Map<String, List<String>> phoneNumbersAndEmails /*TODO: Replace Map with UserLookupModel */) throws JsonProcessingException, IllegalArgumentException {
+        Set<User> users;
 
         try {
             UserLookupModel userLookup = mapper.convertValue(phoneNumbersAndEmails, UserLookupModel.class);
 
-            List<String> lastDigitsOfPhoneNumbersRegex = getLastDigitsOfPhoneNumbersRegex(userLookup.getPhoneNumbers());
-
-            System.out.println(lastDigitsOfPhoneNumbersRegex);
-
-            Criteria[] phoneNumbersCriteria = lastDigitsOfPhoneNumbersRegex.stream()
+            Criteria[] phoneNumbersCriteria = getLastDigitsOfPhoneNumbersRegex(userLookup.getPhoneNumbers()).stream()
                     .map(regex -> Criteria.where("phoneNumber").regex(regex, "i"))
                     .toArray(Criteria[]::new);
 
-//            Criteria[] emailsCriteria = userLookup.getEmails().stream()
-//                    .map(email -> Criteria.where("email").regex(email, "i"))
-//                    .toArray(Criteria[]::new);
-
-//            Collection<Criteria> criteriaCollection = Arrays.asList(phoneNumbersCriteria, emailsCriteria);
-
-            Criteria orCriteria = new Criteria().orOperator(phoneNumbersCriteria);//.orOperator(emailsCriteria);
+            Criteria orCriteria = new Criteria().orOperator(phoneNumbersCriteria);
             Query query = new Query(orCriteria);
 
-            users = mongoTemplate.find(query, User.class);
+            var usersFoundFromPhoneNumbers = mongoTemplate.find(query, User.class);
+            var usersFoundFromEmails = userRepository.findByEmailIn(userLookup.getEmails());
 
-//            users = userRepository.findByLastDigitsOfPhoneNumberOrExactEmail(lastDigitsOfPhoneNumbersRegex, userLookup.getEmails());
+           users = new HashSet<>(usersFoundFromPhoneNumbers);
+
+            users.addAll(usersFoundFromEmails);
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid Request Format. Request body must be a JSON object with phoneNumbers and emails properties");
