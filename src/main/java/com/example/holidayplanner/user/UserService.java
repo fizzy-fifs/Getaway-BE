@@ -362,7 +362,7 @@ public class UserService {
         try {
             UserLookupModel userLookup = mapper.convertValue(phoneNumbersAndEmails, UserLookupModel.class);
 
-            List<String> lastDigitsOfPhoneNumbersRegex = getlastDigitsOfPhoneNumbersRegex(userLookup.getPhoneNumbers());
+            List<String> lastDigitsOfPhoneNumbersRegex = getLastDigitsOfPhoneNumbersRegex(userLookup.getPhoneNumbers());
 
             users = userRepository.findByLastDigitsOfPhoneNumberOrExactEmail(lastDigitsOfPhoneNumbersRegex, userLookup.getEmails());
 
@@ -380,14 +380,15 @@ public class UserService {
         return ResponseEntity.ok(usersJson);
     }
 
-    private static List<String> getlastDigitsOfPhoneNumbersRegex(List<String> phoneNumbers) {
+    private static List<String> getLastDigitsOfPhoneNumbersRegex(List<String> phoneNumbers) {
         List<String> lastDigitsOfPhoneNumbersRegex = new ArrayList<>();
 
         for (String phoneNumber : phoneNumbers) {
-            var normalizedPhoneNumber = ".*" + phoneNumber.replaceAll("[^0-9]", "") + ".*";
+            var normalizedPhoneNumber = phoneNumber.replaceAll("[^0-9]", "");
+
             var lastDigits =  normalizedPhoneNumber.substring(normalizedPhoneNumber.length() - 7);
-            lastDigits = lastDigits.concat("$");
-            lastDigits = "^.*" + lastDigits;
+            lastDigits = "^.*" + lastDigits + "$";
+            
             lastDigitsOfPhoneNumbersRegex.add(lastDigits);
         }
         return lastDigitsOfPhoneNumbersRegex;
