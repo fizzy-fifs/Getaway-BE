@@ -356,11 +356,11 @@ public class UserService {
     }
 
 
-    public ResponseEntity<String> declineFriendRequest(String userId, String friendId) throws JsonProcessingException {
+    public ResponseEntity<String> declineFriendRequest(String userWhoSentRequestId, String userWhoReceivedRequestId) throws JsonProcessingException {
         List<User> users;
 
         try {
-            users = (List<User>) userRepository.findAllById(Arrays.asList(userId, friendId)); //Returns Iterable list of users in random order
+            users = (List<User>) userRepository.findAllById(Arrays.asList(userWhoSentRequestId, userWhoReceivedRequestId)); //Returns Iterable list of users in random order
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid Id");
         }
@@ -370,8 +370,10 @@ public class UserService {
         }
 
         for (User user : users) {
-            user.deleteFriendRequest(friendId);
-            user.removeFromFreindRequestsSent(userId);
+            if (Objects.equals(user.getId(), userWhoSentRequestId)) {
+                user.removeFromFreindRequestsSent(userWhoReceivedRequestId);
+            }
+            user.deleteFriendRequest(userWhoSentRequestId);
         }
 
         List<User> savedUsers = userRepository.saveAll(users);
