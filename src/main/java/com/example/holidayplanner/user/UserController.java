@@ -77,14 +77,20 @@ public class UserController {
 
     @GetMapping(path = "/acceptfriendrequest/{userId}/{friendId}")
     @Operation(summary = "Add a Friend")
-    public ResponseEntity acceptFriendRequest(@PathVariable("userId") String userId, @PathVariable("friendId") String friendId) {
+    public ResponseEntity<String> acceptFriendRequest(@PathVariable("userId") String userId, @PathVariable("friendId") String friendId) {
         return userService.acceptFriendRequest(userId, friendId);
     }
 
     @GetMapping(path = "/declinefriendrequest/{userId}/{friendId}")
     @Operation(summary = "Delete a friend request")
-    public ResponseEntity declineFriendRequest(@PathVariable("userId") String userId, @PathVariable("friendId") String friendId) {
+    public ResponseEntity<String> declineFriendRequest(@PathVariable("userId") String userId, @PathVariable("friendId") String friendId) throws JsonProcessingException {
         return userService.declineFriendRequest(userId, friendId);
+    }
+
+    @GetMapping(path = "withdrawfriendrequest/{userId}/{friendId}")
+    @Operation(summary = "Withdraw a friend request")
+    public ResponseEntity<String> withdrawFriendRequest(@PathVariable("userId") String userId, @PathVariable("friendId") String friendId) throws JsonProcessingException {
+        return userService.withdrawFriendRequest(userId, friendId);
     }
 
     @GetMapping(path = "/findbyid/{id}")

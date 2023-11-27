@@ -306,7 +306,7 @@ public class UserService {
         return ResponseEntity.ok(allegedFriend.getFirstName() + " has been sent a friend request");
     }
 
-    public ResponseEntity<Object> acceptFriendRequest(String userId, String friendId) {
+    public ResponseEntity<String> acceptFriendRequest(String userId, String friendId) {
         // query db for both users using userId and friendId
         ArrayList<User> users;
 
@@ -355,6 +355,57 @@ public class UserService {
         return ResponseEntity.ok("You are now friends with " + friend.getFirstName());
     }
 
+
+    public ResponseEntity<String> declineFriendRequest(String userId, String friendId) throws JsonProcessingException {
+        List<User> users;
+
+        try {
+            users = (List<User>) userRepository.findAllById(Arrays.asList(userId, friendId)); //Returns Iterable list of users in random order
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid Id");
+        }
+
+        if (users.size() != 2) {
+            return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid");
+        }
+
+        for (User user : users) {
+            user.deleteFriendRequest(friendId);
+            user.removeFromFreindRequestsSent(userId);
+        }
+
+        List<User> savedUsers = userRepository.saveAll(users);
+
+        String savedUserJson = mapper.writeValueAsString(savedUsers);
+
+        return ResponseEntity.ok(savedUserJson);
+    }
+
+    public ResponseEntity<String> withdrawFriendRequest(String userId, String friendId) throws JsonProcessingException {
+        List<User> users;
+
+        try {
+            users = (List<User>) userRepository.findAllById(Arrays.asList(userId, friendId)); //Returns Iterable list of users in random order
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid Id");
+        }
+
+        if (users.size() != 2) {
+            return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid");
+        }
+
+        for (User user : users) {
+            user.deleteFriendRequest(friendId);
+            user.removeFromFreindRequestsSent(userId);
+        }
+
+        List<User> savedUsers = userRepository.saveAll(users);
+
+        String savedUserJson = mapper.writeValueAsString(savedUsers);
+
+        return ResponseEntity.ok(savedUserJson);
+    }
+
     public ResponseEntity<String> findMultipleByPhoneNumberOrEmail(Map<String, List<String>> phoneNumbersAndEmails /*TODO: Replace Map with UserLookupModel */) throws JsonProcessingException, IllegalArgumentException {
         Set<User> users;
 
@@ -397,29 +448,6 @@ public class UserService {
             lastDigitsOfPhoneNumbersRegex.add(lastDigits);
         }
         return lastDigitsOfPhoneNumbersRegex;
-    }
-
-    public ResponseEntity<Object> declineFriendRequest(String userId, String friendId) {
-        List<User> users;
-
-        try {
-            users = (List<User>) userRepository.findAllById(Arrays.asList(userId, friendId)); //Returns Iterable list of users in random order
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Invalid Id");
-        }
-
-        if (users.size() != 2) {
-            return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid");
-        }
-
-        for (User user : users) {
-            user.deleteFriendRequest(friendId);
-            user.removeFromFreindRequestsSent(userId);
-        }
-
-        List<User> savedUsers = userRepository.saveAll(users);
-
-        return ResponseEntity.ok(savedUsers);
     }
 
 
