@@ -356,7 +356,7 @@ public class UserService {
     }
 
 
-    public ResponseEntity<String> declineFriendRequest(String userWhoSentRequestId, String userWhoReceivedRequestId) throws JsonProcessingException {
+    public ResponseEntity<String> deleteFriendRequest(String userWhoSentRequestId, String userWhoReceivedRequestId) throws JsonProcessingException {
         List<User> users;
 
         try {

@@ -46,6 +46,7 @@ class CascadeSaveMongoEventListener extends AbstractMongoEventListener<Object> {
     }
 
     private void checkAndSave(Object fieldValue) {
+        System.out.println("fieldValue = " + fieldValue);
         try {
             DbRefFieldCallback callback = new DbRefFieldCallback(fieldValue);
             ReflectionUtils.doWithFields(fieldValue.getClass(), callback);

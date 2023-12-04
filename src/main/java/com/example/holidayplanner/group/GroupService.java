@@ -59,7 +59,7 @@ public class GroupService {
 
         userIds.add(groupCreator.getId());
 
-        List<User> users = (List<User>) userRepository.findAllById(userIds);
+        List<User> users = userRepository.findAllById(userIds);
 
         if (users.size() != userIds.size()) {
             return ResponseEntity.badRequest().body("One of the users added does not exist");
