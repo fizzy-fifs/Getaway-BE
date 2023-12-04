@@ -63,6 +63,7 @@ class CascadeSaveMongoEventListener extends AbstractMongoEventListener<Object> {
                 }
             }
         } catch (Exception e) {
+            System.out.println("fieldValue that threw exception = " + fieldValue);
             e.printStackTrace();
         }
     }
