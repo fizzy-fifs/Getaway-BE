@@ -84,7 +84,7 @@ public class GroupService {
 
         for (User invitedMember : users) {
             if (!invitedMember.getId().equals(groupCreator.getId())) {
-                invitedMember.addGroupInvite(savedGroupInvite.getId());
+                invitedMember.addGroupInviteId(savedGroupInvite.getId());
             } else {
                 invitedMember.addGroup(newGroup.getId());
             }

@@ -114,13 +114,12 @@ public class HolidayService {
         HolidayInvite holidayInvite = new HolidayInvite(newHoliday, invitingUser);
         HolidayInvite newHolidayInvite = holidayInviteRepository.insert(holidayInvite);
 
-        for (User invitedHolidayMaker : confirmedUsers) {
-            if (!invitedHolidayMaker.getId().equals(invitingUser.getId())) {
-                invitedHolidayMaker.getHolidayInviteIds().add(newHolidayInvite.getId());
+        for (User user : confirmedUsers) {
+            if (!user.getId().equals(invitingUser.getId())) {
+                user.addHolidayInviteId(newHolidayInvite.getId());
             }
+            user.addHoliday(newHoliday.getId());
         }
-
-        invitingUser.addHoliday(newHoliday.getId());
 
         groupRepository.save(group);
 

@@ -1,21 +1,13 @@
 package com.example.holidayplanner.user;
 
-import com.example.holidayplanner.config.cascadeSaveMongoEventListener.CascadeSave;
-import com.example.holidayplanner.group.Group;
-import com.example.holidayplanner.holiday.Holiday;;
+;
 import com.example.holidayplanner.user.role.Role;
 import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.Data;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.*;
@@ -137,8 +129,12 @@ public class User {
         this.password = password;
     }
 
-    public void addGroupInvite(String groupInviteId) {
+    public void addGroupInviteId(String groupInviteId) {
         groupInviteIds.add(groupInviteId);
+    }
+
+    public void addHolidayInviteId(String holidayInviteId) {
+        holidayInviteIds.add(holidayInviteId);
     }
 
     public void addGroup(String groupId) {
