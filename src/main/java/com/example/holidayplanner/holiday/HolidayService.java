@@ -97,10 +97,10 @@ public class HolidayService {
         AvailableDates newAvailableDates = availableDatesRepository.insert(availableDates);
         holiday.getAvailableDatesIds().add(newAvailableDates.getId());
 
-        holiday.setId(new ObjectId().toString());
         holiday.setName(Helper.toSentenceCase(holiday.getName()));
 
-        group.addHoliday(holiday);
+        Holiday newHoliday = holidayRepository.insert(holiday);
+        group.addHoliday(newHoliday);
 
         User invitingUser = confirmedUsers.stream()
                 .filter(holidayMaker ->
@@ -111,7 +111,7 @@ public class HolidayService {
         confirmedUsers.remove(invitingUser);
         confirmedUsers.removeIf(user -> user.getBlockedUserIds().contains(invitingUser.getId()));
 
-        HolidayInvite holidayInvite = new HolidayInvite(holiday, invitingUser);
+        HolidayInvite holidayInvite = new HolidayInvite(newHoliday, invitingUser);
         HolidayInvite newHolidayInvite = holidayInviteRepository.insert(holidayInvite);
 
         for (User invitedHolidayMaker : confirmedUsers) {
@@ -120,10 +120,10 @@ public class HolidayService {
             }
         }
 
-        invitingUser.addHoliday(holiday.getId());
+        invitingUser.addHoliday(newHoliday.getId());
 
         groupRepository.save(group);
-        Holiday newHoliday = holidayRepository.save(holiday);
+
         userRepository.saveAll(confirmedUsers);
 
         String holidayJson = mapper.writeValueAsString(newHoliday);

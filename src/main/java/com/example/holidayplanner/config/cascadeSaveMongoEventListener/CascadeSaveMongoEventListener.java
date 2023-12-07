@@ -24,6 +24,7 @@ class CascadeSaveMongoEventListener extends AbstractMongoEventListener<Object> {
     @Override
     public void onBeforeConvert(BeforeConvertEvent<Object> event) {
         Object source = event.getSource();
+        System.out.println("source = " + source);
 
         ReflectionUtils.doWithFields(source.getClass(), new ReflectionUtils.FieldCallback() {
             @Override
@@ -32,6 +33,7 @@ class CascadeSaveMongoEventListener extends AbstractMongoEventListener<Object> {
                 if (field.isAnnotationPresent(DBRef.class) && field.isAnnotationPresent(CascadeSave.class)) {
 
                     Object fieldValue = field.get(source);
+
 
                     if (fieldValue instanceof List<?>) {
                         for (Object item : (List<?>) fieldValue) {
@@ -46,7 +48,6 @@ class CascadeSaveMongoEventListener extends AbstractMongoEventListener<Object> {
     }
 
     private void checkAndSave(Object fieldValue) {
-        System.out.println("fieldValue = " + fieldValue);
         try {
             DbRefFieldCallback callback = new DbRefFieldCallback(fieldValue);
             ReflectionUtils.doWithFields(fieldValue.getClass(), callback);
