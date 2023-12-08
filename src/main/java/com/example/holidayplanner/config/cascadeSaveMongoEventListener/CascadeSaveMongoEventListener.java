@@ -24,7 +24,6 @@ class CascadeSaveMongoEventListener extends AbstractMongoEventListener<Object> {
     @Override
     public void onBeforeConvert(BeforeConvertEvent<Object> event) {
         Object source = event.getSource();
-        System.out.println("source = " + source);
 
         ReflectionUtils.doWithFields(source.getClass(), new ReflectionUtils.FieldCallback() {
             @Override
@@ -64,7 +63,6 @@ class CascadeSaveMongoEventListener extends AbstractMongoEventListener<Object> {
                 }
             }
         } catch (Exception e) {
-            System.out.println("fieldValue that threw exception = " + fieldValue);
             e.printStackTrace();
         }
     }

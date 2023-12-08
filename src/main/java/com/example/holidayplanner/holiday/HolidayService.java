@@ -108,7 +108,6 @@ public class HolidayService {
                                 .equals(holidayCreatorId))
                 .findFirst().get();
 
-//        confirmedUsers.remove(invitingUser);
         confirmedUsers.removeIf(user -> user.getBlockedUserIds().contains(invitingUser.getId()));
 
         HolidayInvite holidayInvite = new HolidayInvite(newHoliday, invitingUser);
@@ -119,7 +118,6 @@ public class HolidayService {
                 user.addHolidayInviteId(newHolidayInvite.getId());
             }
             user.addHoliday(newHoliday.getId());
-//            System.out.println("Ln 122: " + user);
         }
 
         groupRepository.save(group);
