@@ -73,7 +73,7 @@ public class HolidayService {
         String holidayCreatorId = holiday.getHolidayMakers().get(0).getId();
         userIdsToCheck.add(holidayCreatorId);
 
-        List<User> confirmedUsers = (List<User>) userRepository.findAllById(userIdsToCheck);
+        List<User> confirmedUsers = userRepository.findAllById(userIdsToCheck);
 
         if (confirmedUsers.size() != userIdsToCheck.size()) {
             return ResponseEntity.badRequest().body("One of the user ids added is invalid");
@@ -108,7 +108,7 @@ public class HolidayService {
                                 .equals(holidayCreatorId))
                 .findFirst().get();
 
-        confirmedUsers.remove(invitingUser);
+//        confirmedUsers.remove(invitingUser);
         confirmedUsers.removeIf(user -> user.getBlockedUserIds().contains(invitingUser.getId()));
 
         HolidayInvite holidayInvite = new HolidayInvite(newHoliday, invitingUser);
@@ -119,6 +119,7 @@ public class HolidayService {
                 user.addHolidayInviteId(newHolidayInvite.getId());
             }
             user.addHoliday(newHoliday.getId());
+//            System.out.println("Ln 122: " + user);
         }
 
         groupRepository.save(group);
