@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="WIP Scraper for AirBnB" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GithubDefaultAccount">
+    <option name="defaultAccountId" value="bd40825d-7567-4fa2-810f-d6cb5780b8a8" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2UbfpoVmEZUCmZfVnG9jTa7sNND" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "monorepo-setup",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.editor.code.editing"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Getaway" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Main">
+    <configuration name="Crawler" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.holidayplanner.crawler.Crawler" />
+      <module name="holiday-planner" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.holidayplanner.crawler.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Main" type="Application" factoryName="Application">
+      <envs>
+        <env name="DATABASE_NAME" value="HolidayPlannerLocalDB" />
+        <env name="MONGODB_CONNECTION_STRING" value="mongodb://localhost:27017/HolidayPlannerLocalDB" />
+        <env name="MONGODB_PASSWORD" value="holidayplanner" />
+        <env name="MONGODB_USERNAME" value="Fifolu" />
+      </envs>
+      <option name="MAIN_CLASS_NAME" value="com.example.holidayplanner.HolidayPlannerApplication" />
+      <module name="holiday-planner" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Scraper" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="scraper.Scraper" />
+      <module name="holiday-planner" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="scraper.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="com.example.holidayplanner.scraper.Scraper" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.holidayplanner.scraper.Scraper" />
+      <module name="holiday-planner" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.holidayplanner.scraper.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.com.example.holidayplanner.scraper.Scraper" />
+        <item itemvalue="Application.Scraper" />
+        <item itemvalue="Application.Crawler" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="" />
+      <created>1693213386150</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1693213386150</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Add dateJoined and lastLogin fields to user class">
+      <option name="closed" value="true" />
+      <created>1695272882804</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1695272882804</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Change dateJoined implementation">
+      <option name="closed" value="true" />
+      <created>1695273508489</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1695273508489</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Remove dob property">
+      <option name="closed" value="true" />
+      <created>1695278787854</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1695278787854</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Create user account deactivation mechanism (WIP)">
+      <option name="closed" value="true" />
+      <created>1695665056033</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1695665056033</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Create user account deactivation mechanism 2 (WIP)">
+      <option name="closed" value="true" />
+      <created>1695665631226</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1695665631226</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Fix bug in deactivate user account endpoint">
+      <option name="closed" value="true" />
+      <created>1695666445517</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1695666445517</updated>
+    </task>
+    <task id="LOCAL-00038" summary="Return correct status code">
+      <option name="closed" value="true" />
+      <created>1695669672316</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1695669672316</updated>
+    </task>
+    <task id="LOCAL-00039" summary="Change error message">
+      <option name="closed" value="true" />
+      <created>1695670684163</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1695670684163</updated>
+    </task>
+    <task id="LOCAL-00040" summary="Ednpoint to report a group">
+      <option name="closed" value="true" />
+      <created>1695889245929</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1695889245929</updated>
+    </task>
+    <task id="LOCAL-00041" summary="Ednpoint to report a user">
+      <option name="closed" value="true" />
+      <created>1695903544608</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1695903544608</updated>
+    </task>
+    <task id="LOCAL-00042" summary="Send deactivation request object if a user that has requested account deletions attempts to sign in.">
+      <option name="closed" value="true" />
+      <created>1695904260646</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1695904260646</updated>
+    </task>
+    <task id="LOCAL-00043" summary="Change field name">
+      <option name="closed" value="true" />
+      <created>1695905111828</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1695905111828</updated>
+    </task>
+    <task id="LOCAL-00044" summary="Endpoint to reactivate user account">
+      <option name="closed" value="true" />
+      <created>1695914193271</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1695914193271</updated>
+    </task>
+    <task id="LOCAL-00045" summary="Fix bug with deactivation request date.">
+      <option name="closed" value="true" />
+      <created>1696499001457</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1696499001457</updated>
+    </task>
+    <task id="LOCAL-00046" summary="Token bug(WIP)">
+      <option name="closed" value="true" />
+      <created>1696520506700</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1696520506700</updated>
+    </task>
+    <task id="LOCAL-00047" summary="delete users' token on login before creating a new one">
+      <option name="closed" value="true" />
+      <created>1696521374274</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1696521374274</updated>
+    </task>
+    <task id="LOCAL-00048" summary="Mechanism for blocking users">
+      <option name="closed" value="true" />
+      <created>1696701085841</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1696701085841</updated>
+    </task>
+    <task id="LOCAL-00049" summary="Remove sout">
+      <option name="closed" value="true" />
+      <created>1696702871008</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1696702871008</updated>
+    </task>
+    <task id="LOCAL-00050" summary="Fix bug in block user endpoint">
+      <option name="closed" value="true" />
+      <created>1696705222754</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1696705222756</updated>
+    </task>
+    <task id="LOCAL-00051" summary="Fix bug in send friend request endpoint">
+      <option name="closed" value="true" />
+      <created>1696774541316</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1696774541317</updated>
+    </task>
+    <task id="LOCAL-00052" summary="Endpoint to unblock a user">
+      <option name="closed" value="true" />
+      <created>1699723609974</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1699723609974</updated>
+    </task>
+    <task id="LOCAL-00053" summary="Debugging">
+      <option name="closed" value="true" />
+      <created>1700921248060</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1700921248060</updated>
+    </task>
+    <task id="LOCAL-00054" summary="Debugging 2">
+      <option name="closed" value="true" />
+      <created>1700921925046</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1700921925046</updated>
+    </task>
+    <task id="LOCAL-00055" summary="Debugging 3">
+      <option name="closed" value="true" />
+      <created>1700923649189</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1700923649190</updated>
+    </task>
+    <task id="LOCAL-00056" summary="Still Debugging 3">
+      <option name="closed" value="true" />
+      <created>1700923750398</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1700923750398</updated>
+    </task>
+    <task id="LOCAL-00057" summary="Debugging 4">
+      <option name="closed" value="true" />
+      <created>1700924143848</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1700924143848</updated>
+    </task>
+    <task id="LOCAL-00058" summary="Debugging 5">
+      <option name="closed" value="true" />
+      <created>1701009129079</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1701009129080</updated>
+    </task>
+    <task id="LOCAL-00059" summary="Debugging 6">
+      <option name="closed" value="true" />
+      <created>1701009598426</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1701009598426</updated>
+    </task>
+    <task id="LOCAL-00060" summary="Debugging 6">
+      <option name="closed" value="true" />
+      <created>1701016488079</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1701016488079</updated>
+    </task>
+    <task id="LOCAL-00061" summary="Query with last digits or email.">
+      <option name="closed" value="true" />
+      <created>1701017732061</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1701017732061</updated>
+    </task>
+    <task id="LOCAL-00062" summary="Skip number less than 7 digits">
+      <option name="closed" value="true" />
+      <created>1701018728002</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1701018728002</updated>
+    </task>
+    <task id="LOCAL-00063" summary="Fix error with query">
+      <option name="closed" value="true" />
+      <created>1701024266631</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1701024266631</updated>
+    </task>
+    <task id="LOCAL-00064" summary="Debugging">
+      <option name="closed" value="true" />
+      <created>1701024793053</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1701024793053</updated>
+    </task>
+    <task id="LOCAL-00065" summary="Debugging 1">
+      <option name="closed" value="true" />
+      <created>1701025548957</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1701025548957</updated>
+    </task>
+    <task id="LOCAL-00066" summary="Debugging 3">
+      <option name="closed" value="true" />
+      <created>1701030761938</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1701030761938</updated>
+    </task>
+    <task id="LOCAL-00067" summary="Debugging 4">
+      <option name="closed" value="true" />
+      <created>1701031228246</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1701031228246</updated>
+    </task>
+    <task id="LOCAL-00068" summary="Fix bug">
+      <option name="closed" value="true" />
+      <created>1701032797357</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1701032797357</updated>
+    </task>
+    <task id="LOCAL-00069" summary="Remove debug flags">
+      <option name="closed" value="true" />
+      <created>1701033197028</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1701033197028</updated>
+    </task>
+    <task id="LOCAL-00070" summary="Endpoint to withdraw friend request">
+      <option name="closed" value="true" />
+      <created>1701049796298</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1701049796298</updated>
+    </task>
+    <task id="LOCAL-00071" summary="Change logic">
+      <option name="closed" value="true" />
+      <created>1701050522100</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1701050522100</updated>
+    </task>
+    <task id="LOCAL-00072" summary="Housekeeping">
+      <option name="closed" value="true" />
+      <created>1701669393011</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1701669393011</updated>
+    </task>
+    <task id="LOCAL-00073" summary="commit">
+      <option name="closed" value="true" />
+      <created>1701684770461</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1701684770461</updated>
+    </task>
+    <task id="LOCAL-00074" summary="Debugging">
+      <option name="closed" value="true" />
+      <created>1701965443338</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1701965443339</updated>
+    </task>
+    <task id="LOCAL-00075" summary="Refactor">
+      <option name="closed" value="true" />
+      <created>1701967144945</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1701967144945</updated>
+    </task>
+    <task id="LOCAL-00076" summary="Fix bug">
+      <option name="closed" value="true" />
+      <created>1702067416888</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1702067416888</updated>
+    </task>
+    <task id="LOCAL-00077" summary="Tidy up">
+      <option name="closed" value="true" />
+      <created>1702067862456</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1702067862456</updated>
+    </task>
+    <task id="LOCAL-00078" summary="WIP Crawler">
+      <option name="closed" value="true" />
+      <created>1704645722917</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1704645722917</updated>
+    </task>
+    <task id="LOCAL-00079" summary="WIP Crawler for AirBnB">
+      <option name="closed" value="true" />
+      <created>1705693322351</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1705693322352</updated>
+    </task>
+    <task id="LOCAL-00080" summary="WIP Scraper for AirBnB">
+      <option name="closed" value="true" />
+      <created>1707113000101</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1707113000102</updated>
+    </task>
+    <option name="localTasksCounter" value="81" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Fix bug in block user endpoint" />
+    <MESSAGE value="Fix bug in send friend request endpoint" />
+    <MESSAGE value="Endpoint to unblock a user" />
+    <MESSAGE value="Debugging 2" />
+    <MESSAGE value="Still Debugging 3" />
+    <MESSAGE value="Debugging 5" />
+    <MESSAGE value="Debugging 6" />
+    <MESSAGE value="Query with last digits or email." />
+    <MESSAGE value="Skip number less than 7 digits" />
+    <MESSAGE value="Fix error with query" />
+    <MESSAGE value="Debugging 1" />
+    <MESSAGE value="Debugging 3" />
+    <MESSAGE value="Debugging 4" />
+    <MESSAGE value="Remove debug flags" />
+    <MESSAGE value="Endpoint to withdraw friend request" />
+    <MESSAGE value="Change logic" />
+    <MESSAGE value="Housekeeping" />
+    <MESSAGE value="commit" />
+    <MESSAGE value="Debugging" />
+    <MESSAGE value="Refactor" />
+    <MESSAGE value="Fix bug" />
+    <MESSAGE value="Tidy up" />
+    <MESSAGE value="WIP Crawler" />
+    <MESSAGE value="WIP Crawler for AirBnB" />
+    <MESSAGE value="WIP Scraper for AirBnB" />
+    <option name="LAST_COMMIT_MESSAGE" value="WIP Scraper for AirBnB" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/config/cascadeSaveMongoEventListener/CascadeSaveMongoEventListener.java</url>
+          <line>59</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/holiday/HolidayService.java</url>
+          <line>122</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/holiday/HolidayService.java</url>
+          <line>124</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
