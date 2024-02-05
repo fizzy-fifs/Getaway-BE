@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 public class Scraper {
     public static void main(String[] args) {
-        var url = "https://www.airbnb.co.uk";
+        var url = "https://www.airbnb.co.uk/?checkin=2024-12-18&checkout=2024-12-27&adults=10&price_filter_num_nights=9&price_max=610&price_min=590";
 
         try {
             Connection conn = Jsoup.connect(url);
