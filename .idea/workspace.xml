@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="WIP Scraper for AirBnB" />
+    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="WIP Scraper for AirBnB">
+      <change afterPath="$PROJECT_DIR$/Scraper/pyproject.toml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Scraper/schemas.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scraper/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Scraper/main.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -48,10 +53,12 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "monorepo-setup",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/afifoluwaakinyemi/IdeaProjects/Holiday-Planner-Java",
     "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
     "settings.editor.selected.configurable": "preferences.editor.code.editing"
   }
 }]]></component>
@@ -113,13 +120,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.com.example.holidayplanner.scraper.Scraper" />
-        <item itemvalue="Application.Scraper" />
-        <item itemvalue="Application.Crawler" />
-      </list>
-    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-20.0.2-azul-20.0.2-4caba194b151-895bf479" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -563,27 +570,6 @@
     <MESSAGE value="WIP Crawler for AirBnB" />
     <MESSAGE value="WIP Scraper for AirBnB" />
     <option name="LAST_COMMIT_MESSAGE" value="WIP Scraper for AirBnB" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/config/cascadeSaveMongoEventListener/CascadeSaveMongoEventListener.java</url>
-          <line>59</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/holiday/HolidayService.java</url>
-          <line>122</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/holiday/HolidayService.java</url>
-          <line>124</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
