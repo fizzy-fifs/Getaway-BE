@@ -2,6 +2,7 @@ from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
+import traceback
 
 
 async def scrape(url: str):
@@ -24,11 +25,19 @@ async def scrape(url: str):
 
             content = extract_wanted_tags(soup)
 
+
+
+            print(content)
+
+
             results = remove_unnecessary_lines(content)
+
+            print("Results: ")
+            print(results)
 
             print("Scraping complete!")
         except Exception as e:
-            results = f"An error occurred: {e}"
+            results = f"An error occurred: {traceback.print_exc()}"
             print(results)
         await browser.close()
         return results
@@ -52,18 +61,20 @@ def remove_unnecessary_lines(content: str):
     return "".join(deduped_lines)
 
 
-def extract_wanted_tags(soup: BeautifulSoup, wanted_tags: list = ["span", "h1", "h2", "h3"]):
+def extract_wanted_tags(soup: BeautifulSoup, wanted_tags: list = ['div<class=" dir dir-ltr">', "h1", "h2", "h3", "span"]):
     text_parts = []
-    for tag in wanted_tags:
-        for element in soup.find_all(tag):
-            if element == 'a':
-                href = element.get('href')
-                if href:
-                    text_parts.append(f"{element.text} ({href})")
-                else:
-                    text_parts.append(element.text)
+
+    # print(soup.find("div", class_="dir dir-ltr"))
+
+    for element in soup.find_all("div", class_="dir dir-ltr"):
+        if element == 'a':
+            href = element.get('href')
+            if href:
+                text_parts.append(f"{element.text} ({href})")
             else:
                 text_parts.append(element.text)
+        else:
+            text_parts.append(element.text)
     return " ".join(text_parts)
 
 
