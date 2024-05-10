@@ -20,8 +20,6 @@ async def extract(content: str, **kwargs):
 
     prompt = "The 'link_to_rooms' property in the schema refers to the URL of the accommodation. It typically starts with www.airbnb.co.uk/rooms."
 
-    prompt_template = PromptTemplate(template=prompt)
-
     if 'schema_pydantic' in kwargs:
         response = create_extraction_chain_pydantic(pydantic_schema=kwargs['schema_pydantic'], llm=llm, ).run(content)
 
@@ -30,4 +28,4 @@ async def extract(content: str, **kwargs):
         return response_as_dict
 
     else:
-        return create_extraction_chain(schema=kwargs['schema'], llm=llm, verbose=True, prompt=prompt_template).run(content)
+        return create_extraction_chain(schema=kwargs['schema'], llm=llm, verbose=True).run(content)

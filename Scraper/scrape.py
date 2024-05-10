@@ -25,10 +25,7 @@ async def scrape(url: str):
 
             content = extract_wanted_tags(soup)
 
-
-
             print(content)
-
 
             results = remove_unnecessary_lines(content)
 
