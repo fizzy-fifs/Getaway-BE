@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Complete structure reset">
+    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Little adjustments">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -157,14 +156,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1693213386150</updated>
-    </task>
-    <task id="LOCAL-00033" summary="Change dateJoined implementation">
-      <option name="closed" value="true" />
-      <created>1695273508489</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1695273508489</updated>
     </task>
     <task id="LOCAL-00034" summary="Remove dob property">
       <option name="closed" value="true" />
@@ -550,7 +541,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727429838852</updated>
     </task>
-    <option name="localTasksCounter" value="82" />
+    <task id="LOCAL-00082" summary="Little adjustments">
+      <option name="closed" value="true" />
+      <created>1727477911196</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1727477911196</updated>
+    </task>
+    <option name="localTasksCounter" value="83" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -565,7 +564,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fix bug in send friend request endpoint" />
     <MESSAGE value="Endpoint to unblock a user" />
     <MESSAGE value="Debugging 2" />
     <MESSAGE value="Still Debugging 3" />
@@ -590,7 +588,8 @@
     <MESSAGE value="WIP Crawler for AirBnB" />
     <MESSAGE value="WIP Scraper for AirBnB" />
     <MESSAGE value="Complete structure reset" />
-    <option name="LAST_COMMIT_MESSAGE" value="Complete structure reset" />
+    <MESSAGE value="Little adjustments" />
+    <option name="LAST_COMMIT_MESSAGE" value="Little adjustments" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

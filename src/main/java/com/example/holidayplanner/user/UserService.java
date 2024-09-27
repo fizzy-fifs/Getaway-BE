@@ -335,7 +335,7 @@ public class UserService {
 
         assert friend != null;
         if (!friendRequests.contains(friend.getId())) {
-            return ResponseEntity.badRequest().body("Friend Request does not exist");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Friend request does not exist");
         }
 
 
