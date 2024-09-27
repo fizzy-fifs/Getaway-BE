@@ -4,7 +4,102 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="WIP Scraper for AirBnB" />
+    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="WIP Scraper for AirBnB">
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/.github/workflows/main_holidayplannermonolith.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/.mvn/wrapper/MavenWrapperDownloader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/docker-compose.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/GetawayApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/availableDates/AvailableDates.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/availableDates/AvailableDatesConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/availableDates/AvailableDatesController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/availableDates/AvailableDatesRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/availableDates/AvailableDatesService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/budget/Budget.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/budget/BudgetConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/budget/BudgetController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/budget/BudgetRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/budget/BudgetService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/config/MyUserDetailsService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/config/PasswordEncoderTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/config/SecurityConfigurer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/config/SwaggerConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/config/cascadeSaveMongoEventListener/CascadeSave.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/config/cascadeSaveMongoEventListener/CascadeSaveMongoEventListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/config/jwt/AuthenticationRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/config/jwt/AuthenticationResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/config/jwt/JwtRequestFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/config/jwt/JwtUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/config/jwt/token/Token.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/config/jwt/token/TokenConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/config/jwt/token/TokenController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/config/jwt/token/TokenRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/config/jwt/token/TokenService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/config/mongoConfiguration/MongoConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/config/mongoConfiguration/MongoShutdownHook.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/crawler/Crawler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/crawler/Scraper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/feedback/Feedback.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/feedback/FeedbackController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/feedback/FeedbackRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/feedback/FeedbackService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/group/Group.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/group/GroupConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/group/GroupController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/group/GroupRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/group/GroupService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/group/reportGroup/ReportGroup.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/group/reportGroup/ReportGroupRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/groupInvite/GroupInvite.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/groupInvite/GroupInviteConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/groupInvite/GroupInviteController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/groupInvite/GroupInviteRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/groupInvite/GroupInviteService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/helpers/Helper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/holiday/Holiday.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/holiday/HolidayController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/holiday/HolidayCreationRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/holiday/HolidayRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/holiday/HolidayService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/holidayInvite/HolidayInvite.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/holidayInvite/HolidayInviteController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/holidayInvite/HolidayInviteRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/holidayInvite/HolidayInviteService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/holidayPreferences/HolidayPreferencesController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/holidayPreferences/HolidayPreferencesCreationRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/holidayPreferences/HolidayPreferencesService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/scheduler/Scheduler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/scheduler/SchedulingConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/scraper/Scraper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/user/SetupDataLoader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/user/User.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/user/UserConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/user/UserController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/user/UserRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/user/UserService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/user/privilege/Privilege.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/user/privilege/PrivilegeRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/user/reportUser/ReportUser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/user/reportUser/ReportUserRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/user/role/Role.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/user/role/RoleRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/user/userDeactivationRequest/UserDeactivationRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/user/userDeactivationRequest/UserDeactivationRequestRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/userLookupModel/UserLookupModel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/test/java/com/example/holidayplanner/GetawayApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/test/java/com/example/holidayplanner/group/GroupTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/src/test/java/com/example/holidayplanner/holiday/HolidayTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Getaway/system.properties" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -46,12 +141,13 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.Main.executor": "Debug",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "monorepo-setup",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
+    "git-widget-placeholder": "main",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
     "settings.editor.selected.configurable": "preferences.editor.code.editing"
   }
 }]]></component>
@@ -75,14 +171,16 @@
       </method>
     </configuration>
     <configuration name="Main" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="openjdk-20" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <envs>
         <env name="DATABASE_NAME" value="HolidayPlannerLocalDB" />
         <env name="MONGODB_CONNECTION_STRING" value="mongodb://localhost:27017/HolidayPlannerLocalDB" />
         <env name="MONGODB_PASSWORD" value="holidayplanner" />
         <env name="MONGODB_USERNAME" value="Fifolu" />
       </envs>
-      <option name="MAIN_CLASS_NAME" value="com.example.holidayplanner.HolidayPlannerApplication" />
-      <module name="holiday-planner" />
+      <option name="MAIN_CLASS_NAME" value="com.example.holidayplanner.GetawayApplication" />
+      <module name="Getaway-BE" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -113,6 +211,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.Main" />
+      <item itemvalue="Application.Crawler" />
+      <item itemvalue="Application.Scraper" />
+      <item itemvalue="Application.com.example.holidayplanner.scraper.Scraper" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.com.example.holidayplanner.scraper.Scraper" />
