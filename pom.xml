@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>holiday-planner</artifactId>
+	<artifactId>Getaway-BE</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>holiday-planner</name>
 	<description>Holiday Planner</description>
