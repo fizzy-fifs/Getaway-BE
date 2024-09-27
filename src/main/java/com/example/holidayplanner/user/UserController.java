@@ -2,6 +2,7 @@ package com.example.holidayplanner.user;
 
 import com.example.holidayplanner.scheduler.Scheduler;
 import com.example.holidayplanner.user.reportUser.ReportUser;
+import com.example.holidayplanner.userLookupModel.UserLookupModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -107,8 +108,8 @@ public class UserController {
 
     @PostMapping(path = "/findmultiplebyphonenumberoremail")
     @Operation(summary = "Find multiple users by their phone numbers or email addresses")
-    public ResponseEntity findMultipleByPhoneNumberOrEmail(@RequestBody Map<String, List<String>> phoneNumbersAndEmails) throws JsonProcessingException {
-        return userService.findMultipleByPhoneNumberOrEmail(phoneNumbersAndEmails);
+    public ResponseEntity findMultipleByPhoneNumberOrEmail(@RequestBody UserLookupModel userLookupModel) throws JsonProcessingException {
+        return userService.findMultipleByPhoneNumberOrEmail(userLookupModel);
     }
 
     @GetMapping(path = "/search/{searchTerm}/{userId}")
@@ -125,8 +126,12 @@ public class UserController {
 
     @PutMapping(path = "/{userId}")
     @Operation(summary = "Update user details")
-    public String update(@PathVariable("userId") String userId, @RequestBody User newUserInfo) {
-        return userService.update(userId, newUserInfo);
+    public ResponseEntity<String> update(@PathVariable("userId") String userId, @RequestBody @Valid User newUserInfo, Errors errors) {
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest().body(errors.getAllErrors().get(0).getDefaultMessage());
+        }
+
+        return userService.updateUserDetails(userId, newUserInfo);
     }
 
     @GetMapping(path = "/updateuserproperties")

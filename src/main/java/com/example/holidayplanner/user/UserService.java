@@ -71,10 +71,6 @@ public class UserService {
     @Autowired
     private final ReportUserRepository reportUserRepository;
 
-    private final int pageNumber = 0;
-
-    private final int pageSize = 10;
-
     @Autowired
     public UserService(UserRepository userRepository, RoleRepository roleRepository, MyUserDetailsService myUserDetailsService, JwtUtil jwtTokenUtil, TokenService tokenService, AuthenticationManager authenticationManager, MongoTemplate mongoTemplate, UserDeactivationRequestRepository userDeactivationRequestRepository, ReportUserRepository reportUserRepository) {
         this.userRepository = userRepository;
@@ -199,7 +195,7 @@ public class UserService {
 
     }
 
-    public ResponseEntity logout(String userId) {
+    public ResponseEntity<String> logout(String userId) {
         User user = userRepository.findById(new ObjectId(userId));
 
         if (user == null) {
@@ -215,13 +211,13 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public String update(String userId, User newUserInfo) {
+    public ResponseEntity<String> updateUserDetails(String userId, User newUserInfo) {
         ObjectId userIdToObjectId = new ObjectId(userId);
 
         User currentUserInfo = userRepository.findById(userIdToObjectId);
 
         if (currentUserInfo == null) {
-            return "user with id " + userId + " does not exists";
+            return ResponseEntity.badRequest().body("user with id " + userId + " does not exists");
         }
 
         currentUserInfo.setFirstName(newUserInfo.getFirstName());
@@ -230,7 +226,7 @@ public class UserService {
         currentUserInfo.setPassword(newUserInfo.getPassword());
 
         userRepository.save(currentUserInfo);
-        return "User has been successfully updated";
+        return ResponseEntity.ok("User has been successfully updated");
     }
 
     public ResponseEntity<String> deactivateUserAccount(String userId) {
@@ -257,7 +253,7 @@ public class UserService {
     }
 
 
-    public ResponseEntity<Object> sendFriendRequest(String userId, String allegedFriendId) {
+    public ResponseEntity<String> sendFriendRequest(String userId, String allegedFriendId) {
 
         ArrayList<User> users;
 
@@ -350,7 +346,7 @@ public class UserService {
         //Remove the request from the friendRequest list, friendRequestSent list and save to db
         friendRequests.remove(friendId);
         friend.removeFromFreindRequestsSent(principal.getId());
-        List<User> savedUsers = userRepository.saveAll(Arrays.asList(principal, friend));
+        userRepository.saveAll(Arrays.asList(principal, friend));
 
         return ResponseEntity.ok("You are now friends with " + friend.getFirstName());
     }
@@ -408,13 +404,11 @@ public class UserService {
         return ResponseEntity.ok(savedUserJson);
     }
 
-    public ResponseEntity<String> findMultipleByPhoneNumberOrEmail(Map<String, List<String>> phoneNumbersAndEmails /*TODO: Replace Map with UserLookupModel */) throws JsonProcessingException, IllegalArgumentException {
+    public ResponseEntity<String> findMultipleByPhoneNumberOrEmail(UserLookupModel userLookupModel) throws JsonProcessingException, IllegalArgumentException {
         Set<User> users;
 
         try {
-            UserLookupModel userLookup = mapper.convertValue(phoneNumbersAndEmails, UserLookupModel.class);
-
-            Criteria[] phoneNumbersCriteria = getLastDigitsOfPhoneNumbersRegex(userLookup.getPhoneNumbers()).stream()
+            Criteria[] phoneNumbersCriteria = getLastDigitsOfPhoneNumbersRegex(userLookupModel.getPhoneNumbers()).stream()
                     .map(regex -> Criteria.where("phoneNumber").regex(regex, "i"))
                     .toArray(Criteria[]::new);
 
@@ -422,7 +416,7 @@ public class UserService {
             Query query = new Query(orCriteria);
 
             var usersFoundFromPhoneNumbers = mongoTemplate.find(query, User.class);
-            var usersFoundFromEmails = userRepository.findByEmailIn(userLookup.getEmails());
+            var usersFoundFromEmails = userRepository.findByEmailIn(userLookupModel.getEmails());
 
            users = new HashSet<>(usersFoundFromPhoneNumbers);
 
@@ -435,23 +429,6 @@ public class UserService {
         String usersJson = mapper.writeValueAsString(users);
         return ResponseEntity.ok(usersJson);
     }
-
-    private static List<String> getLastDigitsOfPhoneNumbersRegex(List<String> phoneNumbers) {
-        List<String> lastDigitsOfPhoneNumbersRegex = new ArrayList<>();
-
-        for (String phoneNumber : phoneNumbers) {
-            var normalizedPhoneNumber = phoneNumber.replaceAll("[^0-9]", "");
-
-            if (normalizedPhoneNumber.length() < 7) continue;
-
-            var lastDigits = normalizedPhoneNumber.substring(normalizedPhoneNumber.length() - 7);
-            lastDigits = "^.*" + lastDigits + "$";
-
-            lastDigitsOfPhoneNumbersRegex.add(lastDigits);
-        }
-        return lastDigitsOfPhoneNumbersRegex;
-    }
-
 
     public ResponseEntity<Object> search(String searchTerm, String userId) {
         User user = userRepository.findById(new ObjectId(userId));
@@ -479,6 +456,7 @@ public class UserService {
 
         searchQuery.addCriteria(criteria);
         int pageSize = 10;
+        int pageNumber = 0;
         searchQuery.with(PageRequest.of(pageNumber, pageSize));
 
 
@@ -489,7 +467,7 @@ public class UserService {
         return ResponseEntity.ok(users);
     }
 
-    public ResponseEntity findById(String id) throws JsonProcessingException {
+    public ResponseEntity<String> findById(String id) throws JsonProcessingException {
 
         User user = userRepository.findById(new ObjectId(id));
 
@@ -501,7 +479,7 @@ public class UserService {
         return ResponseEntity.ok(userJson);
     }
 
-    public ResponseEntity findMultipleById(List<String> userIds) throws JsonProcessingException {
+    public ResponseEntity<String> findMultipleById(List<String> userIds) throws JsonProcessingException {
         if (userIds.isEmpty()) {
             return ResponseEntity.badRequest().body("No ids provided");
         }
@@ -517,7 +495,7 @@ public class UserService {
         return ResponseEntity.ok(usersJson);
     }
 
-    public ResponseEntity saveDeviceToken(String userId, String deviceToken) {
+    public ResponseEntity<String> saveDeviceToken(String userId, String deviceToken) {
         User user = userRepository.findById(new ObjectId(userId));
 
         if (user == null) {
@@ -683,6 +661,22 @@ public class UserService {
 
         userRepository.saveAll(Arrays.asList(authenticatedUser, blockedUser));
         return ResponseEntity.ok("You have unblocked " + blockedUser.getUserName());
+    }
+
+    private List<String> getLastDigitsOfPhoneNumbersRegex(List<String> phoneNumbers) {
+        List<String> lastDigitsOfPhoneNumbersRegex = new ArrayList<>();
+
+        for (String phoneNumber : phoneNumbers) {
+            var normalizedPhoneNumber = phoneNumber.replaceAll("[^0-9]", "");
+
+            if (normalizedPhoneNumber.length() < 7) continue;
+
+            var lastDigits = normalizedPhoneNumber.substring(normalizedPhoneNumber.length() - 7);
+            lastDigits = "^.*" + lastDigits + "$";
+
+            lastDigitsOfPhoneNumbersRegex.add(lastDigits);
+        }
+        return lastDigitsOfPhoneNumbersRegex;
     }
 
     private boolean emailExists(User user) {
