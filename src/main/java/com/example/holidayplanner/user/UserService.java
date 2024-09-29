@@ -223,7 +223,12 @@ public class UserService {
         currentUserInfo.setFirstName(newUserInfo.getFirstName());
         currentUserInfo.setLastName(newUserInfo.getLastName());
         currentUserInfo.setEmail(newUserInfo.getEmail());
-        currentUserInfo.setPassword(newUserInfo.getPassword());
+
+        var newEncodedPassword = this.passwordEncoder.encode(newUserInfo.getPassword());
+
+        if (!Objects.equals(newEncodedPassword, currentUserInfo.getPassword())) {
+            currentUserInfo.setPassword(newEncodedPassword);
+        }
 
         userRepository.save(currentUserInfo);
         return ResponseEntity.ok("User has been successfully updated");

@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Little adjustments">
+    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Return 404 when tries to accept a friend request that does not exist">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserService.java" afterDir="false" />
     </list>
@@ -156,14 +156,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1693213386150</updated>
-    </task>
-    <task id="LOCAL-00034" summary="Remove dob property">
-      <option name="closed" value="true" />
-      <created>1695278787854</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1695278787854</updated>
     </task>
     <task id="LOCAL-00035" summary="Create user account deactivation mechanism (WIP)">
       <option name="closed" value="true" />
@@ -549,7 +541,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727477911196</updated>
     </task>
-    <option name="localTasksCounter" value="83" />
+    <task id="LOCAL-00083" summary="Return 404 when tries to accept a friend request that does not exist">
+      <option name="closed" value="true" />
+      <created>1727479141195</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1727479141195</updated>
+    </task>
+    <option name="localTasksCounter" value="84" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -564,7 +564,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Endpoint to unblock a user" />
     <MESSAGE value="Debugging 2" />
     <MESSAGE value="Still Debugging 3" />
     <MESSAGE value="Debugging 5" />
@@ -589,35 +588,26 @@
     <MESSAGE value="WIP Scraper for AirBnB" />
     <MESSAGE value="Complete structure reset" />
     <MESSAGE value="Little adjustments" />
-    <option name="LAST_COMMIT_MESSAGE" value="Little adjustments" />
+    <MESSAGE value="Return 404 when tries to accept a friend request that does not exist" />
+    <option name="LAST_COMMIT_MESSAGE" value="Return 404 when tries to accept a friend request that does not exist" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/config/cascadeSaveMongoEventListener/CascadeSaveMongoEventListener.java</url>
           <line>59</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/holiday/HolidayService.java</url>
           <line>122</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/holiday/HolidayService.java</url>
           <line>124</line>
           <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserController.java</url>
-          <line>133</line>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserController.java</url>
-          <line>123</line>
-          <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
