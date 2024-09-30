@@ -1,6 +1,5 @@
 package com.example.holidayplanner.user;
 
-;
 import com.example.holidayplanner.user.role.Role;
 import com.fasterxml.jackson.annotation.*;
 import lombok.Data;

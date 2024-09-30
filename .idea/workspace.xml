@@ -4,17 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Implement rate limits per second per ip">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/config/rateLimit/RateLimitConfig.java" afterDir="false" />
+    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="1. Remove findAll endpoint 2. Create IpRateLimiter bean">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/config/WebConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/config/rateLimitConfig/IpRateLimiter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/config/rateLimit/IpRateLimiter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/config/rateLimitConfig/RateLimitInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/config/rateLimit/RateLimitInterceptor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/config/rateLimitConfig/RateLimiter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/config/rateLimit/RateLimiter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/config/rateLimit/IpRateLimiter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/config/rateLimit/IpRateLimiter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/config/rateLimit/RateLimitInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/config/rateLimit/RateLimitInterceptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -164,14 +158,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1693213386150</updated>
-    </task>
-    <task id="LOCAL-00037" summary="Fix bug in deactivate user account endpoint">
-      <option name="closed" value="true" />
-      <created>1695666445517</created>
-      <option name="number" value="00037" />
-      <option name="presentableId" value="LOCAL-00037" />
-      <option name="project" value="LOCAL" />
-      <updated>1695666445517</updated>
     </task>
     <task id="LOCAL-00038" summary="Return correct status code">
       <option name="closed" value="true" />
@@ -557,7 +543,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727703614891</updated>
     </task>
-    <option name="localTasksCounter" value="86" />
+    <task id="LOCAL-00086" summary="1. Remove findAll endpoint 2. Create IpRateLimiter bean">
+      <option name="closed" value="true" />
+      <created>1727704226979</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1727704226979</updated>
+    </task>
+    <option name="localTasksCounter" value="87" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -572,7 +566,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Debugging 5" />
     <MESSAGE value="Debugging 6" />
     <MESSAGE value="Query with last digits or email." />
     <MESSAGE value="Skip number less than 7 digits" />
@@ -597,7 +590,8 @@
     <MESSAGE value="Return 404 when tries to accept a friend request that does not exist" />
     <MESSAGE value="Hash password when user updates their password." />
     <MESSAGE value="Implement rate limits per second per ip" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implement rate limits per second per ip" />
+    <MESSAGE value="1. Remove findAll endpoint 2. Create IpRateLimiter bean" />
+    <option name="LAST_COMMIT_MESSAGE" value="1. Remove findAll endpoint 2. Create IpRateLimiter bean" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
