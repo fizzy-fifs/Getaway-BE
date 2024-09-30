@@ -356,7 +356,7 @@ public class UserService {
         List<User> users;
 
         try {
-            users = (List<User>) userRepository.findAllById(Arrays.asList(userWhoSentRequestId, userWhoReceivedRequestId)); //Returns Iterable list of users in random order
+            users = userRepository.findAllById(Arrays.asList(userWhoSentRequestId, userWhoReceivedRequestId)); //Returns Iterable list of users in random order
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid Id");
         }
@@ -383,7 +383,7 @@ public class UserService {
         List<User> users;
 
         try {
-            users = (List<User>) userRepository.findAllById(Arrays.asList(userId, friendId)); //Returns Iterable list of users in random order
+            users = userRepository.findAllById(Arrays.asList(userId, friendId)); //Returns Iterable list of users in random order
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid Id");
         }
@@ -418,7 +418,7 @@ public class UserService {
             var usersFoundFromPhoneNumbers = mongoTemplate.find(query, User.class);
             var usersFoundFromEmails = userRepository.findByEmailIn(userLookupModel.getEmails());
 
-           users = new HashSet<>(usersFoundFromPhoneNumbers);
+            users = new HashSet<>(usersFoundFromPhoneNumbers);
 
             users.addAll(usersFoundFromEmails);
 
@@ -484,7 +484,7 @@ public class UserService {
             return ResponseEntity.badRequest().body("No ids provided");
         }
 
-        List<User> users = (List<User>) userRepository.findAllById(userIds);
+        List<User> users = userRepository.findAllById(userIds);
 
         if (users.isEmpty()) {
             return ResponseEntity.badRequest().body("No users found");
@@ -521,7 +521,7 @@ public class UserService {
             return ResponseEntity.badRequest().body("You cannot report yourself");
         }
 
-        List<User> users = (List<User>) userRepository.findAllById(Arrays.asList(reportUser.getUserToReport().getId(), reportUser.getUserReporting().getId()));
+        List<User> users = userRepository.findAllById(Arrays.asList(reportUser.getUserToReport().getId(), reportUser.getUserReporting().getId()));
 
         if (users.size() != 2) {
             return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid");
@@ -587,7 +587,7 @@ public class UserService {
             return ResponseEntity.badRequest().body("User id cannot be null or empty");
         }
 
-        List<User> users = (List<User>) userRepository.findAllById(Arrays.asList(authenticatedUserId, userId));
+        List<User> users = userRepository.findAllById(Arrays.asList(authenticatedUserId, userId));
 
         if (users.size() != 2) {
             return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid");
@@ -631,7 +631,7 @@ public class UserService {
             return ResponseEntity.badRequest().body("User id cannot be null or empty");
         }
 
-        List<User> users = (List<User>) userRepository.findAllById(Arrays.asList(authenticatedUserId, blockedUserId));
+        List<User> users = userRepository.findAllById(Arrays.asList(authenticatedUserId, blockedUserId));
 
         if (users.size() != 2) {
             return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid");
