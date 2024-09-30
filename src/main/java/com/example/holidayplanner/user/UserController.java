@@ -57,12 +57,6 @@ public class UserController {
         return userService.logout(userId);
     }
 
-    @GetMapping
-    @Operation(summary = "Get a list of all users")
-    public List<User> getAll() {
-        return userService.getAll();
-    }
-
 
     @GetMapping(path = "deactivate/{userId}")
     @Operation(summary = "Deactivate a user's account")

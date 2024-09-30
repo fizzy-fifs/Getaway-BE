@@ -1,13 +1,9 @@
 package com.example.holidayplanner.user;
 
-import com.example.holidayplanner.scheduler.Scheduler;
 import com.example.holidayplanner.userLookupModel.UserLookupModel;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoDatabase;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.core.MongoTemplate;
 
 
 @Configuration

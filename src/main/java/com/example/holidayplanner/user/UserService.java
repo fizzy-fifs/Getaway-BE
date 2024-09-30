@@ -207,10 +207,6 @@ public class UserService {
         return ResponseEntity.ok("You have been logged out");
     }
 
-    public List<User> getAll() {
-        return userRepository.findAll();
-    }
-
     public ResponseEntity<String> updateUserDetails(String userId, User newUserInfo) {
         ObjectId userIdToObjectId = new ObjectId(userId);
 

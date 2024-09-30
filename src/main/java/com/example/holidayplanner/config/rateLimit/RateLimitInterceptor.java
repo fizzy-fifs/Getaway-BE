@@ -1,4 +1,4 @@
-package com.example.holidayplanner.config.rateLimitConfig;
+package com.example.holidayplanner.config.rateLimit;
 
 import io.github.bucket4j.Bucket;
 import jakarta.servlet.http.HttpServletRequest;

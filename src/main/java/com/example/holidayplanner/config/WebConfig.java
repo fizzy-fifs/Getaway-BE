@@ -1,6 +1,6 @@
 package com.example.holidayplanner.config;
 
-import com.example.holidayplanner.config.rateLimitConfig.RateLimitInterceptor;
+import com.example.holidayplanner.config.rateLimit.RateLimitInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
