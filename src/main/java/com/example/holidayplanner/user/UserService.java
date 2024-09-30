@@ -255,7 +255,6 @@ public class UserService {
 
 
     public ResponseEntity<String> sendFriendRequest(String userId, String allegedFriendId) {
-        /*ToDo: Stop friend request from being sent to the same user multiple times*/
         ArrayList<User> users;
 
         try {
@@ -288,7 +287,7 @@ public class UserService {
             return ResponseEntity.badRequest().body("You have been blocked by " + allegedFriend.getFirstName() + ". You cannot send a friend request to this user");
         }
 
-        if (allegedFriend.getFriendRequestsSent().contains(principal.getId())) {
+        if (allegedFriend.getFriendRequests().contains(principal.getId())) {
             return ResponseEntity.badRequest().body("You have already sent a friend request to " + allegedFriend.getFirstName());
         }
 

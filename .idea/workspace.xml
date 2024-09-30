@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="1. Remove findAll endpoint 2. Create IpRateLimiter bean">
+    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Send user-friendly error message when user hits rate limit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/config/rateLimit/IpRateLimiter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/config/rateLimit/IpRateLimiter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/config/rateLimit/RateLimitInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/config/rateLimit/RateLimitInterceptor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -158,14 +156,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1693213386150</updated>
-    </task>
-    <task id="LOCAL-00038" summary="Return correct status code">
-      <option name="closed" value="true" />
-      <created>1695669672316</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1695669672316</updated>
     </task>
     <task id="LOCAL-00039" summary="Change error message">
       <option name="closed" value="true" />
@@ -551,7 +541,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727704226979</updated>
     </task>
-    <option name="localTasksCounter" value="87" />
+    <task id="LOCAL-00087" summary="Send user-friendly error message when user hits rate limit">
+      <option name="closed" value="true" />
+      <created>1727706033983</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1727706033983</updated>
+    </task>
+    <option name="localTasksCounter" value="88" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -566,7 +564,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Debugging 6" />
     <MESSAGE value="Query with last digits or email." />
     <MESSAGE value="Skip number less than 7 digits" />
     <MESSAGE value="Fix error with query" />
@@ -591,7 +588,8 @@
     <MESSAGE value="Hash password when user updates their password." />
     <MESSAGE value="Implement rate limits per second per ip" />
     <MESSAGE value="1. Remove findAll endpoint 2. Create IpRateLimiter bean" />
-    <option name="LAST_COMMIT_MESSAGE" value="1. Remove findAll endpoint 2. Create IpRateLimiter bean" />
+    <MESSAGE value="Send user-friendly error message when user hits rate limit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Send user-friendly error message when user hits rate limit" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -610,6 +608,11 @@
           <url>file://$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/holiday/HolidayService.java</url>
           <line>124</line>
           <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserService.java</url>
+          <line>290</line>
+          <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
