@@ -259,7 +259,7 @@ public class UserService {
 
 
     public ResponseEntity<String> sendFriendRequest(String userId, String allegedFriendId) {
-
+        /*ToDo: Stop friend request from being sent to the same user multiple times*/
         ArrayList<User> users;
 
         try {
