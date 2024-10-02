@@ -88,13 +88,8 @@ public class UserService {
 
     public ResponseEntity<Object> create(User user) throws JsonProcessingException {
 
-        //Check if email is already registered
-        if (emailExists(user)) {
-            return ResponseEntity.badRequest().body("Email already exists");
-        }
-
-        //Check if username already exists
-        if (userNameExists(user)) {
+        //Check if email of username already exists
+        if (emailOrUsernameExists(user.getEmail(), user.getUserName())) {
             return ResponseEntity.badRequest().body("Username is already taken.");
         }
 
@@ -679,13 +674,7 @@ public class UserService {
         return lastDigitsOfPhoneNumbersRegex;
     }
 
-    private boolean emailExists(User user) {
-        User findUser = userRepository.findByEmail(user.getEmail());
-        return findUser != null;
-    }
-
-    private boolean userNameExists(User user) {
-        User findUser = userRepository.findByUserName(user.getUserName().toLowerCase());
-        return findUser != null;
+    private boolean emailOrUsernameExists(String email, String userName) {
+        return userRepository.existsByEmailOrUserName(email, userName);
     }
 }
