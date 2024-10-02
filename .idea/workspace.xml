@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Remove redundant castings">
+    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Optimise username and email exists checks">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -160,14 +159,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1693213386150</updated>
-    </task>
-    <task id="LOCAL-00041" summary="Ednpoint to report a user">
-      <option name="closed" value="true" />
-      <created>1695903544608</created>
-      <option name="number" value="00041" />
-      <option name="presentableId" value="LOCAL-00041" />
-      <option name="project" value="LOCAL" />
-      <updated>1695903544608</updated>
     </task>
     <task id="LOCAL-00042" summary="Send deactivation request object if a user that has requested account deletions attempts to sign in.">
       <option name="closed" value="true" />
@@ -553,7 +544,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727707132315</updated>
     </task>
-    <option name="localTasksCounter" value="90" />
+    <task id="LOCAL-00090" summary="Optimise username and email exists checks">
+      <option name="closed" value="true" />
+      <created>1727888594040</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1727888594041</updated>
+    </task>
+    <option name="localTasksCounter" value="91" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -568,7 +567,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fix error with query" />
     <MESSAGE value="Debugging 1" />
     <MESSAGE value="Debugging 3" />
     <MESSAGE value="Debugging 4" />
@@ -593,7 +591,8 @@
     <MESSAGE value="Send user-friendly error message when user hits rate limit" />
     <MESSAGE value="Fix bug that allows the same friend request to be sent multiple times." />
     <MESSAGE value="Remove redundant castings" />
-    <option name="LAST_COMMIT_MESSAGE" value="Remove redundant castings" />
+    <MESSAGE value="Optimise username and email exists checks" />
+    <option name="LAST_COMMIT_MESSAGE" value="Optimise username and email exists checks" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -615,7 +614,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserService.java</url>
-          <line>284</line>
+          <line>290</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>

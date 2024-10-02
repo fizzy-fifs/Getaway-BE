@@ -13,6 +13,7 @@ import com.example.holidayplanner.user.userDeactivationRequest.UserDeactivationR
 import com.example.holidayplanner.userLookupModel.UserLookupModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.DuplicateKeyException;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -88,11 +89,6 @@ public class UserService {
 
     public ResponseEntity<Object> create(User user) throws JsonProcessingException {
 
-        //Check if email of username already exists
-        if (emailOrUsernameExists(user.getEmail(), user.getUserName())) {
-            return ResponseEntity.badRequest().body("Username is already taken.");
-        }
-
         user.setFirstName(Helper.toSentenceCase(user.getFirstName()));
         user.setLastName(Helper.toSentenceCase(user.getLastName()));
         user.setUserName(user.getUserName().toLowerCase());
@@ -107,34 +103,44 @@ public class UserService {
         user.setPassword(encodedPassword);
         user.setRoles(Collections.singletonList(roleRepository.findByName("ROLE_USER")));
 
-        //Insert user in DB
-        User savedUser = userRepository.insert(user);
+        try {
+            //Insert user in DB
+            User savedUser = userRepository.insert(user);
 
-        //Generate JWT
-        final UserDetails userDetails = myUserDetailsService.loadUserByUsername(user.getEmail());
-        final String accessToken = jwtTokenUtil.generateAccessToken(userDetails);
-        final String refreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
+            //Generate JWT
+            final UserDetails userDetails = myUserDetailsService.loadUserByUsername(user.getEmail());
+            final String accessToken = jwtTokenUtil.generateAccessToken(userDetails);
+            final String refreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
 
-        Token token = new Token();
-        token.setOwner(savedUser);
-        token.setAccessToken(accessToken);
-        token.setAccessTokenExpiration(jwtTokenUtil.extractExpiration(accessToken));
-        token.setRefreshToken(refreshToken);
-        token.setRefreshTokenExpiration(jwtTokenUtil.extractExpiration(refreshToken));
+            Token token = new Token();
+            token.setOwner(savedUser);
+            token.setAccessToken(accessToken);
+            token.setAccessTokenExpiration(jwtTokenUtil.extractExpiration(accessToken));
+            token.setRefreshToken(refreshToken);
+            token.setRefreshTokenExpiration(jwtTokenUtil.extractExpiration(refreshToken));
 
-        tokenService.saveToken(token);
+            tokenService.saveToken(token);
 
-        //Put JWT and created user object in a map and send response
-        Map<String, Object> responseData = new HashMap<>();
+            //Put JWT and created user object in a map and send response
+            Map<String, Object> responseData = new HashMap<>();
 
-        //Convert user object to json
-        String userJson = mapper.writeValueAsString(savedUser);
+            //Convert user object to json
+            String userJson = mapper.writeValueAsString(savedUser);
 
-        responseData.put("user", userJson);
-        responseData.put("accessToken", accessToken);
-        responseData.put("refreshToken", refreshToken);
+            responseData.put("user", userJson);
+            responseData.put("accessToken", accessToken);
+            responseData.put("refreshToken", refreshToken);
 
-        return ResponseEntity.ok(responseData);
+            return ResponseEntity.ok(responseData);
+        } catch (DuplicateKeyException dke) {
+            if (dke.getMessage().contains("email")) {
+                return ResponseEntity.badRequest().body("Email already exists");
+            } else if (dke.getMessage().contains("userName")) {
+                return ResponseEntity.badRequest().body("Username is already taken");
+            } else {
+                return ResponseEntity.badRequest().body("Duplicate key error");
+            }
+        }
     }
 
     @Transactional
