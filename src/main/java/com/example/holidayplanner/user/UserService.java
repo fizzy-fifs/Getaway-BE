@@ -13,7 +13,6 @@ import com.example.holidayplanner.user.userDeactivationRequest.UserDeactivationR
 import com.example.holidayplanner.userLookupModel.UserLookupModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.DuplicateKeyException;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -132,10 +131,10 @@ public class UserService {
             responseData.put("refreshToken", refreshToken);
 
             return ResponseEntity.ok(responseData);
-        } catch (DuplicateKeyException dke) {
-            if (dke.getMessage().contains("email")) {
+        } catch (Exception e) {
+            if (e.getMessage().contains("email")) {
                 return ResponseEntity.badRequest().body("Email already exists");
-            } else if (dke.getMessage().contains("userName")) {
+            } else if (e.getMessage().contains("userName")) {
                 return ResponseEntity.badRequest().body("Username is already taken");
             } else {
                 return ResponseEntity.badRequest().body("Duplicate key error");

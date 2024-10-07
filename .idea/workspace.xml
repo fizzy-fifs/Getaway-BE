@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Optimise username and email exists checks">
+    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Catch possible DuplicateKeyExceptionThrown on insert">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,14 +160,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1693213386150</updated>
-    </task>
-    <task id="LOCAL-00042" summary="Send deactivation request object if a user that has requested account deletions attempts to sign in.">
-      <option name="closed" value="true" />
-      <created>1695904260646</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1695904260646</updated>
     </task>
     <task id="LOCAL-00043" summary="Change field name">
       <option name="closed" value="true" />
@@ -552,7 +545,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727888594041</updated>
     </task>
-    <option name="localTasksCounter" value="91" />
+    <task id="LOCAL-00091" summary="Catch possible DuplicateKeyExceptionThrown on insert">
+      <option name="closed" value="true" />
+      <created>1727891073681</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1727891073681</updated>
+    </task>
+    <option name="localTasksCounter" value="92" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -567,7 +568,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Debugging 1" />
     <MESSAGE value="Debugging 3" />
     <MESSAGE value="Debugging 4" />
     <MESSAGE value="Remove debug flags" />
@@ -592,7 +592,8 @@
     <MESSAGE value="Fix bug that allows the same friend request to be sent multiple times." />
     <MESSAGE value="Remove redundant castings" />
     <MESSAGE value="Optimise username and email exists checks" />
-    <option name="LAST_COMMIT_MESSAGE" value="Optimise username and email exists checks" />
+    <MESSAGE value="Catch possible DuplicateKeyExceptionThrown on insert" />
+    <option name="LAST_COMMIT_MESSAGE" value="Catch possible DuplicateKeyExceptionThrown on insert" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -614,8 +615,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserService.java</url>
-          <line>290</line>
+          <line>291</line>
           <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserService.java</url>
+          <line>108</line>
+          <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
