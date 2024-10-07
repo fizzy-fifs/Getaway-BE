@@ -13,4 +13,4 @@ RUN mvn clean install
 
 #Set entry point
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "target/holiday-planner-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "target/Getaway-BE-0.0.1-SNAPSHOT.jar"]

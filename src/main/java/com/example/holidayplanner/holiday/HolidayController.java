@@ -53,13 +53,13 @@ public class HolidayController {
 
     @GetMapping(path= "/acceptinvite/{holidayInviteId}/{userId}")
     @Operation(summary = "Accept a holiday invite")
-    public ResponseEntity<Object> acceptInvite(@PathVariable("holidayInviteId") String holidayInviteId, @PathVariable("userId") String userId) throws JsonProcessingException {
+    public ResponseEntity<Object> acceptInvite(@PathVariable("holidayInviteId") String holidayInviteId, @PathVariable("userId") String userId) {
         return holidayService.acceptInvite(holidayInviteId, userId);
     }
 
     @GetMapping(path= "/declineinvite/{holidayInviteId}/{userId}")
     @Operation(summary = "Decline a holiday invite")
-    public ResponseEntity<Object> declineInvite(@PathVariable("holidayInviteId") String holidayInviteId, @PathVariable("userId") String userId) {
+    public ResponseEntity declineInvite(@PathVariable("holidayInviteId") String holidayInviteId, @PathVariable("userId") String userId) {
         return holidayService.declineInvite(holidayInviteId, userId);
     }
 }
