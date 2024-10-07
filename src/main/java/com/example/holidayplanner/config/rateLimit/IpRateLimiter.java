@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class IpRateLimiter {
 
-    private final int TOKEN_LIMIT = 5;
+    private final int TOKEN_LIMIT = 10;
     private final Duration ONE_SECOND_DURATION = Duration.ofSeconds(1);
     private final Map<String, Bucket> inMemoryCache = new ConcurrentHashMap<String, Bucket>();
 

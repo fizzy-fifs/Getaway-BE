@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Catch correct Exception thrown on insert. Set MongoDB auto index creation to true">
+    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Update Dockerfile">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -161,14 +159,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1693213386150</updated>
-    </task>
-    <task id="LOCAL-00044" summary="Endpoint to reactivate user account">
-      <option name="closed" value="true" />
-      <created>1695914193271</created>
-      <option name="number" value="00044" />
-      <option name="presentableId" value="LOCAL-00044" />
-      <option name="project" value="LOCAL" />
-      <updated>1695914193271</updated>
     </task>
     <task id="LOCAL-00045" summary="Fix bug with deactivation request date.">
       <option name="closed" value="true" />
@@ -554,7 +544,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728316049148</updated>
     </task>
-    <option name="localTasksCounter" value="93" />
+    <task id="LOCAL-00093" summary="Update Dockerfile">
+      <option name="closed" value="true" />
+      <created>1728320350928</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1728320350928</updated>
+    </task>
+    <option name="localTasksCounter" value="94" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -569,7 +567,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Debugging 4" />
     <MESSAGE value="Remove debug flags" />
     <MESSAGE value="Endpoint to withdraw friend request" />
     <MESSAGE value="Change logic" />
@@ -594,7 +591,8 @@
     <MESSAGE value="Optimise username and email exists checks" />
     <MESSAGE value="Catch possible DuplicateKeyExceptionThrown on insert" />
     <MESSAGE value="Catch correct Exception thrown on insert. Set MongoDB auto index creation to true" />
-    <option name="LAST_COMMIT_MESSAGE" value="Catch correct Exception thrown on insert. Set MongoDB auto index creation to true" />
+    <MESSAGE value="Update Dockerfile" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update Dockerfile" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
