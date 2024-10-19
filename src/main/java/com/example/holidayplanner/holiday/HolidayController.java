@@ -29,7 +29,7 @@ public class HolidayController {
         return holidayService.create(holidayCreationRequest.getHoliday(), holidayCreationRequest.getBudget(), holidayCreationRequest.getAvailableDates());
     }
 
-    @GetMapping(path = "/removeholidaymaker/holiday={holidayId}&user={userId}")
+    @DeleteMapping(path = "/removeholidaymaker/holiday={holidayId}&user={userId}")
     public String removeHolidayMaker(@PathVariable("holidayId") String holidayId, @PathVariable("userId") String userId) {
         return holidayService.removeHolidayMaker(holidayId, userId);
     }
@@ -51,13 +51,13 @@ public class HolidayController {
         return holidayService.findById(holidayId);
     }
 
-    @GetMapping(path= "/acceptinvite/{holidayInviteId}/{userId}")
+    @PutMapping(path= "/acceptinvite/{holidayInviteId}/{userId}")
     @Operation(summary = "Accept a holiday invite")
     public ResponseEntity<Object> acceptInvite(@PathVariable("holidayInviteId") String holidayInviteId, @PathVariable("userId") String userId) {
         return holidayService.acceptInvite(holidayInviteId, userId);
     }
 
-    @GetMapping(path= "/declineinvite/{holidayInviteId}/{userId}")
+    @PutMapping(path= "/declineinvite/{holidayInviteId}/{userId}")
     @Operation(summary = "Decline a holiday invite")
     public ResponseEntity declineInvite(@PathVariable("holidayInviteId") String holidayInviteId, @PathVariable("userId") String userId) {
         return holidayService.declineInvite(holidayInviteId, userId);

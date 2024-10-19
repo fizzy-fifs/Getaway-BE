@@ -48,12 +48,12 @@ public class GroupController {
         return groupService.delete(groupId);
     }
 
-    @PostMapping(path = "/addmember/{groupId}")
+    @PutMapping(path = "/addmember/{groupId}")
     public ResponseEntity<Object> addGroupMember(@PathVariable("groupId") String groupId, @RequestBody String userId) {
         return groupService.addGroupMember(groupId, userId);
     }
 
-    @PostMapping(path = "/removemember/{groupId}")
+    @DeleteMapping(path = "/removemember/{groupId}")
     public String removeGroupMember(@PathVariable("groupId") String groupId, @RequestBody String userId){
         return groupService.removeGroupMember(groupId, userId);
     }
@@ -77,19 +77,19 @@ public class GroupController {
         return groupService.search(searchTerm, userId);
     }
 
-    @PostMapping(path = "/invite/{groupId}/{inviteeId}")
+    @PutMapping(path = "/invite/{groupId}/{inviteeId}")
     @Operation(summary = "Invite multiple users to a group")
     public ResponseEntity<Object> inviteUsers(@PathVariable("groupId") String groupId, @PathVariable("inviteeId") String inviteeId, @RequestBody List<String> userIds) throws JsonProcessingException {
         return groupService.inviteUsers(groupId, inviteeId, userIds);
     }
 
-    @PostMapping(path = "/acceptinvite/{groupInviteId}/{userId}")
+    @PutMapping(path = "/acceptinvite/{groupInviteId}/{userId}")
     @Operation(summary = "Accept an invitation to a group")
     public ResponseEntity<Object> acceptInvitation(@PathVariable("groupInviteId") String groupInviteId, @PathVariable String userId) throws JsonProcessingException {
         return groupService.acceptInvitation(groupInviteId, userId);
     }
 
-    @PostMapping(path = "/declineinvite/{groupInviteId}/{userId}")
+    @DeleteMapping(path = "/declineinvite/{groupInviteId}/{userId}")
     @Operation(summary = "Decline an invitation to a group")
     public ResponseEntity<Object> declineInvitation(@PathVariable("groupInviteId") String groupInviteId, @PathVariable String userId) throws JsonProcessingException {
         return groupService.declineInvitation(groupInviteId, userId);

@@ -76,13 +76,13 @@ public class UserController {
         return userService.acceptFriendRequest(userId, friendId);
     }
 
-    @GetMapping(path = "/declinefriendrequest/{userId}/{friendId}")
+    @DeleteMapping(path = "/declinefriendrequest/{userId}/{friendId}")
     @Operation(summary = "Delete a friend request")
     public ResponseEntity<String> deleteFriendRequest(@PathVariable("userId") String userId, @PathVariable("friendId") String friendId) throws JsonProcessingException {
         return userService.deleteFriendRequest(userId, friendId);
     }
 
-    @GetMapping(path = "withdrawfriendrequest/{userId}/{friendId}")
+    @PutMapping(path = "withdrawfriendrequest/{userId}/{friendId}")
     @Operation(summary = "Withdraw a friend request")
     public ResponseEntity<String> withdrawFriendRequest(@PathVariable("userId") String userId, @PathVariable("friendId") String friendId) throws JsonProcessingException {
         return userService.withdrawFriendRequest(userId, friendId);
@@ -128,9 +128,9 @@ public class UserController {
         return userService.updateUserDetails(userId, newUserInfo);
     }
 
-    @GetMapping(path = "/updateuserproperties")
+    @PutMapping(path = "/updateuserproperties")
     @Operation(summary = "Update user properties in database")
-    public ResponseEntity<Object> updateUserproperties() {
+    public ResponseEntity<Object> updateUserProperties() {
         scheduler.updateUserPropertiesIfNotPresent();
         return ResponseEntity.ok().build();
     }
