@@ -15,6 +15,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -467,6 +468,7 @@ public class UserService {
         return ResponseEntity.ok(users);
     }
 
+    @Cacheable(value = "users", key = "#id", unless = "#user == null")
     public ResponseEntity<String> findById(String id) throws JsonProcessingException {
 
         User user = userRepository.findById(new ObjectId(id));
