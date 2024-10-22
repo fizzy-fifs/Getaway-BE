@@ -11,6 +11,7 @@ import com.example.holidayplanner.user.role.RoleRepository;
 import com.example.holidayplanner.user.userDeactivationRequest.UserDeactivationRequest;
 import com.example.holidayplanner.user.userDeactivationRequest.UserDeactivationRequestRepository;
 import com.example.holidayplanner.userLookupModel.UserLookupModel;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
@@ -84,6 +85,7 @@ public class UserService {
         this.userDeactivationRequestRepository = userDeactivationRequestRepository;
         this.reportUserRepository = reportUserRepository;
         this.mapper = new ObjectMapper().findAndRegisterModules();
+        this.mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
@@ -432,7 +434,7 @@ public class UserService {
     }
 
     public ResponseEntity<Object> search(String searchTerm, String userId) {
-        User user = userRepository.findById(new ObjectId(userId));
+        User user = findUserByIdCached(userId);
 
         if (user == null) {
             return ResponseEntity.badRequest().body("User with id " + userId + " does not exist");
@@ -468,10 +470,9 @@ public class UserService {
         return ResponseEntity.ok(users);
     }
 
-    @Cacheable(value = "users", key = "#id", unless = "#user == null")
     public ResponseEntity<String> findById(String id) throws JsonProcessingException {
 
-        User user = userRepository.findById(new ObjectId(id));
+        User user = findUserByIdCached(id);
 
         if (user == null) {
             return ResponseEntity.badRequest().body("User with id " + id + " does not exist");
@@ -480,6 +481,7 @@ public class UserService {
         String userJson = mapper.writeValueAsString(user);
         return ResponseEntity.ok(userJson);
     }
+
 
     public ResponseEntity<String> findMultipleById(List<String> userIds) throws JsonProcessingException {
         if (userIds.isEmpty()) {
@@ -665,6 +667,11 @@ public class UserService {
         return ResponseEntity.ok("You have unblocked " + blockedUser.getUserName());
     }
 
+    @Cacheable(value = "users", key = "#id", unless = "#result == null")
+    private User findUserByIdCached(String id) {
+        return userRepository.findById(new ObjectId(id));
+    }
+
     private List<String> getLastDigitsOfPhoneNumbersRegex(List<String> phoneNumbers) {
         List<String> lastDigitsOfPhoneNumbersRegex = new ArrayList<>();
 
@@ -679,9 +686,5 @@ public class UserService {
             lastDigitsOfPhoneNumbersRegex.add(lastDigits);
         }
         return lastDigitsOfPhoneNumbersRegex;
-    }
-
-    private boolean emailOrUsernameExists(String email, String userName) {
-        return userRepository.existsByEmailOrUserName(email, userName);
     }
 }
