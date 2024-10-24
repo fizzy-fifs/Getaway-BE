@@ -15,9 +15,9 @@ public class CacheHelper<T> {
 
     private final String cacheName;
 
-    public CacheHelper(CacheManager cacheManager, Class<T> type) {
+    public CacheHelper(CacheManager cacheManager, String cacheName) {
         this.cacheManager = cacheManager;
-        this.cacheName = type.getName().toLowerCase();
+        this.cacheName = cacheName;
     }
 
     public List<T> getCachedEntries(List<String> cachedKey) {

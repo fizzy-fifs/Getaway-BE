@@ -4,6 +4,7 @@ import com.example.holidayplanner.config.MyUserDetailsService;
 import com.example.holidayplanner.config.jwt.JwtUtil;
 import com.example.holidayplanner.config.jwt.token.Token;
 import com.example.holidayplanner.config.jwt.token.TokenService;
+import com.example.holidayplanner.helpers.CacheHelper;
 import com.example.holidayplanner.helpers.Helper;
 import com.example.holidayplanner.user.reportUser.ReportUser;
 import com.example.holidayplanner.user.reportUser.ReportUserRepository;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -73,8 +75,10 @@ public class UserService {
     @Autowired
     private final ReportUserRepository reportUserRepository;
 
+    private final CacheHelper<User> userCacheHelper;
+
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, MyUserDetailsService myUserDetailsService, JwtUtil jwtTokenUtil, TokenService tokenService, AuthenticationManager authenticationManager, MongoTemplate mongoTemplate, UserDeactivationRequestRepository userDeactivationRequestRepository, ReportUserRepository reportUserRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, MyUserDetailsService myUserDetailsService, JwtUtil jwtTokenUtil, TokenService tokenService, AuthenticationManager authenticationManager, MongoTemplate mongoTemplate, UserDeactivationRequestRepository userDeactivationRequestRepository, ReportUserRepository reportUserRepository, CacheManager cacheManager) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.myUserDetailsService = myUserDetailsService;
@@ -84,6 +88,7 @@ public class UserService {
         this.mongoTemplate = mongoTemplate;
         this.userDeactivationRequestRepository = userDeactivationRequestRepository;
         this.reportUserRepository = reportUserRepository;
+        this.userCacheHelper = new CacheHelper<>(cacheManager, "user");
         this.mapper = new ObjectMapper().findAndRegisterModules();
         this.mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         this.passwordEncoder = new BCryptPasswordEncoder();
@@ -488,13 +493,23 @@ public class UserService {
             return ResponseEntity.badRequest().body("No ids provided");
         }
 
-        List<User> users = userRepository.findAllById(userIds);
+        List<User> cachedUsers = userCacheHelper.getCachedEntries(userIds);
 
-        if (users.isEmpty()) {
+        List<String> idsToFetch = userIds.stream().filter(id ->
+                cachedUsers.stream().noneMatch(user -> user.getId().equals(id))).toList();
+
+        List<User> freshUsers = userRepository.findAllById(idsToFetch);
+
+        userCacheHelper.cacheEntries(freshUsers, User::getId);
+
+        List<User> allUsers = new ArrayList<>(cachedUsers);
+        allUsers.addAll(freshUsers);
+
+        if (allUsers.isEmpty()) {
             return ResponseEntity.badRequest().body("No users found");
         }
 
-        String usersJson = mapper.writeValueAsString(users);
+        String usersJson = mapper.writeValueAsString(allUsers);
 
         return ResponseEntity.ok(usersJson);
     }
