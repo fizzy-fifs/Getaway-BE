@@ -19,7 +19,7 @@ public class ReportUser {
 
     @JsonProperty
     @DBRef
-    private User userToReport;
+    private User userReported;
 
     @JsonProperty
     @DBRef
@@ -35,7 +35,7 @@ public class ReportUser {
     }
 
     public ReportUser(User userToReport, User userReporting, String reason, LocalDateTime dateReported) {
-        this.userToReport = userToReport;
+        this.userReported = userToReport;
         this.userReporting = userReporting;
         this.reason = reason;
         this.dateReported = dateReported;

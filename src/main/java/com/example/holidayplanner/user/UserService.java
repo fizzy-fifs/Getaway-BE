@@ -104,7 +104,6 @@ public class UserService {
         user.setDateJoined(LocalDate.now());
         user.setLastLogin(LocalDateTime.now());
 
-
         //Hash password and set role as user
         String encodedPassword = this.passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
@@ -197,6 +196,7 @@ public class UserService {
         }
 
         user.setLastLogin(LocalDateTime.now());
+        //ToDo: Update user cache
         userRepository.save(user);
 
         return ResponseEntity.ok(responseData);
@@ -204,7 +204,7 @@ public class UserService {
     }
 
     public ResponseEntity<String> logout(String userId) {
-        User user = userRepository.findById(new ObjectId(userId));
+        User user = findUserByIdCached(userId);
 
         if (user == null) {
             return ResponseEntity.badRequest().body("User with id " + userId + " does not exist");
@@ -234,12 +234,13 @@ public class UserService {
             currentUserInfo.setPassword(newEncodedPassword);
         }
 
+        //ToDo: Update user cache
         userRepository.save(currentUserInfo);
         return ResponseEntity.ok("User has been successfully updated");
     }
 
     public ResponseEntity<String> deactivateUserAccount(String userId) {
-        User user = userRepository.findById(new ObjectId(userId));
+        User user = findUserByIdCached(userId);
 
         if (user == null) {
             return ResponseEntity.badRequest().body("User does not exist");
@@ -256,6 +257,7 @@ public class UserService {
         UserDeactivationRequest userDeactivationRequest = new UserDeactivationRequest(user, LocalDateTime.now());
 
         userDeactivationRequestRepository.save(userDeactivationRequest);
+//        ToDo: Update user cache
         userRepository.save(user);
 
         return ResponseEntity.ok("Your account will be deactivated in 30 days");
@@ -353,7 +355,7 @@ public class UserService {
 
         //Remove the request from the friendRequest list, friendRequestSent list and save to db
         friendRequests.remove(friendId);
-        friend.removeFromFreindRequestsSent(principal.getId());
+        friend.removeFromFriendRequestsSent(principal.getId());
         userRepository.saveAll(Arrays.asList(principal, friend));
 
         return ResponseEntity.ok("You are now friends with " + friend.getFirstName());
@@ -375,7 +377,7 @@ public class UserService {
 
         for (User user : users) {
             if (Objects.equals(user.getId(), userWhoSentRequestId)) {
-                user.removeFromFreindRequestsSent(userWhoReceivedRequestId);
+                user.removeFromFriendRequestsSent(userWhoReceivedRequestId);
             }
             user.deleteFriendRequest(userWhoSentRequestId);
         }
@@ -402,7 +404,7 @@ public class UserService {
 
         for (User user : users) {
             user.deleteFriendRequest(friendId);
-            user.removeFromFreindRequestsSent(userId);
+            user.removeFromFriendRequestsSent(userId);
         }
 
         List<User> savedUsers = userRepository.saveAll(users);
@@ -528,19 +530,21 @@ public class UserService {
     }
 
     public ResponseEntity<Object> reportUser(ReportUser reportUser) {
-        if (reportUser.getUserToReport() == null || reportUser.getUserReporting() == null) {
-            return ResponseEntity.badRequest().body("User to report and user reporting cannot be null");
+        User reportedUser = reportUser.getUserReported();
+        if ( reportedUser == null || reportUser.getUserReporting() == null) {
+            return ResponseEntity.badRequest().body("Reported user and user reporting cannot be null");
         }
 
         if (reportUser.getReason() == null || reportUser.getReason().isEmpty()) {
-            return ResponseEntity.badRequest().body("Reason cannot be null or empty");
+            return ResponseEntity.badRequest().body("Please state a reason for reporting @" + reportedUser.getUserName());
         }
 
-        if (reportUser.getUserToReport().getId().equals(reportUser.getUserReporting().getId())) {
+        if (reportUser.getUserReported().getId().equals(reportUser.getUserReporting().getId())) {
             return ResponseEntity.badRequest().body("You cannot report yourself");
         }
 
-        List<User> users = userRepository.findAllById(Arrays.asList(reportUser.getUserToReport().getId(), reportUser.getUserReporting().getId()));
+        //ToDo: Check in cache first
+        List<User> users = userRepository.findAllById(Arrays.asList(reportUser.getUserReported().getId(), reportUser.getUserReporting().getId()));
 
         if (users.size() != 2) {
             return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid");
@@ -551,7 +555,7 @@ public class UserService {
 
         for (User user : users) {
 
-            if (Objects.equals(user.getId(), reportUser.getUserToReport().getId())) {
+            if (Objects.equals(user.getId(), reportUser.getUserReported().getId())) {
                 userToReport = user;
             } else if (Objects.equals(user.getId(), reportUser.getUserReporting().getId())) {
                 userReporting = user;
@@ -572,7 +576,7 @@ public class UserService {
             return ResponseEntity.badRequest().body("User id cannot be null or empty");
         }
 
-        User user = userRepository.findById(new ObjectId(userId));
+        User user = findUserByIdCached(userId);
 
         if (user == null) {
             return ResponseEntity.badRequest().body("User with id " + userId + " does not exist");
@@ -590,6 +594,7 @@ public class UserService {
             userDeactivationRequestRepository.delete(userDeactivationRequest);
         }
 
+        //ToDo:Update cache
         User savedUser = userRepository.save(user);
 
         var savedUserJson = mapper.writeValueAsString(savedUser);
@@ -637,6 +642,7 @@ public class UserService {
         authenticatedUser.addBlockedUser(userToBlock.getId());
         userToBlock.addBlockedByUser(authenticatedUser.getId());
 
+//        ToDo: Update user cache
         userRepository.saveAll(Arrays.asList(authenticatedUser, userToBlock));
         return ResponseEntity.ok("You have blocked " + userToBlock.getUserName());
     }
@@ -650,6 +656,7 @@ public class UserService {
             return ResponseEntity.badRequest().body("User id cannot be null or empty");
         }
 
+        //ToDo: Check Cache first
         List<User> users = userRepository.findAllById(Arrays.asList(authenticatedUserId, blockedUserId));
 
         if (users.size() != 2) {
@@ -678,6 +685,7 @@ public class UserService {
         authenticatedUser.removeBlockedUser(blockedUser.getId());
         blockedUser.removeBlockedByUser(authenticatedUser.getId());
 
+        //ToDo: Update Cache
         userRepository.saveAll(Arrays.asList(authenticatedUser, blockedUser));
         return ResponseEntity.ok("You have unblocked " + blockedUser.getUserName());
     }

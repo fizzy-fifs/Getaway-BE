@@ -148,7 +148,7 @@ public class User {
         friendRequestsSent.add(id);
     }
 
-    public void removeFromFreindRequestsSent(String id) {
+    public void removeFromFriendRequestsSent(String id) {
         friendRequestsSent.remove(id);
     }
 
