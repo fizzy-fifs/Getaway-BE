@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="create and use group service methods to find a group in the cache or db, and update a group in the cache and db.">
+    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Method to check and update cache when looking for multiple groups by id">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/group/GroupService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/group/GroupService.java" afterDir="false" />
     </list>
@@ -160,22 +160,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1693213386150</updated>
-    </task>
-    <task id="LOCAL-00055" summary="Debugging 3">
-      <option name="closed" value="true" />
-      <created>1700923649189</created>
-      <option name="number" value="00055" />
-      <option name="presentableId" value="LOCAL-00055" />
-      <option name="project" value="LOCAL" />
-      <updated>1700923649190</updated>
-    </task>
-    <task id="LOCAL-00056" summary="Still Debugging 3">
-      <option name="closed" value="true" />
-      <created>1700923750398</created>
-      <option name="number" value="00056" />
-      <option name="presentableId" value="LOCAL-00056" />
-      <option name="project" value="LOCAL" />
-      <updated>1700923750398</updated>
     </task>
     <task id="LOCAL-00057" summary="Debugging 4">
       <option name="closed" value="true" />
@@ -553,7 +537,23 @@
       <option name="project" value="LOCAL" />
       <updated>1729895877626</updated>
     </task>
-    <option name="localTasksCounter" value="104" />
+    <task id="LOCAL-00104" summary="Remove get all groups endpoint">
+      <option name="closed" value="true" />
+      <created>1729896479359</created>
+      <option name="number" value="00104" />
+      <option name="presentableId" value="LOCAL-00104" />
+      <option name="project" value="LOCAL" />
+      <updated>1729896479359</updated>
+    </task>
+    <task id="LOCAL-00105" summary="Modify remove group member endpoint to find and update both user and group in their respective cache.">
+      <option name="closed" value="true" />
+      <created>1729896994885</created>
+      <option name="number" value="00105" />
+      <option name="presentableId" value="LOCAL-00105" />
+      <option name="project" value="LOCAL" />
+      <updated>1729896994885</updated>
+    </task>
+    <option name="localTasksCounter" value="106" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -568,9 +568,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="WIP Crawler for AirBnB" />
-    <MESSAGE value="WIP Scraper for AirBnB" />
-    <MESSAGE value="Complete structure reset" />
     <MESSAGE value="Little adjustments" />
     <MESSAGE value="Return 404 when tries to accept a friend request that does not exist" />
     <MESSAGE value="Hash password when user updates their password." />
@@ -593,7 +590,10 @@
     <MESSAGE value="Method to check for multiple users in cache first before checking in the db and caching users not in the Db." />
     <MESSAGE value="Extend endpoints to update user cache where relevant." />
     <MESSAGE value="create and use group service methods to find a group in the cache or db, and update a group in the cache and db." />
-    <option name="LAST_COMMIT_MESSAGE" value="create and use group service methods to find a group in the cache or db, and update a group in the cache and db." />
+    <MESSAGE value="Remove get all groups endpoint" />
+    <MESSAGE value="Modify remove group member endpoint to find and update both user and group in their respective cache." />
+    <MESSAGE value="Method to check and update cache when looking for multiple groups by id" />
+    <option name="LAST_COMMIT_MESSAGE" value="Method to check and update cache when looking for multiple groups by id" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

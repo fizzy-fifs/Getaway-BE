@@ -168,7 +168,7 @@ public class GroupService {
             return ResponseEntity.badRequest().body("No group id provided");
         }
 
-        List<Group> groups = (List<Group>) groupRepository.findAllById(groupIds);
+        List<Group> groups = findMultipleGroupsByIdInCacheOrDatabase(groupIds);
 
         if (groups.isEmpty()) {
             return ResponseEntity.badRequest().body("No group found");
@@ -393,6 +393,24 @@ public class GroupService {
     @Cacheable(value = "groups", key = "#id", unless = "#result == null")
     public Group findSingleGroupByIdInCacheOrDatabase(String groupId) {
         return groupRepository.findById(new ObjectId(groupId));
+    }
+
+    public List<Group> findMultipleGroupsByIdInCacheOrDatabase(List<String> groupIds) {
+        List<Group> cachedGroups = groupCacheHelper.getCachedEntries(groupIds);
+
+        List<String> idsToFetch = groupIds.stream().filter(id ->
+                        cachedGroups.stream().noneMatch(group -> group.getId().equals(id)))
+                .toList();
+
+        if (idsToFetch.isEmpty()) { return cachedGroups; }
+
+        List<Group> freshGroups = groupRepository.findAllById(idsToFetch);
+
+        groupCacheHelper.cacheEntries(freshGroups, Group::getId);
+
+        List<Group> allGroups = new ArrayList<>(cachedGroups);
+        allGroups.addAll(freshGroups);
+        return allGroups;
     }
 
     public Group updateSingleGroupInCacheAndDatabase(Group group) {
