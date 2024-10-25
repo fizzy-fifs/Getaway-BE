@@ -196,7 +196,7 @@ public class UserService {
         }
 
         user.setLastLogin(LocalDateTime.now());
-        saveUser(user);
+        saveUserCached(user);
 
         return ResponseEntity.ok(responseData);
 
@@ -233,7 +233,7 @@ public class UserService {
             currentUserInfo.setPassword(newEncodedPassword);
         }
 
-        saveUser(currentUserInfo);
+        saveUserCached(currentUserInfo);
 
         return ResponseEntity.ok("User has been successfully updated");
     }
@@ -256,17 +256,17 @@ public class UserService {
         UserDeactivationRequest userDeactivationRequest = new UserDeactivationRequest(user, LocalDateTime.now());
 
         userDeactivationRequestRepository.save(userDeactivationRequest);
-        saveUser(user);
+        saveUserCached(user);
 
         return ResponseEntity.ok("Your account will be deactivated in 30 days");
     }
 
 
     public ResponseEntity<String> sendFriendRequest(String userId, String allegedFriendId) {
-        ArrayList<User> users;
+        List<User> users;
 
         try {
-            users = (ArrayList<User>) userRepository.findAllById(Arrays.asList(userId, allegedFriendId)); //Returns Iterable list of users in random order
+            users = findMultipleUsersByIdCached(Arrays.asList(userId, allegedFriendId));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid Id");
         }
@@ -285,7 +285,6 @@ public class UserService {
             } else if (Objects.equals(user.getId(), userId)) {
                 principal = user;
             }
-
         }
 
         assert allegedFriend != null;
@@ -312,11 +311,10 @@ public class UserService {
     }
 
     public ResponseEntity<String> acceptFriendRequest(String userId, String friendId) {
-        // query db for both users using userId and friendId
-        ArrayList<User> users;
+        List<User> users;
 
         try {
-            users = (ArrayList<User>) userRepository.findAllById(Arrays.asList(userId, friendId)); //Returns Iterable list of users in random order
+            users = findMultipleUsersByIdCached(Arrays.asList(userId, friendId)); //Returns Iterable list of users in random order
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid Id");
         }
@@ -365,7 +363,7 @@ public class UserService {
         List<User> users;
 
         try {
-            users = userRepository.findAllById(Arrays.asList(userWhoSentRequestId, userWhoReceivedRequestId)); //Returns Iterable list of users in random order
+            users = findMultipleUsersByIdCached(Arrays.asList(userWhoSentRequestId, userWhoReceivedRequestId)); //Returns Iterable list of users in random order
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid Id");
         }
@@ -392,7 +390,7 @@ public class UserService {
         List<User> users;
 
         try {
-            users = userRepository.findAllById(Arrays.asList(userId, friendId)); //Returns Iterable list of users in random order
+            users = findMultipleUsersByIdCached(Arrays.asList(userId, friendId)); //Returns Iterable list of users in random order
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid Id");
         }
@@ -476,7 +474,7 @@ public class UserService {
         List<User> users = mongoTemplate.find(searchQuery, User.class);
         users.remove(user);
         users.removeIf(u -> u.getEmail().equals("admin@mail.com"));
-        saveUser(user);
+        saveUserCached(user);
         return ResponseEntity.ok(users);
     }
 
@@ -498,17 +496,7 @@ public class UserService {
             return ResponseEntity.badRequest().body("No ids provided");
         }
 
-        List<User> cachedUsers = userCacheHelper.getCachedEntries(userIds);
-
-        List<String> idsToFetch = userIds.stream().filter(id ->
-                cachedUsers.stream().noneMatch(user -> user.getId().equals(id))).toList();
-
-        List<User> freshUsers = userRepository.findAllById(idsToFetch);
-
-        userCacheHelper.cacheEntries(freshUsers, User::getId);
-
-        List<User> allUsers = new ArrayList<>(cachedUsers);
-        allUsers.addAll(freshUsers);
+        List<User> allUsers = findMultipleUsersByIdCached(userIds);
 
         if (allUsers.isEmpty()) {
             return ResponseEntity.badRequest().body("No users found");
@@ -527,7 +515,7 @@ public class UserService {
         }
 
         user.setDeviceToken(deviceToken);
-        saveUser(user);
+        saveUserCached(user);
 
         return ResponseEntity.ok("Device token saved");
     }
@@ -546,8 +534,7 @@ public class UserService {
             return ResponseEntity.badRequest().body("You cannot report yourself");
         }
 
-        //ToDo: Check in cache first
-        List<User> users = userRepository.findAllById(Arrays.asList(reportUser.getUserReported().getId(), reportUser.getUserReporting().getId()));
+        List<User> users = findMultipleUsersByIdCached(Arrays.asList(reportUser.getUserReported().getId(), reportUser.getUserReporting().getId()));
 
         if (users.size() != 2) {
             return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid");
@@ -597,7 +584,7 @@ public class UserService {
             userDeactivationRequestRepository.delete(userDeactivationRequest);
         }
 
-        User savedUser = saveUser(user);
+        User savedUser = saveUserCached(user);
 
         var savedUserJson = mapper.writeValueAsString(savedUser);
 
@@ -613,7 +600,7 @@ public class UserService {
             return ResponseEntity.badRequest().body("User id cannot be null or empty");
         }
 
-        List<User> users = userRepository.findAllById(Arrays.asList(authenticatedUserId, userId));
+        List<User> users = findMultipleUsersByIdCached(Arrays.asList(authenticatedUserId, userId));
 
         if (users.size() != 2) {
             return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid");
@@ -658,8 +645,7 @@ public class UserService {
             return ResponseEntity.badRequest().body("User id cannot be null or empty");
         }
 
-        //ToDo: Check Cache first
-        List<User> users = userRepository.findAllById(Arrays.asList(authenticatedUserId, blockedUserId));
+        List<User> users = findMultipleUsersByIdCached(Arrays.asList(authenticatedUserId, blockedUserId));
 
         if (users.size() != 2) {
             return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid");
@@ -697,7 +683,24 @@ public class UserService {
         return userRepository.findById(new ObjectId(id));
     }
 
-    private User saveUser(User user) {
+    private List<User> findMultipleUsersByIdCached(List<String> userIds) {
+        List<User> cachedUsers = userCacheHelper.getCachedEntries(userIds);
+
+        List<String> idsToFetch = userIds.stream().filter(id ->
+                cachedUsers.stream().noneMatch(user -> user.getId().equals(id))).toList();
+
+        if (idsToFetch.isEmpty()) { return cachedUsers; }
+
+        List<User> freshUsers = userRepository.findAllById(idsToFetch);
+
+        userCacheHelper.cacheEntries(freshUsers, User::getId);
+
+        List<User> allUsers = new ArrayList<>(cachedUsers);
+        allUsers.addAll(freshUsers);
+        return allUsers;
+    }
+
+    private User saveUserCached (User user) {
         User cachedUser = userCacheHelper.getCachedEntry(user.getId());
         if (cachedUser != null) { userCacheHelper.cacheEntry(user, user.getId()); }
 

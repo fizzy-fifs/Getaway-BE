@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Implement caching for find multiple users by id endpoint">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/helpers/CacheHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/helpers/CacheHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserService.java" afterDir="false" />
-    </list>
+    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Implement cache update for endpoints saving a single user to the DB." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -162,14 +157,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1693213386150</updated>
-    </task>
-    <task id="LOCAL-00051" summary="Fix bug in send friend request endpoint">
-      <option name="closed" value="true" />
-      <created>1696774541316</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1696774541317</updated>
     </task>
     <task id="LOCAL-00052" summary="Endpoint to unblock a user">
       <option name="closed" value="true" />
@@ -555,7 +542,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729775803887</updated>
     </task>
-    <option name="localTasksCounter" value="100" />
+    <task id="LOCAL-00100" summary="Implement cache update for endpoints saving a single user to the DB.">
+      <option name="closed" value="true" />
+      <created>1729871176380</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1729871176380</updated>
+    </task>
+    <option name="localTasksCounter" value="101" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -570,7 +565,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Refactor" />
     <MESSAGE value="Fix bug" />
     <MESSAGE value="Tidy up" />
     <MESSAGE value="WIP Crawler" />
@@ -595,7 +589,8 @@
     <MESSAGE value="Enable GZip compression" />
     <MESSAGE value="Create generic cache helper" />
     <MESSAGE value="Implement caching for find multiple users by id endpoint" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implement caching for find multiple users by id endpoint" />
+    <MESSAGE value="Implement cache update for endpoints saving a single user to the DB." />
+    <option name="LAST_COMMIT_MESSAGE" value="Implement cache update for endpoints saving a single user to the DB." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
