@@ -140,6 +140,8 @@ public class User {
         groupIds.add(groupId);
     }
 
+    public void removeGroup(String groupId) { groupIds.remove(groupId); }
+
     public void addFriendRequest(String friendId) {
         friendRequests.add(friendId);
     }

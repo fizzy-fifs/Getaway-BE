@@ -147,14 +147,17 @@ public class GroupService {
     }
 
     public ResponseEntity<String> removeGroupMember(String groupId, String userId) {
-        Group group = groupRepository.findById(new ObjectId(groupId));
+        Group group = findSingleGroupByIdInCacheOrDatabase(groupId);
+        User user = userService.findSingleUserByIdInCacheOrDatabase(userId);
 
         if (group == null) {
             return ResponseEntity.badRequest().body("group with id " + groupId + " does not exists");
         }
         group.removeMember(userId);
+        user.removeGroup(groupId);
 
         updateSingleGroupInCacheAndDatabase(group);
+        userService.updateSingleUserInCacheAndDatabase(user);
 
         return ResponseEntity.ok("user with id: " + userId + " has been successfully removed from " + group.getName());
     }
