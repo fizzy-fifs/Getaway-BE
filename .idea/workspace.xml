@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Extend endpoints to update user cache where relevant.">
+    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="create and use group service methods to find a group in the cache or db, and update a group in the cache and db.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/group/GroupController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/group/GroupController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/group/GroupService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/group/GroupService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/helpers/CacheHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/helpers/CacheHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -164,14 +160,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1693213386150</updated>
-    </task>
-    <task id="LOCAL-00054" summary="Debugging 2">
-      <option name="closed" value="true" />
-      <created>1700921925046</created>
-      <option name="number" value="00054" />
-      <option name="presentableId" value="LOCAL-00054" />
-      <option name="project" value="LOCAL" />
-      <updated>1700921925046</updated>
     </task>
     <task id="LOCAL-00055" summary="Debugging 3">
       <option name="closed" value="true" />
@@ -557,7 +545,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729875013358</updated>
     </task>
-    <option name="localTasksCounter" value="103" />
+    <task id="LOCAL-00103" summary="create and use group service methods to find a group in the cache or db, and update a group in the cache and db.">
+      <option name="closed" value="true" />
+      <created>1729895877625</created>
+      <option name="number" value="00103" />
+      <option name="presentableId" value="LOCAL-00103" />
+      <option name="project" value="LOCAL" />
+      <updated>1729895877626</updated>
+    </task>
+    <option name="localTasksCounter" value="104" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -572,7 +568,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="WIP Crawler" />
     <MESSAGE value="WIP Crawler for AirBnB" />
     <MESSAGE value="WIP Scraper for AirBnB" />
     <MESSAGE value="Complete structure reset" />
@@ -597,7 +592,8 @@
     <MESSAGE value="Implement cache update for endpoints saving a single user to the DB." />
     <MESSAGE value="Method to check for multiple users in cache first before checking in the db and caching users not in the Db." />
     <MESSAGE value="Extend endpoints to update user cache where relevant." />
-    <option name="LAST_COMMIT_MESSAGE" value="Extend endpoints to update user cache where relevant." />
+    <MESSAGE value="create and use group service methods to find a group in the cache or db, and update a group in the cache and db." />
+    <option name="LAST_COMMIT_MESSAGE" value="create and use group service methods to find a group in the cache or db, and update a group in the cache and db." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

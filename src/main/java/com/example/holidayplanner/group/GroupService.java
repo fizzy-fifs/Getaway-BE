@@ -70,7 +70,7 @@ public class GroupService {
 
         userIds.add(groupCreator.getId());
 
-        List<User> users = userRepository.findAllById(userIds);
+        List<User> users = userService.findMultipleUsersByIdInCacheOrDatabase(userIds);
 
         if (users.size() != userIds.size()) {
             return ResponseEntity.badRequest().body("One of the users added does not exist");
@@ -101,16 +101,12 @@ public class GroupService {
             }
         }
 
-        userRepository.saveAll(users);
+        userService.updateMultipleUsersInCacheAndDatabase(users);
 
         ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
         String groupJson = mapper.writeValueAsString(newGroup);
 
         return ResponseEntity.ok(groupJson);
-    }
-
-    public List<Group> getAll() {
-        return groupRepository.findAll();
     }
 
     public ResponseEntity<String> delete(String groupId) {

@@ -38,11 +38,6 @@ public class GroupController {
         return groupService.create(group);
     }
 
-    @GetMapping
-    @Operation(summary = "Get a list of all groups")
-    public List<Group> getAll() { return groupService.getAll();}
-
-
     @DeleteMapping(path = "/{groupId}")
     public ResponseEntity<String> delete(@PathVariable("groupId") String groupId) {
         return groupService.delete(groupId);
