@@ -196,14 +196,14 @@ public class UserService {
         }
 
         user.setLastLogin(LocalDateTime.now());
-        saveUserCached(user);
+        updateSingleUserInCacheAndDatabase(user);
 
         return ResponseEntity.ok(responseData);
 
     }
 
     public ResponseEntity<String> logout(String userId) {
-        User user = findUserByIdCached(userId);
+        User user = findSingleUserByIdInCacheOrDatabase(userId);
 
         if (user == null) {
             return ResponseEntity.badRequest().body("User with id " + userId + " does not exist");
@@ -233,13 +233,13 @@ public class UserService {
             currentUserInfo.setPassword(newEncodedPassword);
         }
 
-        saveUserCached(currentUserInfo);
+        updateSingleUserInCacheAndDatabase(currentUserInfo);
 
         return ResponseEntity.ok("User has been successfully updated");
     }
 
     public ResponseEntity<String> deactivateUserAccount(String userId) {
-        User user = findUserByIdCached(userId);
+        User user = findSingleUserByIdInCacheOrDatabase(userId);
 
         if (user == null) {
             return ResponseEntity.badRequest().body("User does not exist");
@@ -256,7 +256,7 @@ public class UserService {
         UserDeactivationRequest userDeactivationRequest = new UserDeactivationRequest(user, LocalDateTime.now());
 
         userDeactivationRequestRepository.save(userDeactivationRequest);
-        saveUserCached(user);
+        updateSingleUserInCacheAndDatabase(user);
 
         return ResponseEntity.ok("Your account will be deactivated in 30 days");
     }
@@ -266,7 +266,7 @@ public class UserService {
         List<User> users;
 
         try {
-            users = findMultipleUsersByIdCached(Arrays.asList(userId, allegedFriendId));
+            users = findMultipleUsersByIdInCacheOrDatabase(Arrays.asList(userId, allegedFriendId));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid Id");
         }
@@ -305,8 +305,7 @@ public class UserService {
         allegedFriend.addFriendRequest(principal.getId());
         principal.addToFriendRequestsSent(allegedFriend.getId());
 
-        //ToDo:Save all users method that checks cache for users, updates all the user objects that were already in the cache and save all the users(cached and uncached) to the DB.
-        userRepository.saveAll(Arrays.asList(allegedFriend, principal));
+       updateMultipleUsersInCacheAndDatabase(Arrays.asList(allegedFriend, principal));
         return ResponseEntity.ok(allegedFriend.getFirstName() + " has been sent a friend request");
     }
 
@@ -314,7 +313,7 @@ public class UserService {
         List<User> users;
 
         try {
-            users = findMultipleUsersByIdCached(Arrays.asList(userId, friendId)); //Returns Iterable list of users in random order
+            users = findMultipleUsersByIdInCacheOrDatabase(Arrays.asList(userId, friendId)); //Returns Iterable list of users in random order
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid Id");
         }
@@ -345,25 +344,23 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Friend request does not exist");
         }
 
-
         //Add friend to principal's friend's list and vice versa
         principal.addFriend(friend.getId());
         friend.addFriend(principal.getId());
 
-        //Remove the request from the friendRequest list, friendRequestSent list and save to db
+        //Remove the request from the friendRequest list, friendRequestSent list, update users in cache and db
         friendRequests.remove(friendId);
         friend.removeFromFriendRequestsSent(principal.getId());
-        userRepository.saveAll(Arrays.asList(principal, friend));
+        updateMultipleUsersInCacheAndDatabase(Arrays.asList(principal, friend));
 
         return ResponseEntity.ok("You are now friends with " + friend.getFirstName());
     }
-
 
     public ResponseEntity<String> deleteFriendRequest(String userWhoSentRequestId, String userWhoReceivedRequestId) throws JsonProcessingException {
         List<User> users;
 
         try {
-            users = findMultipleUsersByIdCached(Arrays.asList(userWhoSentRequestId, userWhoReceivedRequestId)); //Returns Iterable list of users in random order
+            users = findMultipleUsersByIdInCacheOrDatabase(Arrays.asList(userWhoSentRequestId, userWhoReceivedRequestId)); //Returns Iterable list of users in random order
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid Id");
         }
@@ -379,7 +376,7 @@ public class UserService {
             user.deleteFriendRequest(userWhoSentRequestId);
         }
 
-        List<User> savedUsers = userRepository.saveAll(users);
+        List<User> savedUsers = updateMultipleUsersInCacheAndDatabase(users);
 
         String savedUserJson = mapper.writeValueAsString(savedUsers);
 
@@ -390,7 +387,7 @@ public class UserService {
         List<User> users;
 
         try {
-            users = findMultipleUsersByIdCached(Arrays.asList(userId, friendId)); //Returns Iterable list of users in random order
+            users = findMultipleUsersByIdInCacheOrDatabase(Arrays.asList(userId, friendId)); //Returns Iterable list of users in random order
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid Id");
         }
@@ -404,7 +401,7 @@ public class UserService {
             user.removeFromFriendRequestsSent(userId);
         }
 
-        List<User> savedUsers = userRepository.saveAll(users);
+        List<User> savedUsers = updateMultipleUsersInCacheAndDatabase(users);
 
         String savedUserJson = mapper.writeValueAsString(savedUsers);
 
@@ -438,7 +435,7 @@ public class UserService {
     }
 
     public ResponseEntity<Object> search(String searchTerm, String userId) {
-        User user = findUserByIdCached(userId);
+        User user = findSingleUserByIdInCacheOrDatabase(userId);
 
         if (user == null) {
             return ResponseEntity.badRequest().body("User with id " + userId + " does not exist");
@@ -474,13 +471,13 @@ public class UserService {
         List<User> users = mongoTemplate.find(searchQuery, User.class);
         users.remove(user);
         users.removeIf(u -> u.getEmail().equals("admin@mail.com"));
-        saveUserCached(user);
+        updateSingleUserInCacheAndDatabase(user);
         return ResponseEntity.ok(users);
     }
 
     public ResponseEntity<String> findById(String id) throws JsonProcessingException {
 
-        User user = findUserByIdCached(id);
+        User user = findSingleUserByIdInCacheOrDatabase(id);
 
         if (user == null) {
             return ResponseEntity.badRequest().body("User with id " + id + " does not exist");
@@ -496,7 +493,7 @@ public class UserService {
             return ResponseEntity.badRequest().body("No ids provided");
         }
 
-        List<User> allUsers = findMultipleUsersByIdCached(userIds);
+        List<User> allUsers = findMultipleUsersByIdInCacheOrDatabase(userIds);
 
         if (allUsers.isEmpty()) {
             return ResponseEntity.badRequest().body("No users found");
@@ -515,7 +512,7 @@ public class UserService {
         }
 
         user.setDeviceToken(deviceToken);
-        saveUserCached(user);
+        updateSingleUserInCacheAndDatabase(user);
 
         return ResponseEntity.ok("Device token saved");
     }
@@ -534,7 +531,7 @@ public class UserService {
             return ResponseEntity.badRequest().body("You cannot report yourself");
         }
 
-        List<User> users = findMultipleUsersByIdCached(Arrays.asList(reportUser.getUserReported().getId(), reportUser.getUserReporting().getId()));
+        List<User> users = findMultipleUsersByIdInCacheOrDatabase(Arrays.asList(reportUser.getUserReported().getId(), reportUser.getUserReporting().getId()));
 
         if (users.size() != 2) {
             return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid");
@@ -566,7 +563,7 @@ public class UserService {
             return ResponseEntity.badRequest().body("User id cannot be null or empty");
         }
 
-        User user = findUserByIdCached(userId);
+        User user = findSingleUserByIdInCacheOrDatabase(userId);
 
         if (user == null) {
             return ResponseEntity.badRequest().body("User with id " + userId + " does not exist");
@@ -584,7 +581,7 @@ public class UserService {
             userDeactivationRequestRepository.delete(userDeactivationRequest);
         }
 
-        User savedUser = saveUserCached(user);
+        User savedUser = updateSingleUserInCacheAndDatabase(user);
 
         var savedUserJson = mapper.writeValueAsString(savedUser);
 
@@ -600,7 +597,7 @@ public class UserService {
             return ResponseEntity.badRequest().body("User id cannot be null or empty");
         }
 
-        List<User> users = findMultipleUsersByIdCached(Arrays.asList(authenticatedUserId, userId));
+        List<User> users = findMultipleUsersByIdInCacheOrDatabase(Arrays.asList(authenticatedUserId, userId));
 
         if (users.size() != 2) {
             return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid");
@@ -631,8 +628,7 @@ public class UserService {
         authenticatedUser.addBlockedUser(userToBlock.getId());
         userToBlock.addBlockedByUser(authenticatedUser.getId());
 
-//        ToDo: Update user cache
-        userRepository.saveAll(Arrays.asList(authenticatedUser, userToBlock));
+        updateMultipleUsersInCacheAndDatabase(Arrays.asList(authenticatedUser, userToBlock));
         return ResponseEntity.ok("You have blocked " + userToBlock.getUserName());
     }
 
@@ -645,7 +641,7 @@ public class UserService {
             return ResponseEntity.badRequest().body("User id cannot be null or empty");
         }
 
-        List<User> users = findMultipleUsersByIdCached(Arrays.asList(authenticatedUserId, blockedUserId));
+        List<User> users = findMultipleUsersByIdInCacheOrDatabase(Arrays.asList(authenticatedUserId, blockedUserId));
 
         if (users.size() != 2) {
             return ResponseEntity.badRequest().body("One or more of the Ids is/are invalid");
@@ -673,17 +669,16 @@ public class UserService {
         authenticatedUser.removeBlockedUser(blockedUser.getId());
         blockedUser.removeBlockedByUser(authenticatedUser.getId());
 
-        //ToDo: Update Cache
-        userRepository.saveAll(Arrays.asList(authenticatedUser, blockedUser));
+        updateMultipleUsersInCacheAndDatabase(Arrays.asList(authenticatedUser, blockedUser));
         return ResponseEntity.ok("You have unblocked " + blockedUser.getUserName());
     }
 
     @Cacheable(value = "users", key = "#id", unless = "#result == null")
-    private User findUserByIdCached(String id) {
+    private User findSingleUserByIdInCacheOrDatabase(String id) {
         return userRepository.findById(new ObjectId(id));
     }
 
-    private List<User> findMultipleUsersByIdCached(List<String> userIds) {
+    private List<User> findMultipleUsersByIdInCacheOrDatabase(List<String> userIds) {
         List<User> cachedUsers = userCacheHelper.getCachedEntries(userIds);
 
         List<String> idsToFetch = userIds.stream().filter(id ->
@@ -700,11 +695,22 @@ public class UserService {
         return allUsers;
     }
 
-    private User saveUserCached (User user) {
+    private User updateSingleUserInCacheAndDatabase(User user) {
         User cachedUser = userCacheHelper.getCachedEntry(user.getId());
         if (cachedUser != null) { userCacheHelper.cacheEntry(user, user.getId()); }
 
         return userRepository.save(user);
+    }
+
+    private List<User> updateMultipleUsersInCacheAndDatabase(List<User> users) {
+        List<String> userIds = users.stream().map(User::getId).toList();
+
+        List<User> cachedUsers = userCacheHelper.getCachedEntries(userIds);
+        if (!cachedUsers.isEmpty()) {
+            userCacheHelper.cacheEntries(cachedUsers, User::getId);
+        }
+
+        return userRepository.saveAll(users);
     }
 
     private List<String> getLastDigitsOfPhoneNumbersRegex(List<String> phoneNumbers) {
