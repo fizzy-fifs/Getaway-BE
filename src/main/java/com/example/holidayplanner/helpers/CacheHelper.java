@@ -45,4 +45,8 @@ public class CacheHelper<T> {
 
         return cachedEntries;
     }
+
+    public void removeEntryFromCache(String cachedKey) {
+        cache.evictIfPresent(cachedKey);
+    }
 }

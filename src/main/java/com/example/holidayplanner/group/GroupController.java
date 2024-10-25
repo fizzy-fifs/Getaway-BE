@@ -44,7 +44,7 @@ public class GroupController {
 
 
     @DeleteMapping(path = "/{groupId}")
-    public String delete(@PathVariable("groupId") String groupId) {
+    public ResponseEntity<String> delete(@PathVariable("groupId") String groupId) {
         return groupService.delete(groupId);
     }
 
@@ -54,7 +54,7 @@ public class GroupController {
     }
 
     @DeleteMapping(path = "/removemember/{groupId}")
-    public String removeGroupMember(@PathVariable("groupId") String groupId, @RequestBody String userId){
+    public ResponseEntity<String> removeGroupMember(@PathVariable("groupId") String groupId, @RequestBody String userId){
         return groupService.removeGroupMember(groupId, userId);
     }
 

@@ -3,14 +3,18 @@ package com.example.holidayplanner.group;
 import com.example.holidayplanner.group.reportGroup.ReportGroup;
 import com.example.holidayplanner.group.reportGroup.ReportGroupRepository;
 import com.example.holidayplanner.groupInvite.GroupInviteRepository;
+import com.example.holidayplanner.helpers.CacheHelper;
 import com.example.holidayplanner.helpers.Helper;
 import com.example.holidayplanner.groupInvite.GroupInvite;
 import com.example.holidayplanner.user.User;
 import com.example.holidayplanner.user.UserRepository;
+import com.example.holidayplanner.user.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -28,6 +32,9 @@ public class GroupService {
     private final GroupRepository groupRepository;
 
     @Autowired
+    private final UserService userService;
+
+    @Autowired
     private final UserRepository userRepository;
 
     @Autowired
@@ -42,14 +49,18 @@ public class GroupService {
     @Autowired
     private final ReportGroupRepository reportGroupRepository;
 
+    private final CacheHelper<Group> groupCacheHelper;
+
     @Autowired
-    public GroupService(GroupRepository groupRepository, UserRepository userRepository, ObjectMapper mapper, MongoTemplate mongoTemplate, GroupInviteRepository groupInviteRepository, ReportGroupRepository reportGroupRepository) {
+    public GroupService(GroupRepository groupRepository, UserService userService, UserRepository userRepository, ObjectMapper mapper, MongoTemplate mongoTemplate, GroupInviteRepository groupInviteRepository, ReportGroupRepository reportGroupRepository, CacheManager cacheManager) {
         this.groupRepository = groupRepository;
+        this.userService = userService;
         this.userRepository = userRepository;
         this.mapper = mapper;
         this.mongoTemplate = mongoTemplate;
         this.groupInviteRepository = groupInviteRepository;
         this.reportGroupRepository = reportGroupRepository;
+        this.groupCacheHelper = new CacheHelper<>(cacheManager, "groups", Group.class);
     }
 
     public ResponseEntity<Object> create(Group group) throws JsonProcessingException {
@@ -102,29 +113,29 @@ public class GroupService {
         return groupRepository.findAll();
     }
 
+    public ResponseEntity<String> delete(String groupId) {
 
-    public String update(String entityId, Group newEntityInfo) {
-        return null;
-    }
+        Group group = findSingleGroupByIdInCacheOrDatabase(groupId);
 
-    public String delete(String groupId) {
-
-        Group group = groupRepository.findById(new ObjectId(groupId));
+        if (group == null) {
+            return ResponseEntity.badRequest().body("Group with id: " + groupId + "does not exist");
+        }
 
         groupRepository.delete(group);
+        groupCacheHelper.removeEntryFromCache(groupId);
 
-        return group.getName() + " has been deleted";
+        return ResponseEntity.ok(group.getName() + " has been deleted");
     }
 
     public ResponseEntity<Object> addGroupMember(String groupId, String userId) {
 
-        User newGroupMember = userRepository.findById(new ObjectId(userId));
+        User newGroupMember = userService.findSingleUserByIdInCacheOrDatabase(userId);
 
         if (newGroupMember == null) {
             return ResponseEntity.badRequest().body("user with id " + userId + " does not exists");
         }
 
-        Group group = groupRepository.findById(new ObjectId(groupId));
+        Group group = findSingleGroupByIdInCacheOrDatabase(groupId);
 
         if (group == null) {
             return ResponseEntity.badRequest().body("Group with id " + groupId + " does not exist");
@@ -133,23 +144,23 @@ public class GroupService {
         group.addNewMember(newGroupMember);
         newGroupMember.addGroup(group.getId());
 
-        groupRepository.save(group);
-        userRepository.save(newGroupMember);
+        updateSingleGroupInCacheAndDatabase(group);
+        userService.updateSingleUserInCacheAndDatabase(newGroupMember);
 
         return ResponseEntity.ok(newGroupMember.getFirstName() + " has been successfully added to " + group.getName());
     }
 
-    public String removeGroupMember(String groupId, String userId) {
+    public ResponseEntity<String> removeGroupMember(String groupId, String userId) {
         Group group = groupRepository.findById(new ObjectId(groupId));
 
         if (group == null) {
-            return "group with id " + groupId + " does not exists";
+            return ResponseEntity.badRequest().body("group with id " + groupId + " does not exists");
         }
         group.removeMember(userId);
 
-        groupRepository.save(group);
+        updateSingleGroupInCacheAndDatabase(group);
 
-        return "user with id: " + userId + " has been successfully removed from " + group.getName();
+        return ResponseEntity.ok("user with id: " + userId + " has been successfully removed from " + group.getName());
     }
 
     public ResponseEntity<Object> findMultipleById(List<String> groupIds) throws JsonProcessingException {
@@ -174,7 +185,7 @@ public class GroupService {
             return ResponseEntity.badRequest().body("No group id provided");
         }
 
-        Group group = groupRepository.findById(new ObjectId(groupId));
+        Group group = findSingleGroupByIdInCacheOrDatabase(groupId);
 
         if (group == null) {
             return ResponseEntity.badRequest().body("No group found");
@@ -234,7 +245,7 @@ public class GroupService {
 
         invitedUsersIds.remove(invitingUserId);
 
-        Group group = groupRepository.findById(new ObjectId(groupId));
+        Group group = findSingleGroupByIdInCacheOrDatabase(groupId);
 
         if (group == null) {
             return ResponseEntity.badRequest().body("No group found");
@@ -264,7 +275,7 @@ public class GroupService {
             group.getInvitedGroupMembersIds().add(user.getId());
         }
 
-        groupRepository.save(group);
+        updateSingleGroupInCacheAndDatabase(group);
         userRepository.saveAll(users);
 
         return ResponseEntity.ok("Invitation sent");
@@ -299,7 +310,7 @@ public class GroupService {
 
         userRepository.save(user);
 
-        groupRepository.save(group);
+        updateSingleGroupInCacheAndDatabase(group);
 
         return ResponseEntity.ok("Invitation accepted");
     }
@@ -333,7 +344,7 @@ public class GroupService {
 
         userRepository.save(user);
 
-        groupRepository.save(group);
+        updateSingleGroupInCacheAndDatabase(group);
 
         return ResponseEntity.ok("Invitation declined");
     }
@@ -361,7 +372,7 @@ public class GroupService {
             return ResponseEntity.badRequest().body("No reason provided");
         }
 
-        Group groupToReport = groupRepository.findById(new ObjectId(group.getId()));
+        Group groupToReport = findSingleGroupByIdInCacheOrDatabase(group.getId());
 
         if (groupToReport == null) {
             return ResponseEntity.badRequest().body("Group not found");
@@ -378,5 +389,17 @@ public class GroupService {
         ReportGroup savedReportGroup = reportGroupRepository.insert(newReportGroup);
 
         return ResponseEntity.ok(savedReportGroup);
+    }
+
+    @Cacheable(value = "groups", key = "#id", unless = "#result == null")
+    public Group findSingleGroupByIdInCacheOrDatabase(String groupId) {
+        return groupRepository.findById(new ObjectId(groupId));
+    }
+
+    public Group updateSingleGroupInCacheAndDatabase(Group group) {
+        Group cachedGroup = groupCacheHelper.getCachedEntry(group.getId());
+        if (cachedGroup != null) { groupCacheHelper.cacheEntry(group, group.getId()); }
+
+        return groupRepository.save(group);
     }
 }

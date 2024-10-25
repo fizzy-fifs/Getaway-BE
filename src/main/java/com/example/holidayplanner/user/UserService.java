@@ -88,7 +88,7 @@ public class UserService {
         this.mongoTemplate = mongoTemplate;
         this.userDeactivationRequestRepository = userDeactivationRequestRepository;
         this.reportUserRepository = reportUserRepository;
-        this.userCacheHelper = new CacheHelper<>(cacheManager, "user", User.class);
+        this.userCacheHelper = new CacheHelper<>(cacheManager, "users", User.class);
         this.mapper = new ObjectMapper().findAndRegisterModules();
         this.mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         this.passwordEncoder = new BCryptPasswordEncoder();
@@ -674,11 +674,11 @@ public class UserService {
     }
 
     @Cacheable(value = "users", key = "#id", unless = "#result == null")
-    private User findSingleUserByIdInCacheOrDatabase(String id) {
+    public User findSingleUserByIdInCacheOrDatabase(String id) {
         return userRepository.findById(new ObjectId(id));
     }
 
-    private List<User> findMultipleUsersByIdInCacheOrDatabase(List<String> userIds) {
+    public List<User> findMultipleUsersByIdInCacheOrDatabase(List<String> userIds) {
         List<User> cachedUsers = userCacheHelper.getCachedEntries(userIds);
 
         List<String> idsToFetch = userIds.stream().filter(id ->
@@ -695,14 +695,14 @@ public class UserService {
         return allUsers;
     }
 
-    private User updateSingleUserInCacheAndDatabase(User user) {
+    public User updateSingleUserInCacheAndDatabase(User user) {
         User cachedUser = userCacheHelper.getCachedEntry(user.getId());
         if (cachedUser != null) { userCacheHelper.cacheEntry(user, user.getId()); }
 
         return userRepository.save(user);
     }
 
-    private List<User> updateMultipleUsersInCacheAndDatabase(List<User> users) {
+    public List<User> updateMultipleUsersInCacheAndDatabase(List<User> users) {
         List<String> userIds = users.stream().map(User::getId).toList();
 
         List<User> cachedUsers = userCacheHelper.getCachedEntries(userIds);
