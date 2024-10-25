@@ -1,6 +1,5 @@
 package com.example.holidayplanner.helpers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 
@@ -10,38 +9,40 @@ import java.util.function.Function;
 
 public class CacheHelper<T> {
 
-    @Autowired
-    private final CacheManager cacheManager;
+    private final Class<T> cacheEntryType;
 
-    private final String cacheName;
+    private final Cache cache;
 
-    public CacheHelper(CacheManager cacheManager, String cacheName) {
-        this.cacheManager = cacheManager;
-        this.cacheName = cacheName;
+    public CacheHelper(CacheManager cacheManager, String cacheName, Class<T> cacheEntryType) {
+        this.cacheEntryType = cacheEntryType;
+        this.cache = cacheManager.getCache(cacheName);
+        assert cache != null;
+    }
+
+    public void cacheEntry(T entryToCache, String cacheKey) {
+        cache.put(cacheKey, entryToCache);
+    }
+
+    public void cacheEntries(List<T> entriesToCache, Function<T, String> cacheKeyExtractor) {
+        for (T entry : entriesToCache) {
+            String id = cacheKeyExtractor.apply(entry);
+            cache.put(id, entry);
+        }
+    }
+    
+    public T getCachedEntry(String cachedKey) {
+        return cache.get(cachedKey, cacheEntryType);
     }
 
     public List<T> getCachedEntries(List<String> cachedKey) {
-        Cache cache = cacheManager.getCache(cacheName);
-        assert cache != null;
-
         List<T> cachedEntries = new ArrayList<>();
         for (String key : cachedKey){
-            Cache.ValueWrapper cachedValue = cache.get(key);
+            T cachedValue = cache.get(key, cacheEntryType);
             if (cachedValue != null) {
-                cachedEntries.add((T) cachedValue.get());
+                cachedEntries.add(cachedValue);
             }
         }
 
         return cachedEntries;
-    }
-
-    public void cacheEntries(List<T> itemsToCache, Function<T, String> idExtractor) {
-        Cache cache = cacheManager.getCache(cacheName);
-        assert cache != null;
-
-        for (T item : itemsToCache) {
-            String id = idExtractor.apply(item);
-            cache.put(id, item);
-        }
     }
 }

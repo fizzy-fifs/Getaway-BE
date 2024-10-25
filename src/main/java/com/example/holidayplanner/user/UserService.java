@@ -88,7 +88,7 @@ public class UserService {
         this.mongoTemplate = mongoTemplate;
         this.userDeactivationRequestRepository = userDeactivationRequestRepository;
         this.reportUserRepository = reportUserRepository;
-        this.userCacheHelper = new CacheHelper<>(cacheManager, "user");
+        this.userCacheHelper = new CacheHelper<>(cacheManager, "user", User.class);
         this.mapper = new ObjectMapper().findAndRegisterModules();
         this.mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         this.passwordEncoder = new BCryptPasswordEncoder();
@@ -196,8 +196,7 @@ public class UserService {
         }
 
         user.setLastLogin(LocalDateTime.now());
-        //ToDo: Update user cache
-        userRepository.save(user);
+        saveUser(user);
 
         return ResponseEntity.ok(responseData);
 
@@ -234,8 +233,8 @@ public class UserService {
             currentUserInfo.setPassword(newEncodedPassword);
         }
 
-        //ToDo: Update user cache
-        userRepository.save(currentUserInfo);
+        saveUser(currentUserInfo);
+
         return ResponseEntity.ok("User has been successfully updated");
     }
 
@@ -257,8 +256,7 @@ public class UserService {
         UserDeactivationRequest userDeactivationRequest = new UserDeactivationRequest(user, LocalDateTime.now());
 
         userDeactivationRequestRepository.save(userDeactivationRequest);
-//        ToDo: Update user cache
-        userRepository.save(user);
+        saveUser(user);
 
         return ResponseEntity.ok("Your account will be deactivated in 30 days");
     }
@@ -308,6 +306,7 @@ public class UserService {
         allegedFriend.addFriendRequest(principal.getId());
         principal.addToFriendRequestsSent(allegedFriend.getId());
 
+        //ToDo:Save all users method that checks cache for users, updates all the user objects that were already in the cache and save all the users(cached and uncached) to the DB.
         userRepository.saveAll(Arrays.asList(allegedFriend, principal));
         return ResponseEntity.ok(allegedFriend.getFirstName() + " has been sent a friend request");
     }
@@ -462,7 +461,11 @@ public class UserService {
         user.setRecentUserSearchHistory(recentUserSearchHistory);
 
         Query searchQuery = new Query();
-        Criteria criteria = new Criteria().orOperator(Criteria.where("firstName").regex(sanitizedSearchTerm, "i"), Criteria.where("lastName").regex(sanitizedSearchTerm, "i"), Criteria.where("userName").regex(sanitizedSearchTerm, "i"), Criteria.where("email").regex(sanitizedSearchTerm, "i"));
+        Criteria criteria = new Criteria().orOperator(
+                Criteria.where("firstName").regex(sanitizedSearchTerm, "i"),
+                Criteria.where("lastName").regex(sanitizedSearchTerm, "i"),
+                Criteria.where("userName").regex(sanitizedSearchTerm, "i"),
+                Criteria.where("email").regex(sanitizedSearchTerm, "i"));
 
         searchQuery.addCriteria(criteria);
         int pageSize = 10;
@@ -473,7 +476,7 @@ public class UserService {
         List<User> users = mongoTemplate.find(searchQuery, User.class);
         users.remove(user);
         users.removeIf(u -> u.getEmail().equals("admin@mail.com"));
-        userRepository.save(user);
+        saveUser(user);
         return ResponseEntity.ok(users);
     }
 
@@ -524,14 +527,14 @@ public class UserService {
         }
 
         user.setDeviceToken(deviceToken);
-        userRepository.save(user);
+        saveUser(user);
 
         return ResponseEntity.ok("Device token saved");
     }
 
     public ResponseEntity<Object> reportUser(ReportUser reportUser) {
         User reportedUser = reportUser.getUserReported();
-        if ( reportedUser == null || reportUser.getUserReporting() == null) {
+        if (reportedUser == null || reportUser.getUserReporting() == null) {
             return ResponseEntity.badRequest().body("Reported user and user reporting cannot be null");
         }
 
@@ -594,8 +597,7 @@ public class UserService {
             userDeactivationRequestRepository.delete(userDeactivationRequest);
         }
 
-        //ToDo:Update cache
-        User savedUser = userRepository.save(user);
+        User savedUser = saveUser(user);
 
         var savedUserJson = mapper.writeValueAsString(savedUser);
 
@@ -693,6 +695,13 @@ public class UserService {
     @Cacheable(value = "users", key = "#id", unless = "#result == null")
     private User findUserByIdCached(String id) {
         return userRepository.findById(new ObjectId(id));
+    }
+
+    private User saveUser(User user) {
+        User cachedUser = userCacheHelper.getCachedEntry(user.getId());
+        if (cachedUser != null) { userCacheHelper.cacheEntry(user, user.getId()); }
+
+        return userRepository.save(user);
     }
 
     private List<String> getLastDigitsOfPhoneNumbersRegex(List<String> phoneNumbers) {
