@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Caching for find multiple holiday invites endpoint">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Extend create holiday endpoints to find and update entities in cache.">
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/holidayInvite/HolidayInviteController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/holidayInvite/HolidayInviteController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/holidayInvite/HolidayInviteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/holidayInvite/HolidayInviteService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,6 +160,14 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1693213386150</updated>
+    </task>
+    <task id="LOCAL-00062" summary="Skip number less than 7 digits">
+      <option name="closed" value="true" />
+      <created>1701018728002</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1701018728002</updated>
     </task>
     <task id="LOCAL-00063" summary="Fix error with query">
       <option name="closed" value="true" />
@@ -544,15 +553,7 @@
       <option name="project" value="LOCAL" />
       <updated>1729909769247</updated>
     </task>
-    <task id="LOCAL-00111" summary="Caching for find multiple holiday invites endpoint">
-      <option name="closed" value="true" />
-      <created>1729949209179</created>
-      <option name="number" value="00111" />
-      <option name="presentableId" value="LOCAL-00111" />
-      <option name="project" value="LOCAL" />
-      <updated>1729949209180</updated>
-    </task>
-    <option name="localTasksCounter" value="112" />
+    <option name="localTasksCounter" value="111" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -567,6 +568,7 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <MESSAGE value="1. Remove findAll endpoint 2. Create IpRateLimiter bean" />
     <MESSAGE value="Send user-friendly error message when user hits rate limit" />
     <MESSAGE value="Fix bug that allows the same friend request to be sent multiple times." />
     <MESSAGE value="Remove redundant castings" />
@@ -591,8 +593,7 @@
     <MESSAGE value="Update invite users endpoints" />
     <MESSAGE value="Extend endpoints to find and update entities in cache." />
     <MESSAGE value="Extend create holiday endpoints to find and update entities in cache." />
-    <MESSAGE value="Caching for find multiple holiday invites endpoint" />
-    <option name="LAST_COMMIT_MESSAGE" value="Caching for find multiple holiday invites endpoint" />
+    <option name="LAST_COMMIT_MESSAGE" value="Extend create holiday endpoints to find and update entities in cache." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
