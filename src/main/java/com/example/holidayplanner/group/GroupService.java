@@ -7,7 +7,6 @@ import com.example.holidayplanner.helpers.CacheHelper;
 import com.example.holidayplanner.helpers.Helper;
 import com.example.holidayplanner.groupInvite.GroupInvite;
 import com.example.holidayplanner.user.User;
-import com.example.holidayplanner.user.UserRepository;
 import com.example.holidayplanner.user.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class GroupService {
@@ -33,9 +33,6 @@ public class GroupService {
 
     @Autowired
     private final UserService userService;
-
-    @Autowired
-    private final UserRepository userRepository;
 
     @Autowired
     private final ObjectMapper mapper;
@@ -52,10 +49,9 @@ public class GroupService {
     private final CacheHelper<Group> groupCacheHelper;
 
     @Autowired
-    public GroupService(GroupRepository groupRepository, UserService userService, UserRepository userRepository, ObjectMapper mapper, MongoTemplate mongoTemplate, GroupInviteRepository groupInviteRepository, ReportGroupRepository reportGroupRepository, CacheManager cacheManager) {
+    public GroupService(GroupRepository groupRepository, UserService userService, ObjectMapper mapper, MongoTemplate mongoTemplate, GroupInviteRepository groupInviteRepository, ReportGroupRepository reportGroupRepository, CacheManager cacheManager) {
         this.groupRepository = groupRepository;
         this.userService = userService;
-        this.userRepository = userRepository;
         this.mapper = mapper;
         this.mongoTemplate = mongoTemplate;
         this.groupInviteRepository = groupInviteRepository;
@@ -65,10 +61,10 @@ public class GroupService {
 
     public ResponseEntity<Object> create(Group group) throws JsonProcessingException {
 
-        List<String> userIds = new ArrayList<>(group.getInvitedGroupMembersIds());
-        User groupCreator = group.getGroupMembers().get(0);
+        List<String> userIds = new ArrayList<>(group.getInvitedGroupMemberIds());
+        String groupCreatorId = group.getGroupMemberIds().get(0);
 
-        userIds.add(groupCreator.getId());
+        userIds.add(groupCreatorId);
 
         List<User> users = userService.findMultipleUsersByIdInCacheOrDatabase(userIds);
 
@@ -76,13 +72,17 @@ public class GroupService {
             return ResponseEntity.badRequest().body("One of the users added does not exist");
         }
 
+        User groupCreator = null;
         for (User user : users) {
-            if (user.getBlockedUserIds().contains(groupCreator.getId())) {
-                group.getGroupMembers().remove(user);
-                group.getInvitedGroupMembersIds().remove(user.getId());
+            if (user.getBlockedUserIds().contains(groupCreatorId)) {
+                group.getGroupMemberIds().remove(user.getId());
+                group.getInvitedGroupMemberIds().remove(user.getId());
                 users.remove(user);
             }
+
+            if (Objects.equals(user.getId(), groupCreatorId)) { groupCreator = user; }
         }
+        assert groupCreator != null;
 
         group.setName(Helper.toSentenceCase(group.getName()));
         group.setDescription(Helper.toSentenceCase(group.getDescription()));
@@ -93,11 +93,11 @@ public class GroupService {
 
         GroupInvite savedGroupInvite = groupInviteRepository.insert(newGroupInvite);
 
-        for (User invitedMember : users) {
-            if (!invitedMember.getId().equals(groupCreator.getId())) {
-                invitedMember.addGroupInviteId(savedGroupInvite.getId());
+        for (User user : users) {
+            if (!user.getId().equals(groupCreatorId)) {
+                user.addGroupInviteId(savedGroupInvite.getId());
             } else {
-                invitedMember.addGroup(newGroup.getId());
+                user.addGroup(newGroup.getId());
             }
         }
 
@@ -137,7 +137,7 @@ public class GroupService {
             return ResponseEntity.badRequest().body("Group with id " + groupId + " does not exist");
         }
 
-        group.addNewMember(newGroupMember);
+        group.addNewMember(newGroupMember.getId());
         newGroupMember.addGroup(group.getId());
 
         updateSingleGroupInCacheAndDatabase(group);
@@ -264,7 +264,7 @@ public class GroupService {
 
         User invitingUser = users.stream().filter(user -> user.getId().equals(invitingUserId)).findFirst().get();
         users.remove(invitingUser);
-        users.removeIf(user -> group.getGroupMembers().contains(user) || group.getInvitedGroupMembersIds().contains(user.getId()) || user.getGroupIds().contains(group.getId()));
+        users.removeIf(user -> group.getGroupMemberIds().contains(user) || group.getInvitedGroupMemberIds().contains(user.getId()) || user.getGroupIds().contains(group.getId()));
         users.removeIf(user -> user.getBlockedUserIds().contains(invitingUser.getId()));
 
         GroupInvite newGroupInvite = new GroupInvite(group, invitingUser);
@@ -272,7 +272,7 @@ public class GroupService {
 
         for (User user : users) {
             user.getGroupInviteIds().add(savedGroupInvite.getId());
-            group.getInvitedGroupMembersIds().add(user.getId());
+            group.getInvitedGroupMemberIds().add(user.getId());
         }
 
         updateSingleGroupInCacheAndDatabase(group);
@@ -302,7 +302,7 @@ public class GroupService {
 
         user.addGroup(group.getId());
 
-        group.addNewMember(user);
+        group.addNewMember(user.getId());
 
         group.removeInvitedMember(user.getId());
 
