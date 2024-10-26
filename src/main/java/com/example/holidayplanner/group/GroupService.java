@@ -7,7 +7,6 @@ import com.example.holidayplanner.helpers.CacheHelper;
 import com.example.holidayplanner.helpers.Helper;
 import com.example.holidayplanner.groupInvite.GroupInvite;
 import com.example.holidayplanner.user.User;
-import com.example.holidayplanner.user.UserRepository;
 import com.example.holidayplanner.user.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,9 +34,6 @@ public class GroupService {
     private final UserService userService;
 
     @Autowired
-    private final UserRepository userRepository;
-
-    @Autowired
     private final ObjectMapper mapper;
 
     @Autowired
@@ -52,10 +48,9 @@ public class GroupService {
     private final CacheHelper<Group> groupCacheHelper;
 
     @Autowired
-    public GroupService(GroupRepository groupRepository, UserService userService, UserRepository userRepository, ObjectMapper mapper, MongoTemplate mongoTemplate, GroupInviteRepository groupInviteRepository, ReportGroupRepository reportGroupRepository, CacheManager cacheManager) {
+    public GroupService(GroupRepository groupRepository, UserService userService, ObjectMapper mapper, MongoTemplate mongoTemplate, GroupInviteRepository groupInviteRepository, ReportGroupRepository reportGroupRepository, CacheManager cacheManager) {
         this.groupRepository = groupRepository;
         this.userService = userService;
-        this.userRepository = userRepository;
         this.mapper = mapper;
         this.mongoTemplate = mongoTemplate;
         this.groupInviteRepository = groupInviteRepository;
@@ -93,11 +88,11 @@ public class GroupService {
 
         GroupInvite savedGroupInvite = groupInviteRepository.insert(newGroupInvite);
 
-        for (User invitedMember : users) {
-            if (!invitedMember.getId().equals(groupCreator.getId())) {
-                invitedMember.addGroupInviteId(savedGroupInvite.getId());
+        for (User user : users) {
+            if (!user.getId().equals(groupCreator.getId())) {
+                user.addGroupInviteId(savedGroupInvite.getId());
             } else {
-                invitedMember.addGroup(newGroup.getId());
+                user.addGroup(newGroup.getId());
             }
         }
 
