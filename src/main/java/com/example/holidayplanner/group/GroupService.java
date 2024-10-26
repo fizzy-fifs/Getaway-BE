@@ -256,7 +256,7 @@ public class GroupService {
         userIdsToCheck.add(invitingUserId);
         userIdsToCheck.addAll(invitedUsersIds);
 
-        List<User> users = (List<User>) userRepository.findAllById(userIdsToCheck);
+        List<User> users = userService.findMultipleUsersByIdInCacheOrDatabase(userIdsToCheck);
 
         if (users.size() != userIdsToCheck.size()) {
             return ResponseEntity.badRequest().body("One or more of the userIds cannot be found");
@@ -276,7 +276,7 @@ public class GroupService {
         }
 
         updateSingleGroupInCacheAndDatabase(group);
-        userRepository.saveAll(users);
+        userService.updateMultipleUsersInCacheAndDatabase(users);
 
         return ResponseEntity.ok("Invitation sent");
     }
