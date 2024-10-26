@@ -292,7 +292,7 @@ public class GroupService {
             return ResponseEntity.badRequest().body("Group invite not found");
         }
 
-        User user = userRepository.findById(new ObjectId(userId));
+        User user = userService.findSingleUserByIdInCacheOrDatabase(userId);
 
         if (user == null) {
             return ResponseEntity.badRequest().body("User not found");
@@ -308,7 +308,7 @@ public class GroupService {
 
         user.deleteGroupInvite(groupInvite.getId());
 
-        userRepository.save(user);
+        userService.updateSingleUserInCacheAndDatabase(user);
 
         updateSingleGroupInCacheAndDatabase(group);
 
@@ -326,7 +326,7 @@ public class GroupService {
             return ResponseEntity.badRequest().body("Group invite not found");
         }
 
-        User user = userRepository.findById(new ObjectId(userId));
+        User user = userService.findSingleUserByIdInCacheOrDatabase(userId);
 
         if (user == null) {
             return ResponseEntity.badRequest().body("User with id " + userId + " does not exist");
@@ -342,7 +342,7 @@ public class GroupService {
 
         group.removeInvitedMember(user.getId());
 
-        userRepository.save(user);
+        userService.updateSingleUserInCacheAndDatabase(user);
 
         updateSingleGroupInCacheAndDatabase(group);
 
@@ -372,19 +372,19 @@ public class GroupService {
             return ResponseEntity.badRequest().body("No reason provided");
         }
 
-        Group groupToReport = findSingleGroupByIdInCacheOrDatabase(group.getId());
+        Group groupReported = findSingleGroupByIdInCacheOrDatabase(group.getId());
 
-        if (groupToReport == null) {
+        if (groupReported == null) {
             return ResponseEntity.badRequest().body("Group not found");
         }
 
-        User userReporting = userRepository.findById(new ObjectId(user.getId()));
+        User userReporting = userService.findSingleUserByIdInCacheOrDatabase(user.getId());
 
         if (userReporting == null) {
             return ResponseEntity.badRequest().body("Reporting user not found");
         }
 
-        ReportGroup newReportGroup = new ReportGroup(groupToReport, userReporting, reason, LocalDateTime.now());
+        ReportGroup newReportGroup = new ReportGroup(groupReported, userReporting, reason, LocalDateTime.now());
 
         ReportGroup savedReportGroup = reportGroupRepository.insert(newReportGroup);
 

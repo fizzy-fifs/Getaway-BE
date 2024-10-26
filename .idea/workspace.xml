@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Method to check and update cache when looking for multiple groups by id">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/group/GroupService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/group/GroupService.java" afterDir="false" />
-    </list>
+    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Update invite users endpoints" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -160,30 +157,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1693213386150</updated>
-    </task>
-    <task id="LOCAL-00057" summary="Debugging 4">
-      <option name="closed" value="true" />
-      <created>1700924143848</created>
-      <option name="number" value="00057" />
-      <option name="presentableId" value="LOCAL-00057" />
-      <option name="project" value="LOCAL" />
-      <updated>1700924143848</updated>
-    </task>
-    <task id="LOCAL-00058" summary="Debugging 5">
-      <option name="closed" value="true" />
-      <created>1701009129079</created>
-      <option name="number" value="00058" />
-      <option name="presentableId" value="LOCAL-00058" />
-      <option name="project" value="LOCAL" />
-      <updated>1701009129080</updated>
-    </task>
-    <task id="LOCAL-00059" summary="Debugging 6">
-      <option name="closed" value="true" />
-      <created>1701009598426</created>
-      <option name="number" value="00059" />
-      <option name="presentableId" value="LOCAL-00059" />
-      <option name="project" value="LOCAL" />
-      <updated>1701009598426</updated>
     </task>
     <task id="LOCAL-00060" summary="Debugging 6">
       <option name="closed" value="true" />
@@ -553,7 +526,31 @@
       <option name="project" value="LOCAL" />
       <updated>1729896994885</updated>
     </task>
-    <option name="localTasksCounter" value="106" />
+    <task id="LOCAL-00106" summary="Method to check and update cache when looking for multiple groups by id">
+      <option name="closed" value="true" />
+      <created>1729900346621</created>
+      <option name="number" value="00106" />
+      <option name="presentableId" value="LOCAL-00106" />
+      <option name="project" value="LOCAL" />
+      <updated>1729900346621</updated>
+    </task>
+    <task id="LOCAL-00107" summary="Update search endpoints">
+      <option name="closed" value="true" />
+      <created>1729900833856</created>
+      <option name="number" value="00107" />
+      <option name="presentableId" value="LOCAL-00107" />
+      <option name="project" value="LOCAL" />
+      <updated>1729900833856</updated>
+    </task>
+    <task id="LOCAL-00108" summary="Update invite users endpoints">
+      <option name="closed" value="true" />
+      <created>1729901158927</created>
+      <option name="number" value="00108" />
+      <option name="presentableId" value="LOCAL-00108" />
+      <option name="project" value="LOCAL" />
+      <updated>1729901158927</updated>
+    </task>
+    <option name="localTasksCounter" value="109" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -568,8 +565,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Little adjustments" />
-    <MESSAGE value="Return 404 when tries to accept a friend request that does not exist" />
     <MESSAGE value="Hash password when user updates their password." />
     <MESSAGE value="Implement rate limits per second per ip" />
     <MESSAGE value="1. Remove findAll endpoint 2. Create IpRateLimiter bean" />
@@ -593,7 +588,9 @@
     <MESSAGE value="Remove get all groups endpoint" />
     <MESSAGE value="Modify remove group member endpoint to find and update both user and group in their respective cache." />
     <MESSAGE value="Method to check and update cache when looking for multiple groups by id" />
-    <option name="LAST_COMMIT_MESSAGE" value="Method to check and update cache when looking for multiple groups by id" />
+    <MESSAGE value="Update search endpoints" />
+    <MESSAGE value="Update invite users endpoints" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update invite users endpoints" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
