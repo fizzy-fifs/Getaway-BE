@@ -57,7 +57,7 @@ public class HolidayController {
         return holidayService.acceptInvite(holidayInviteId, userId);
     }
 
-    @PutMapping(path= "/declineinvite/{holidayInviteId}/{userId}")
+    @PutMapping (path= "/declineinvite/{holidayInviteId}/{userId}")
     @Operation(summary = "Decline a holiday invite")
     public ResponseEntity declineInvite(@PathVariable("holidayInviteId") String holidayInviteId, @PathVariable("userId") String userId) {
         return holidayService.declineInvite(holidayInviteId, userId);

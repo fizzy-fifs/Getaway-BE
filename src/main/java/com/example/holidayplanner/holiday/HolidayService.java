@@ -6,11 +6,13 @@ import com.example.holidayplanner.budget.Budget;
 import com.example.holidayplanner.budget.BudgetRepository;
 import com.example.holidayplanner.group.Group;
 import com.example.holidayplanner.group.GroupRepository;
+import com.example.holidayplanner.group.GroupService;
 import com.example.holidayplanner.helpers.Helper;
 import com.example.holidayplanner.holidayInvite.HolidayInvite;
 import com.example.holidayplanner.holidayInvite.HolidayInviteRepository;
 import com.example.holidayplanner.user.User;
 import com.example.holidayplanner.user.UserRepository;
+import com.example.holidayplanner.user.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
@@ -33,8 +35,12 @@ public class HolidayService {
     @Autowired
     private final HolidayRepository holidayRepository;
 
+    private final UserService userService;
+
     @Autowired
     private final UserRepository userRepository;
+
+    private final GroupService groupService;
 
     @Autowired
     private final GroupRepository groupRepository;
@@ -49,11 +55,13 @@ public class HolidayService {
     private final AvailableDatesRepository availableDatesRepository;
 
     @Autowired
-    private HolidayInviteRepository holidayInviteRepository;
+    private final HolidayInviteRepository holidayInviteRepository;
 
-    public HolidayService(HolidayRepository holidayRepository, UserRepository userRepository, GroupRepository groupRepository, ObjectMapper mapper, BudgetRepository budgetRepository, AvailableDatesRepository availableDatesRepository, HolidayInviteRepository holidayInviteRepository) {
+    public HolidayService(HolidayRepository holidayRepository, UserService userService, UserRepository userRepository, GroupService groupService, GroupRepository groupRepository, ObjectMapper mapper, BudgetRepository budgetRepository, AvailableDatesRepository availableDatesRepository, HolidayInviteRepository holidayInviteRepository) {
         this.holidayRepository = holidayRepository;
+        this.userService = userService;
         this.userRepository = userRepository;
+        this.groupService = groupService;
         this.groupRepository = groupRepository;
         this.mapper = mapper;
         this.budgetRepository = budgetRepository;
@@ -71,7 +79,7 @@ public class HolidayService {
         String holidayCreatorId = holiday.getHolidayMakers().get(0).getId();
         userIdsToCheck.add(holidayCreatorId);
 
-        List<User> confirmedUsers = userRepository.findAllById(userIdsToCheck);
+        List<User> confirmedUsers = userService.findMultipleUsersByIdInCacheOrDatabase(userIdsToCheck);
 
         if (confirmedUsers.size() != userIdsToCheck.size()) {
             return ResponseEntity.badRequest().body("One of the user ids added is invalid");
@@ -83,7 +91,7 @@ public class HolidayService {
             return ResponseEntity.badRequest().body("Group id is null or empty. Please add a valid group id");
         }
 
-        Group group = groupRepository.findById(new ObjectId(groupId));
+        Group group = groupService.findSingleGroupByIdInCacheOrDatabase(groupId);
 
         if (group == null) {
             return ResponseEntity.badRequest().body("Group id is invalid. Please add a valid group id");
@@ -118,9 +126,9 @@ public class HolidayService {
             user.addHoliday(newHoliday.getId());
         }
 
-        groupRepository.save(group);
+        groupService.updateSingleGroupInCacheAndDatabase(group);
 
-        userRepository.saveAll(confirmedUsers);
+        userService.updateMultipleUsersInCacheAndDatabase(confirmedUsers);
 
         String holidayJson = mapper.writeValueAsString(newHoliday);
 

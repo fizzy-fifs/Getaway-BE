@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Update invite users endpoints" />
+    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Extend endpoints to find and update entities in cache.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/holiday/HolidayController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/holiday/HolidayController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/holiday/HolidayService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/holiday/HolidayService.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -157,14 +161,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1693213386150</updated>
-    </task>
-    <task id="LOCAL-00060" summary="Debugging 6">
-      <option name="closed" value="true" />
-      <created>1701016488079</created>
-      <option name="number" value="00060" />
-      <option name="presentableId" value="LOCAL-00060" />
-      <option name="project" value="LOCAL" />
-      <updated>1701016488079</updated>
     </task>
     <task id="LOCAL-00061" summary="Query with last digits or email.">
       <option name="closed" value="true" />
@@ -550,7 +546,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729901158927</updated>
     </task>
-    <option name="localTasksCounter" value="109" />
+    <task id="LOCAL-00109" summary="Extend endpoints to find and update entities in cache.">
+      <option name="closed" value="true" />
+      <created>1729901542782</created>
+      <option name="number" value="00109" />
+      <option name="presentableId" value="LOCAL-00109" />
+      <option name="project" value="LOCAL" />
+      <updated>1729901542782</updated>
+    </task>
+    <option name="localTasksCounter" value="110" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -565,7 +569,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Hash password when user updates their password." />
     <MESSAGE value="Implement rate limits per second per ip" />
     <MESSAGE value="1. Remove findAll endpoint 2. Create IpRateLimiter bean" />
     <MESSAGE value="Send user-friendly error message when user hits rate limit" />
@@ -590,7 +593,8 @@
     <MESSAGE value="Method to check and update cache when looking for multiple groups by id" />
     <MESSAGE value="Update search endpoints" />
     <MESSAGE value="Update invite users endpoints" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update invite users endpoints" />
+    <MESSAGE value="Extend endpoints to find and update entities in cache." />
+    <option name="LAST_COMMIT_MESSAGE" value="Extend endpoints to find and update entities in cache." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
