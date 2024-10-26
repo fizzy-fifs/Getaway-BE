@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Extend endpoints to find and update entities in cache.">
+    <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Extend create holiday endpoints to find and update entities in cache.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/holiday/HolidayController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/holiday/HolidayController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/holiday/HolidayService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/holiday/HolidayService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/groupInvite/GroupInviteController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/groupInvite/GroupInviteController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/groupInvite/GroupInviteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/groupInvite/GroupInviteService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -161,14 +161,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1693213386150</updated>
-    </task>
-    <task id="LOCAL-00061" summary="Query with last digits or email.">
-      <option name="closed" value="true" />
-      <created>1701017732061</created>
-      <option name="number" value="00061" />
-      <option name="presentableId" value="LOCAL-00061" />
-      <option name="project" value="LOCAL" />
-      <updated>1701017732061</updated>
     </task>
     <task id="LOCAL-00062" summary="Skip number less than 7 digits">
       <option name="closed" value="true" />
@@ -554,7 +546,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729901542782</updated>
     </task>
-    <option name="localTasksCounter" value="110" />
+    <task id="LOCAL-00110" summary="Extend create holiday endpoints to find and update entities in cache.">
+      <option name="closed" value="true" />
+      <created>1729909769246</created>
+      <option name="number" value="00110" />
+      <option name="presentableId" value="LOCAL-00110" />
+      <option name="project" value="LOCAL" />
+      <updated>1729909769247</updated>
+    </task>
+    <option name="localTasksCounter" value="111" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -569,7 +569,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Implement rate limits per second per ip" />
     <MESSAGE value="1. Remove findAll endpoint 2. Create IpRateLimiter bean" />
     <MESSAGE value="Send user-friendly error message when user hits rate limit" />
     <MESSAGE value="Fix bug that allows the same friend request to be sent multiple times." />
@@ -594,7 +593,8 @@
     <MESSAGE value="Update search endpoints" />
     <MESSAGE value="Update invite users endpoints" />
     <MESSAGE value="Extend endpoints to find and update entities in cache." />
-    <option name="LAST_COMMIT_MESSAGE" value="Extend endpoints to find and update entities in cache." />
+    <MESSAGE value="Extend create holiday endpoints to find and update entities in cache." />
+    <option name="LAST_COMMIT_MESSAGE" value="Extend create holiday endpoints to find and update entities in cache." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

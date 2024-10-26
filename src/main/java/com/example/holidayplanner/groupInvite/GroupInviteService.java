@@ -1,12 +1,16 @@
 package com.example.holidayplanner.groupInvite;
 
+import com.example.holidayplanner.helpers.CacheHelper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -14,20 +18,23 @@ public class GroupInviteService {
     @Autowired
     private final GroupInviteRepository groupInviteRepository;
 
+    private final CacheHelper<GroupInvite> groupInviteCacheHelper;
+
     @Autowired
     private final ObjectMapper objectMapper;
 
-    public GroupInviteService(GroupInviteRepository groupInviteRepository, ObjectMapper objectMapper) {
+    public GroupInviteService(GroupInviteRepository groupInviteRepository, ObjectMapper objectMapper, CacheManager cacheManager) {
         this.groupInviteRepository = groupInviteRepository;
         this.objectMapper = objectMapper;
+        this.groupInviteCacheHelper = new CacheHelper<>(cacheManager, "group invites", GroupInvite.class);
     }
 
-    public ResponseEntity findById(String groupInviteId) throws JsonProcessingException {
+    public ResponseEntity<String> findById(String groupInviteId) throws JsonProcessingException {
         if (groupInviteId == null) {
             return ResponseEntity.badRequest().body("No group invite id provided");
         }
 
-        GroupInvite groupInvite = groupInviteRepository.findById(new ObjectId(groupInviteId));
+        GroupInvite groupInvite = findSingleGroupInviteByIdInCacheOrDatabase(groupInviteId);
 
         if (groupInvite == null) {
             return ResponseEntity.badRequest().body("No group invite found");
@@ -38,19 +45,42 @@ public class GroupInviteService {
         return ResponseEntity.ok().body(groupInviteJson);
     }
 
-    public ResponseEntity findMultipleById(List<String> groupInviteIds) throws JsonProcessingException {
+    public ResponseEntity<String> findMultipleById(List<String> groupInviteIds) throws JsonProcessingException {
         if (groupInviteIds == null || groupInviteIds.isEmpty()) {
             return ResponseEntity.badRequest().body("No group invite ids provided");
         }
 
-        Iterable<GroupInvite> groupInvites = groupInviteRepository.findAllById(groupInviteIds);
+        List<GroupInvite> groupInvites = findMultipleGroupInvitesByIdInCacheOrDatabase(groupInviteIds);
 
-        if (groupInvites == null) {
+        if (groupInvites.isEmpty()) {
             return ResponseEntity.badRequest().body("No group invites found");
         }
 
         String groupInvitesJson = objectMapper.writeValueAsString(groupInvites);
 
         return ResponseEntity.ok().body(groupInvitesJson);
+    }
+
+    @Cacheable(value = "group invites", key = "#id", unless = "#result == null")
+    public GroupInvite findSingleGroupInviteByIdInCacheOrDatabase(String groupInviteId) {
+        return groupInviteRepository.findById(new ObjectId(groupInviteId));
+    }
+
+    public List<GroupInvite> findMultipleGroupInvitesByIdInCacheOrDatabase(List<String> groupInviteIds) {
+        List<GroupInvite> cachedGroupInvites = groupInviteCacheHelper.getCachedEntries(groupInviteIds);
+
+        List<String> idsToFetch = groupInviteIds.stream().filter(id -> cachedGroupInvites.stream().noneMatch(gi -> gi.getId().equals(id))).toList();
+
+        if (idsToFetch.isEmpty()) {
+            return cachedGroupInvites;
+        }
+
+        List<GroupInvite> freshGroupInvites = groupInviteRepository.findAllById(idsToFetch);
+
+        groupInviteCacheHelper.cacheEntries(freshGroupInvites, GroupInvite::getId);
+        List<GroupInvite> allGroupInvites = new ArrayList<>(cachedGroupInvites);
+        allGroupInvites.addAll(freshGroupInvites);
+
+        return allGroupInvites;
     }
 }

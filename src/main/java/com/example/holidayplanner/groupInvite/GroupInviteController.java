@@ -22,13 +22,13 @@ public class GroupInviteController {
 
     @GetMapping(path= "/{groupInviteId}")
     @Operation(summary = "Find group invite by id")
-    public ResponseEntity findById(@PathVariable("groupInviteId") String groupInviteId) throws JsonProcessingException {
+    public ResponseEntity<String> findById(@PathVariable("groupInviteId") String groupInviteId) throws JsonProcessingException {
         return groupInviteService.findById(groupInviteId);
     }
 
     @PostMapping(path = "/findmultiplebyid")
     @Operation(summary = "Find multiple group invites by their ids")
-    public ResponseEntity findMultipleById(@RequestBody List<String> groupInviteIds) throws JsonProcessingException {
+    public ResponseEntity<String> findMultipleById(@RequestBody List<String> groupInviteIds) throws JsonProcessingException {
         return groupInviteService.findMultipleById(groupInviteIds);
     }
 }
