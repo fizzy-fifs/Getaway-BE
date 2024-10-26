@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Extend create holiday endpoints to find and update entities in cache.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/groupInvite/GroupInviteController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/groupInvite/GroupInviteController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/groupInvite/GroupInviteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/groupInvite/GroupInviteService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/holidayInvite/HolidayInviteController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/holidayInvite/HolidayInviteController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/holidayInvite/HolidayInviteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/holidayInvite/HolidayInviteService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

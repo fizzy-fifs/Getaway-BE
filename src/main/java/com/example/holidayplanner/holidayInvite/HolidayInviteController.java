@@ -28,7 +28,7 @@ public class HolidayInviteController {
 
     @PostMapping("/findmultiplebyid")
     @Operation(summary = "Find multiple holiday invites by their ids")
-    public ResponseEntity findMultipleById(@RequestBody List<String> holidayInviteIds) throws JsonProcessingException {
+    public ResponseEntity<String> findMultipleById(@RequestBody List<String> holidayInviteIds) throws JsonProcessingException {
         return holidayInviteService.findMultipleById(holidayInviteIds);
     }
 }
