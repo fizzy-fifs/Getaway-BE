@@ -108,7 +108,7 @@ public class UserController {
 
     @GetMapping(path = "/search/{searchTerm}/{userId}")
     @Operation(summary = "Search for a user")
-    public ResponseEntity<Object> search(@PathVariable("searchTerm") String searchTerm, @PathVariable("userId") String userId) {
+    public ResponseEntity<String> search(@PathVariable("searchTerm") String searchTerm, @PathVariable("userId") String userId) throws JsonProcessingException {
         return userService.search(searchTerm, userId);
     }
 

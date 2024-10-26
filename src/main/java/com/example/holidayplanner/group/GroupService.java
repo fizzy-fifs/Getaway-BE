@@ -195,8 +195,8 @@ public class GroupService {
         return ResponseEntity.ok(groupJson);
     }
 
-    public ResponseEntity<Object> search(String searchTerm, String userId) {
-        User user = userRepository.findById(new ObjectId(userId));
+    public ResponseEntity<String> search(String searchTerm, String userId) throws JsonProcessingException {
+        User user = userService.findSingleUserByIdInCacheOrDatabase(userId);
 
         if (user == null) {
             return ResponseEntity.badRequest().body("User with id " + userId + " does not exist");
@@ -226,9 +226,10 @@ public class GroupService {
 
         List<Group> groups = mongoTemplate.find(searchQuery, Group.class);
 
-        userRepository.save(user);
+        userService.updateSingleUserInCacheAndDatabase(user);
 
-        return ResponseEntity.ok(groups);
+        String groupsJson = mapper.writeValueAsString(groups);
+        return ResponseEntity.ok(groupsJson);
     }
 
     public ResponseEntity<Object> inviteUsers(String groupId, String invitingUserId, List<String> invitedUsersIds) {

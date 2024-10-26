@@ -434,7 +434,7 @@ public class UserService {
         return ResponseEntity.ok(usersJson);
     }
 
-    public ResponseEntity<Object> search(String searchTerm, String userId) {
+    public ResponseEntity<String> search(String searchTerm, String userId) throws JsonProcessingException {
         User user = findSingleUserByIdInCacheOrDatabase(userId);
 
         if (user == null) {
@@ -472,7 +472,9 @@ public class UserService {
         users.remove(user);
         users.removeIf(u -> u.getEmail().equals("admin@mail.com"));
         updateSingleUserInCacheAndDatabase(user);
-        return ResponseEntity.ok(users);
+
+        String usersJson = mapper.writeValueAsString(users);
+        return ResponseEntity.ok(usersJson);
     }
 
     public ResponseEntity<String> findById(String id) throws JsonProcessingException {
