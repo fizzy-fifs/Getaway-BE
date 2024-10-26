@@ -28,10 +28,10 @@ public class Group {
     @JsonProperty
     @DBRef
     @CascadeSave
-    private List<String> groupMemberIds = new ArrayList<>();
+    private List<User> groupMembers = new ArrayList<>();
 
     @JsonProperty
-    private List<String> invitedGroupMemberIds = new ArrayList<>();
+    private List<String> invitedGroupMembersIds = new ArrayList<>();
 
     @JsonProperty
     private String description;
@@ -52,41 +52,43 @@ public class Group {
         this.name = name;
     }
 
-    public Group(String name, List<String> groupMemberIds) {
+    public Group(String name, List<User> groupMembers) {
         this.name = name;
-        this.groupMemberIds = groupMemberIds;
+        this.groupMembers = groupMembers;
     }
 
-    public Group(String name, List<String> groupMemberIds, List<String> invitedGroupMemberIds) {
+    public Group(String name, List<User> groupMembers, List<String> invitedGroupMembersIds) {
         this.name = name;
-        this.groupMemberIds = groupMemberIds;
-        this.invitedGroupMemberIds = invitedGroupMemberIds;
+        this.groupMembers = groupMembers;
+        this.invitedGroupMembersIds = invitedGroupMembersIds;
     }
 
-    public Group(String name, List<String> groupMemberIds, String description) {
+    public Group(String name, List<User> groupMembers, String description) {
         this.name = name;
-        this.groupMemberIds = groupMemberIds;
+        this.groupMembers = groupMembers;
         this.description = description;
     }
 
-    public Group(String name, List<String> groupMemberIds, String description, String image) {
+    public Group(String name, List<User> groupMembers, String description, String image) {
         this.name = name;
-        this.groupMemberIds = groupMemberIds;
+        this.groupMembers = groupMembers;
         this.description = description;
         this.image = image;
     }
 
-    public void addNewMember(String newGroupMemberId) {
-        this.groupMemberIds.add(newGroupMemberId);
+    public void addNewMember(User newGroupMember) {
+        this.groupMembers.add(newGroupMember);
     }
 
-    public void removeMember(String memberId) { this.groupMemberIds.remove(memberId); }
+    public void removeMember(String memberId) {
+        this.groupMembers.removeIf(member -> Objects.equals(member.getId(), memberId));
+    }
 
     public void addHoliday(Holiday holidayId) {
         holidays.add(holidayId);
     }
 
     public void removeInvitedMember(String invitedMemberId) {
-        this.invitedGroupMemberIds.removeIf(memberId -> Objects.equals(memberId, invitedMemberId));
+        this.invitedGroupMembersIds.removeIf(memberId -> Objects.equals(memberId, invitedMemberId));
     }
 }
