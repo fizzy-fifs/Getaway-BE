@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.List;
 
 @Data
 @Document(collection = "Users")
-public class User {
+public class User implements Serializable {
     @MongoId(value = FieldType.OBJECT_ID)
     @JsonProperty
     private String id;
@@ -95,6 +96,9 @@ public class User {
 
     @JsonProperty
     private boolean isActive = true;
+
+    @JsonProperty
+    private boolean isVerified = false;
 
     @JsonProperty
     private LocalDate dateJoined;

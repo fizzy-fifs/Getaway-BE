@@ -78,7 +78,7 @@ public class UserService {
     private final CacheHelper<User> userCacheHelper;
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, MyUserDetailsService myUserDetailsService, JwtUtil jwtTokenUtil, TokenService tokenService, AuthenticationManager authenticationManager, MongoTemplate mongoTemplate, UserDeactivationRequestRepository userDeactivationRequestRepository, ReportUserRepository reportUserRepository, CacheManager cacheManager) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, MyUserDetailsService myUserDetailsService, JwtUtil jwtTokenUtil, TokenService tokenService, AuthenticationManager authenticationManager, MongoTemplate mongoTemplate, UserDeactivationRequestRepository userDeactivationRequestRepository, ReportUserRepository reportUserRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.myUserDetailsService = myUserDetailsService;
@@ -88,7 +88,7 @@ public class UserService {
         this.mongoTemplate = mongoTemplate;
         this.userDeactivationRequestRepository = userDeactivationRequestRepository;
         this.reportUserRepository = reportUserRepository;
-        this.userCacheHelper = new CacheHelper<>(cacheManager, "users", User.class);
+        this.userCacheHelper = new CacheHelper<>();
         this.mapper = new ObjectMapper().findAndRegisterModules();
         this.mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         this.passwordEncoder = new BCryptPasswordEncoder();
@@ -699,7 +699,7 @@ public class UserService {
 
     public User updateSingleUserInCacheAndDatabase(User user) {
         User cachedUser = userCacheHelper.getCachedEntry(user.getId());
-        if (cachedUser != null) { userCacheHelper.cacheEntry(user, user.getId()); }
+        if (cachedUser != null) { userCacheHelper.cacheEntry(user.getId(), user); }
 
         return userRepository.save(user);
     }

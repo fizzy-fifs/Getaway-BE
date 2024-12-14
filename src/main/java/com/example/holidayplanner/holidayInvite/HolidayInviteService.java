@@ -22,10 +22,10 @@ public class HolidayInviteService {
     @Autowired
     private final ObjectMapper objectMapper;
 
-    public HolidayInviteService(HolidayInviteRepository holidayInviteRepository, ObjectMapper objectMapper, CacheManager cacheManager) {
+    public HolidayInviteService(HolidayInviteRepository holidayInviteRepository, ObjectMapper objectMapper) {
         this.holidayInviteRepository = holidayInviteRepository;
         this.objectMapper = objectMapper;
-        holidayInviteCacheHelper = new CacheHelper<>(cacheManager, "holiday invites", HolidayInvite.class);
+        holidayInviteCacheHelper = new CacheHelper<>();
     }
 
     public ResponseEntity<String> findMultipleById(List<String> holidayInviteIds) throws JsonProcessingException {

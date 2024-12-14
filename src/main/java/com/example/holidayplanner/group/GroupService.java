@@ -48,14 +48,14 @@ public class GroupService {
     private final CacheHelper<Group> groupCacheHelper;
 
     @Autowired
-    public GroupService(GroupRepository groupRepository, UserService userService, ObjectMapper mapper, MongoTemplate mongoTemplate, GroupInviteRepository groupInviteRepository, ReportGroupRepository reportGroupRepository, CacheManager cacheManager) {
+    public GroupService(GroupRepository groupRepository, UserService userService, ObjectMapper mapper, MongoTemplate mongoTemplate, GroupInviteRepository groupInviteRepository, ReportGroupRepository reportGroupRepository) {
         this.groupRepository = groupRepository;
         this.userService = userService;
         this.mapper = mapper;
         this.mongoTemplate = mongoTemplate;
         this.groupInviteRepository = groupInviteRepository;
         this.reportGroupRepository = reportGroupRepository;
-        this.groupCacheHelper = new CacheHelper<>(cacheManager, "groups", Group.class);
+        this.groupCacheHelper = new CacheHelper<>();
     }
 
     public ResponseEntity<Object> create(Group group) throws JsonProcessingException {
@@ -411,7 +411,7 @@ public class GroupService {
 
     public Group updateSingleGroupInCacheAndDatabase(Group group) {
         Group cachedGroup = groupCacheHelper.getCachedEntry(group.getId());
-        if (cachedGroup != null) { groupCacheHelper.cacheEntry(group, group.getId()); }
+        if (cachedGroup != null) { groupCacheHelper.cacheEntry(group.getId(), group); }
 
         return groupRepository.save(group);
     }

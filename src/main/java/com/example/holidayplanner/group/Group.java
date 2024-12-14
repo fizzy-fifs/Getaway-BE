@@ -10,13 +10,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Data
 @Document(collection = "Groups")
-public class Group {
+public class Group implements Serializable {
 
     @MongoId(value = FieldType.OBJECT_ID)
     @JsonProperty

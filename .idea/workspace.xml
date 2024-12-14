@@ -5,7 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9dd73e5b-8b9d-4958-9830-cf76380772ff" name="Changes" comment="Extend create holiday endpoints to find and update entities in cache.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/GetawayApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/GetawayApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/group/Group.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/group/Group.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/group/GroupService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/group/GroupService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/groupInvite/GroupInviteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/groupInvite/GroupInviteService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/helpers/CacheHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/helpers/CacheHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/holidayInvite/HolidayInviteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/holidayInvite/HolidayInviteService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/scheduler/Scheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/scheduler/Scheduler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,18 +75,19 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Application.Main.executor": "Debug",
+    "Application.Main.executor": "Run",
     "Maven.Getaway-BE [package].executor": "Run",
     "Notification.DisplayName-DoNotAsk-GitHub Copilot": "GitHub Copilot",
     "Notification.DoNotAsk-GitHub Copilot": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "undo__commit",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/afifoluwaakinyemi/IdeaProjects/Getaway-BE",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.editor.code.editing"
+    "settings.editor.selected.configurable": "preferences.editor"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -83,20 +95,14 @@
       <recent name="$PROJECT_DIR$/Getaway" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Main">
-    <configuration name="Crawler" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.example.holidayplanner.crawler.Crawler" />
-      <module name="holiday-planner" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.example.holidayplanner.crawler.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="Application" />
+      </set>
+    </option>
+  </component>
+  <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="openjdk-20" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -105,6 +111,8 @@
         <env name="MONGODB_CONNECTION_STRING" value="mongodb://localhost:27017/HolidayPlannerLocalDB" />
         <env name="MONGODB_PASSWORD" value="holidayplanner" />
         <env name="MONGODB_USERNAME" value="Fifolu" />
+        <env name="REDIS_HOST" value="localhost" />
+        <env name="REDIS_PORT" value="6379" />
       </envs>
       <option name="MAIN_CLASS_NAME" value="com.example.holidayplanner.GetawayApplication" />
       <module name="Getaway-BE" />
@@ -112,45 +120,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Scraper" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="scraper.Scraper" />
-      <module name="holiday-planner" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="scraper.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="com.example.holidayplanner.scraper.Scraper" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.example.holidayplanner.scraper.Scraper" />
-      <module name="holiday-planner" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.example.holidayplanner.scraper.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <list>
-      <item itemvalue="Application.Main" />
-      <item itemvalue="Application.Crawler" />
-      <item itemvalue="Application.Scraper" />
-      <item itemvalue="Application.com.example.holidayplanner.scraper.Scraper" />
-    </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.com.example.holidayplanner.scraper.Scraper" />
-        <item itemvalue="Application.Scraper" />
-        <item itemvalue="Application.Crawler" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -612,6 +581,11 @@
           <url>file://$PROJECT_DIR$/Getaway/src/main/java/com/example/holidayplanner/holiday/HolidayService.java</url>
           <line>124</line>
           <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/holidayplanner/user/UserController.java</url>
+          <line>93</line>
+          <option name="timeStamp" value="7" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

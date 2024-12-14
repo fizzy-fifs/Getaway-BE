@@ -21,13 +21,6 @@ public class Scheduler {
 //    @Scheduled(fixedRate = 1000 * 60)
     public void updateUserPropertiesIfNotPresent() {
         mongoTemplate.updateMulti(new Query(), new Update()
-                .setOnInsert("phoneNumber", "")
-                .setOnInsert("image", "")
-                .setOnInsert("groupIds", new ArrayList<>())
-                .setOnInsert("holidayIds", new ArrayList<>())
-                .setOnInsert("friendRequests", new ArrayList<>())
-                .setOnInsert("friends", new ArrayList<>())
-                .setOnInsert("friendRequestsSent", new ArrayList<>())
-                .setOnInsert("groupInvites", new ArrayList<>()), User.class);
+                .setOnInsert("isVerified", false), User.class);
     }
 }

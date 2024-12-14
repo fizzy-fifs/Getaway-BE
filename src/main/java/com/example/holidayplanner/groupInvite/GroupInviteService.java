@@ -23,10 +23,10 @@ public class GroupInviteService {
     @Autowired
     private final ObjectMapper objectMapper;
 
-    public GroupInviteService(GroupInviteRepository groupInviteRepository, ObjectMapper objectMapper, CacheManager cacheManager) {
+    public GroupInviteService(GroupInviteRepository groupInviteRepository, ObjectMapper objectMapper) {
         this.groupInviteRepository = groupInviteRepository;
         this.objectMapper = objectMapper;
-        this.groupInviteCacheHelper = new CacheHelper<>(cacheManager, "group invites", GroupInvite.class);
+        this.groupInviteCacheHelper = new CacheHelper<>();
     }
 
     public ResponseEntity<String> findById(String groupInviteId) throws JsonProcessingException {
