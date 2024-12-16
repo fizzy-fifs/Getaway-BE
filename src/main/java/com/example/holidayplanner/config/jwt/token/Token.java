@@ -1,7 +1,7 @@
 package com.example.holidayplanner.config.jwt.token;
 
 import com.example.holidayplanner.config.cascadeSaveMongoEventListener.CascadeSave;
-import com.example.holidayplanner.user.User;
+import com.example.holidayplanner.models.user.User;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;

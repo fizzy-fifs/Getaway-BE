@@ -1,6 +1,6 @@
 package com.example.holidayplanner.config.jwt.token;
 
-import com.example.holidayplanner.user.User;
+import com.example.holidayplanner.models.user.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;

@@ -1,9 +1,9 @@
 //package com.example.holidayplanner.holiday;
 //
-//import com.example.holidayplanner.availableDates.AvailableDates;
-//import com.example.holidayplanner.budget.Budget;
-//import com.example.holidayplanner.group.Group;
-//import com.example.holidayplanner.user.User;
+//import com.example.holidayplanner.models.AvailableDates;
+//import com.example.holidayplanner.models.Budget;
+//import com.example.holidayplanner.models.group.Group;
+//import com.example.holidayplanner.models.user.User;
 //import com.fasterxml.jackson.core.JsonProcessingException;
 //import com.fasterxml.jackson.databind.ObjectMapper;
 //import org.junit.jupiter.api.Test;

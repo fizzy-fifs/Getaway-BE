@@ -2,7 +2,7 @@ package com.example.holidayplanner.config.jwt.token;
 
 import com.example.holidayplanner.config.MyUserDetailsService;
 import com.example.holidayplanner.config.jwt.JwtUtil;
-import com.example.holidayplanner.user.User;
+import com.example.holidayplanner.models.user.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;

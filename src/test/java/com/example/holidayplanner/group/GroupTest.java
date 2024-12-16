@@ -1,6 +1,6 @@
 //package com.example.holidayplanner.group;
 //
-//import com.example.holidayplanner.user.User;
+//import com.example.holidayplanner.models.user.User;
 //import org.junit.jupiter.api.Test;
 //
 //import java.time.LocalDate;
