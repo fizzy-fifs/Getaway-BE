@@ -15,19 +15,16 @@ import java.util.List;
 
 @Service
 public class HolidayInviteService {
-
-    @Autowired
     private final HolidayInviteRepository holidayInviteRepository;
-
-    private final CacheHelper<HolidayInvite> holidayInviteCacheHelper;
-
     @Autowired
+    private CacheHelper<HolidayInvite> holidayInviteCacheHelper;
+    private final String CACHE_NAME = "holiday_invite";
     private final ObjectMapper objectMapper;
 
-    public HolidayInviteService(HolidayInviteRepository holidayInviteRepository, ObjectMapper objectMapper, RedisTemplate<String, HolidayInvite> redisTemplate) {
+    public HolidayInviteService(HolidayInviteRepository holidayInviteRepository, ObjectMapper objectMapper, RedisTemplate<String, Object> redisTemplate) {
         this.holidayInviteRepository = holidayInviteRepository;
         this.objectMapper = objectMapper;
-        holidayInviteCacheHelper = new CacheHelper<>(redisTemplate);
+        this.holidayInviteCacheHelper = new CacheHelper<>(redisTemplate, objectMapper, HolidayInvite.class);
     }
 
     public ResponseEntity<String> findMultipleById(List<String> holidayInviteIds) throws JsonProcessingException {
@@ -47,7 +44,7 @@ public class HolidayInviteService {
     }
 
     public List<HolidayInvite> findMultipleGroupInvitesByIdInCacheOrDatabase(List<String> holidayInviteIds) {
-        List<HolidayInvite> cachedHolidayInvites = holidayInviteCacheHelper.getCachedEntries(holidayInviteIds);
+        List<HolidayInvite> cachedHolidayInvites = holidayInviteCacheHelper.getCachedEntries(CACHE_NAME, holidayInviteIds);
 
         List<String> idsToFetch = holidayInviteIds.stream().filter(id -> cachedHolidayInvites.stream().noneMatch(holidayInvite -> holidayInvite.getId().equals(id))).toList();
 
@@ -57,7 +54,7 @@ public class HolidayInviteService {
 
         List<HolidayInvite> freshHolidayInvites = holidayInviteRepository.findAllById(idsToFetch);
 
-        holidayInviteCacheHelper.cacheEntries(freshHolidayInvites, HolidayInvite::getId);
+        holidayInviteCacheHelper.cacheEntries(CACHE_NAME, freshHolidayInvites, HolidayInvite::getId);
         List<HolidayInvite> allHolidayInvites = new ArrayList<>(cachedHolidayInvites);
         allHolidayInvites.addAll(freshHolidayInvites);
 

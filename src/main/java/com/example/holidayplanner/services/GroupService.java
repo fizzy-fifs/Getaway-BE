@@ -28,35 +28,32 @@ import java.util.List;
 
 @Service
 public class GroupService {
-    @Autowired
     private final GroupRepository groupRepository;
 
-    @Autowired
     private final UserService userService;
 
-    @Autowired
     private final ObjectMapper mapper;
 
-    @Autowired
     private final MongoTemplate mongoTemplate;
 
-    @Autowired
     private final GroupInviteRepository groupInviteRepository;
 
-    @Autowired
     private final ReportGroupRepository reportGroupRepository;
 
-    private final CacheHelper<Group> groupCacheHelper;
+    @Autowired
+    private CacheHelper<Group> groupCacheHelper;
+
+    private final String CACHE_NAME = "group";
 
     @Autowired
-    public GroupService(GroupRepository groupRepository, UserService userService, ObjectMapper mapper, MongoTemplate mongoTemplate, GroupInviteRepository groupInviteRepository, ReportGroupRepository reportGroupRepository, RedisTemplate<String,Group> redisTemplate) {
+    public GroupService(GroupRepository groupRepository, UserService userService, ObjectMapper mapper, MongoTemplate mongoTemplate, GroupInviteRepository groupInviteRepository, ReportGroupRepository reportGroupRepository, RedisTemplate<String, Object> redisTemplate) {
         this.groupRepository = groupRepository;
         this.userService = userService;
         this.mapper = mapper;
         this.mongoTemplate = mongoTemplate;
         this.groupInviteRepository = groupInviteRepository;
         this.reportGroupRepository = reportGroupRepository;
-        this.groupCacheHelper = new CacheHelper<>(redisTemplate);
+        this.groupCacheHelper = new CacheHelper<>(redisTemplate, mapper, Group.class);
     }
 
     public ResponseEntity<Object> create(Group group) throws JsonProcessingException {
@@ -393,7 +390,7 @@ public class GroupService {
     }
 
     public List<Group> findMultipleGroupsByIdInCacheOrDatabase(List<String> groupIds) {
-        List<Group> cachedGroups = groupCacheHelper.getCachedEntries(groupIds);
+        List<Group> cachedGroups = groupCacheHelper.getCachedEntries(CACHE_NAME, groupIds);
 
         List<String> idsToFetch = groupIds.stream().filter(id ->
                         cachedGroups.stream().noneMatch(group -> group.getId().equals(id)))
@@ -403,7 +400,7 @@ public class GroupService {
 
         List<Group> freshGroups = groupRepository.findAllById(idsToFetch);
 
-        groupCacheHelper.cacheEntries(freshGroups, Group::getId);
+        groupCacheHelper.cacheEntries(CACHE_NAME, freshGroups, Group::getId);
 
         List<Group> allGroups = new ArrayList<>(cachedGroups);
         allGroups.addAll(freshGroups);
@@ -411,8 +408,8 @@ public class GroupService {
     }
 
     public Group updateSingleGroupInCacheAndDatabase(Group group) {
-        Group cachedGroup = groupCacheHelper.getCachedEntry(group.getId());
-        if (cachedGroup != null) { groupCacheHelper.cacheEntry(group.getId(), group); }
+        Group cachedGroup = groupCacheHelper.getCachedEntry(CACHE_NAME, group.getId());
+        if (cachedGroup != null) { groupCacheHelper.cacheEntry(CACHE_NAME, group.getId(), group); }
 
         return groupRepository.save(group);
     }

@@ -19,7 +19,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -77,10 +76,13 @@ public class UserService {
     @Autowired
     private final ReportUserRepository reportUserRepository;
 
-    private final CacheHelper<User> userCacheHelper;
+    @Autowired
+    private CacheHelper<User> userCacheHelper;
+
+    private final String CACHE_NAME = "user";
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, MyUserDetailsService myUserDetailsService, JwtUtil jwtTokenUtil, TokenService tokenService, AuthenticationManager authenticationManager, MongoTemplate mongoTemplate, UserDeactivationRequestRepository userDeactivationRequestRepository, ReportUserRepository reportUserRepository, RedisTemplate<String,User> redisTemplate) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, MyUserDetailsService myUserDetailsService, JwtUtil jwtTokenUtil, TokenService tokenService, AuthenticationManager authenticationManager, MongoTemplate mongoTemplate, UserDeactivationRequestRepository userDeactivationRequestRepository, ReportUserRepository reportUserRepository, RedisTemplate<String, Object> redisTemplate) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.myUserDetailsService = myUserDetailsService;
@@ -90,9 +92,9 @@ public class UserService {
         this.mongoTemplate = mongoTemplate;
         this.userDeactivationRequestRepository = userDeactivationRequestRepository;
         this.reportUserRepository = reportUserRepository;
-        this.userCacheHelper = new CacheHelper<>(redisTemplate);
         this.mapper = new ObjectMapper().findAndRegisterModules();
         this.mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        this.userCacheHelper = new CacheHelper<>(redisTemplate, mapper, User.class);
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
@@ -198,7 +200,7 @@ public class UserService {
         }
 
         user.setLastLogin(LocalDateTime.now());
-        updateSingleUserInCacheAndDatabase(user);
+        userRepository.save(user);
 
         return ResponseEntity.ok(responseData);
 
@@ -235,7 +237,7 @@ public class UserService {
             currentUserInfo.setPassword(newEncodedPassword);
         }
 
-        updateSingleUserInCacheAndDatabase(currentUserInfo);
+        userRepository.save(currentUserInfo);
 
         return ResponseEntity.ok("User has been successfully updated");
     }
@@ -445,17 +447,17 @@ public class UserService {
 
         String sanitizedSearchTerm = searchTerm.trim().toLowerCase();
 
-        List<Object> recentUserSearchHistory = user.getRecentUserSearchHistory();
+        List<Object> userRecentSearchHistory = user.getRecentUserSearchHistory();
 
-        recentUserSearchHistory.remove(sanitizedSearchTerm);
+        userRecentSearchHistory.remove(sanitizedSearchTerm);
 
-        recentUserSearchHistory.add(0, sanitizedSearchTerm);
+        userRecentSearchHistory.add(0, sanitizedSearchTerm);
 
-        if (recentUserSearchHistory.size() > 10) {
-            recentUserSearchHistory.remove(recentUserSearchHistory.size() - 1);
+        if (userRecentSearchHistory.size() > 10) {
+            userRecentSearchHistory.remove(userRecentSearchHistory.size() - 1);
         }
 
-        user.setRecentUserSearchHistory(recentUserSearchHistory);
+        user.setRecentUserSearchHistory(userRecentSearchHistory);
 
         Query searchQuery = new Query();
         Criteria criteria = new Criteria().orOperator(
@@ -677,13 +679,22 @@ public class UserService {
         return ResponseEntity.ok("You have unblocked " + blockedUser.getUserName());
     }
 
-    @Cacheable(value = "users", key = "#id", unless = "#result == null")
     public User findSingleUserByIdInCacheOrDatabase(String id) {
-        return userRepository.findById(new ObjectId(id));
+        User user = userCacheHelper.getCachedEntry(CACHE_NAME, id);
+
+        if (user == null) {
+            Optional<User> userInDb = userRepository.findById(id);
+            if (userInDb.isPresent()) {
+                user = userInDb.get();
+                userCacheHelper.cacheEntry(CACHE_NAME, id, user);
+                return user;
+            }
+        }
+        return user;
     }
 
     public List<User> findMultipleUsersByIdInCacheOrDatabase(List<String> userIds) {
-        List<User> cachedUsers = userCacheHelper.getCachedEntries(userIds);
+        List<User> cachedUsers = userCacheHelper.getCachedEntries(CACHE_NAME, userIds);
 
         List<String> idsToFetch = userIds.stream().filter(id ->
                 cachedUsers.stream().noneMatch(user -> user.getId().equals(id))).toList();
@@ -692,7 +703,7 @@ public class UserService {
 
         List<User> freshUsers = userRepository.findAllById(idsToFetch);
 
-        userCacheHelper.cacheEntries(freshUsers, User::getId);
+        userCacheHelper.cacheEntries(CACHE_NAME, freshUsers, User::getId);
 
         List<User> allUsers = new ArrayList<>(cachedUsers);
         allUsers.addAll(freshUsers);
@@ -700,8 +711,8 @@ public class UserService {
     }
 
     public User updateSingleUserInCacheAndDatabase(User user) {
-        User cachedUser = userCacheHelper.getCachedEntry(user.getId());
-        if (cachedUser != null) { userCacheHelper.cacheEntry(user.getId(), user); }
+        User cachedUser = userCacheHelper.getCachedEntry(CACHE_NAME, user.getId());
+        if (cachedUser != null) { userCacheHelper.cacheEntry(CACHE_NAME, user.getId(), user); }
 
         return userRepository.save(user);
     }
@@ -709,9 +720,9 @@ public class UserService {
     public List<User> updateMultipleUsersInCacheAndDatabase(List<User> users) {
         List<String> userIds = users.stream().map(User::getId).toList();
 
-        List<User> cachedUsers = userCacheHelper.getCachedEntries(userIds);
+        List<User> cachedUsers = userCacheHelper.getCachedEntries(CACHE_NAME, userIds);
         if (!cachedUsers.isEmpty()) {
-            userCacheHelper.cacheEntries(cachedUsers, User::getId);
+            userCacheHelper.cacheEntries(CACHE_NAME, cachedUsers, User::getId);
         }
 
         return userRepository.saveAll(users);

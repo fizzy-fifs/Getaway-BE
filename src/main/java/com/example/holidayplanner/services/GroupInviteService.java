@@ -17,18 +17,19 @@ import java.util.List;
 
 @Service
 public class GroupInviteService {
-    @Autowired
     private final GroupInviteRepository groupInviteRepository;
 
-    private final CacheHelper<GroupInvite> groupInviteCacheHelper;
-
     @Autowired
+    private CacheHelper<GroupInvite> groupInviteCacheHelper;
+
+    private final String CACHE_NAME = "group_invite";
+
     private final ObjectMapper objectMapper;
 
-    public GroupInviteService(GroupInviteRepository groupInviteRepository, ObjectMapper objectMapper, RedisTemplate<String, GroupInvite> redisTemplate) {
+    public GroupInviteService(GroupInviteRepository groupInviteRepository, ObjectMapper objectMapper, RedisTemplate<String, Object> redisTemplate) {
         this.groupInviteRepository = groupInviteRepository;
         this.objectMapper = objectMapper;
-        this.groupInviteCacheHelper = new CacheHelper<>(redisTemplate);
+        this.groupInviteCacheHelper = new CacheHelper<>(redisTemplate, objectMapper, GroupInvite.class);
     }
 
     public ResponseEntity<String> findById(String groupInviteId) throws JsonProcessingException {
@@ -69,7 +70,7 @@ public class GroupInviteService {
     }
 
     public List<GroupInvite> findMultipleGroupInvitesByIdInCacheOrDatabase(List<String> groupInviteIds) {
-        List<GroupInvite> cachedGroupInvites = groupInviteCacheHelper.getCachedEntries(groupInviteIds);
+        List<GroupInvite> cachedGroupInvites = groupInviteCacheHelper.getCachedEntries(CACHE_NAME, groupInviteIds);
 
         List<String> idsToFetch = groupInviteIds.stream().filter(id -> cachedGroupInvites.stream().noneMatch(gi -> gi.getId().equals(id))).toList();
 
@@ -79,7 +80,7 @@ public class GroupInviteService {
 
         List<GroupInvite> freshGroupInvites = groupInviteRepository.findAllById(idsToFetch);
 
-        groupInviteCacheHelper.cacheEntries(freshGroupInvites, GroupInvite::getId);
+        groupInviteCacheHelper.cacheEntries(CACHE_NAME, freshGroupInvites, GroupInvite::getId);
         List<GroupInvite> allGroupInvites = new ArrayList<>(cachedGroupInvites);
         allGroupInvites.addAll(freshGroupInvites);
 
